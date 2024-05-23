@@ -1,4 +1,3 @@
-// add_set_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
@@ -16,17 +15,15 @@ class _AddSetScreenState extends State<AddSetScreen> {
   final _formKey = GlobalKey<FormState>();
   final _weightController = TextEditingController();
   final _repsController = TextEditingController();
-  final _setsController = TextEditingController();
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
       final weight = double.parse(_weightController.text);
       final repetitions = int.parse(_repsController.text);
-      final sets = int.parse(_setsController.text);
 
       final workout = Workout(
         exercise: widget.exercise,
-        sets: sets,
+        sets: 1, // Default to 1 since we're removing the sets field
         repetitions: repetitions,
         weight: weight,
         date: DateTime.now(),
@@ -50,17 +47,6 @@ class _AddSetScreenState extends State<AddSetScreen> {
           key: _formKey,
           child: Column(
             children: [
-              TextFormField(
-                controller: _setsController,
-                decoration: const InputDecoration(labelText: 'Sets'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter the number of sets';
-                  }
-                  return null;
-                },
-              ),
               TextFormField(
                 controller: _repsController,
                 decoration: const InputDecoration(labelText: 'Repetitions'),
