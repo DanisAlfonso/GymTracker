@@ -53,44 +53,84 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Form(
-        key: _formKey,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Create New Routine'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextFormField(
-              controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Routine Name'),
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Please enter a name for the routine';
-                }
-                return null;
-              },
+            const Text(
+              'Routine Name',
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Form(
+              key: _formKey,
+              child: TextFormField(
+                controller: _nameController,
+                decoration: InputDecoration(
+                  hintText: 'Enter routine name',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                ),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter a name for the routine';
+                  }
+                  return null;
+                },
+              ),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _selectExercises,
-              child: const Text('Select Exercises'),
+            Center(
+              child: ElevatedButton(
+                onPressed: _selectExercises,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 16.0, horizontal: 32.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                child: const Text('Select Exercises'),
+              ),
             ),
             const SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
-                shrinkWrap: true,
                 itemCount: _selectedExercises.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(_selectedExercises[index].name),
+                  return Card(
+                    margin: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: ListTile(
+                      title: Text(_selectedExercises[index].name),
+                    ),
                   );
                 },
               ),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _submit,
-              child: const Text('Create Routine'),
+            Center(
+              child: ElevatedButton(
+                onPressed: _submit,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 16.0, horizontal: 32.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                child: const Text('Create Routine'),
+              ),
             ),
           ],
         ),
