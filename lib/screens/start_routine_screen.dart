@@ -1,4 +1,6 @@
+// start_routine_screen.dart
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
 
 class StartRoutineScreen extends StatelessWidget {
@@ -12,19 +14,22 @@ class StartRoutineScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(routine.name),
       ),
-      body: ListView.builder(
-        itemCount: routine.exercises.length,
-        itemBuilder: (context, index) {
-          final exercise = routine.exercises[index];
-          return ListTile(
-            title: Text(exercise.name),
-            subtitle: Text(exercise.description),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AddSetScreen(exercise: exercise)),
+      body: Consumer<WorkoutModel>(
+        builder: (context, workoutModel, child) {
+          final workouts = workoutModel.getWorkoutsForRoutine(routine);
+          return ListView(
+            children: routine.exercises.map((exercise) {
+              final exerciseWorkouts = workouts.where((workout) => workout.exercise == exercise).toList();
+              return ExpansionTile(
+                title: Text(exercise.name),
+                children: exerciseWorkouts.map((workout) {
+                  return ListTile(
+                    title: Text('Set: ${workout.sets} x ${workout.repetitions} reps'),
+                    subtitle: Text('Weight: ${workout.weight} kg'),
+                  );
+                }).toList(),
               );
-            },
+            }).toList(),
           );
         },
       ),
@@ -45,10 +50,24 @@ class _AddSetScreenState extends State<AddSetScreen> {
   final _formKey = GlobalKey<FormState>();
   final _weightController = TextEditingController();
   final _repsController = TextEditingController();
+  final _setsController = TextEditingController();
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
-      // Handle adding the set (this part can be expanded based on how you manage sets)
+      final weight = double.parse(_weightController.text);
+      final repetitions = int.parse(_repsController.text);
+      final sets = int.parse(_setsController.text);
+
+      final workout = Workout(
+        exercise: widget.exercise,
+        sets: sets,
+        repetitions: repetitions,
+        weight: weight,
+        date: DateTime.now(),
+      );
+
+      Provider.of<WorkoutModel>(context, listen: false).addWorkout(workout);
+
       Navigator.pop(context);
     }
   }
@@ -66,12 +85,12 @@ class _AddSetScreenState extends State<AddSetScreen> {
           child: Column(
             children: [
               TextFormField(
-                controller: _weightController,
-                decoration: InputDecoration(labelText: 'Weight (kg)'),
+                controller: _setsController,
+                decoration: InputDecoration(labelText: 'Sets'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return 'Please enter the weight';
+                    return 'Please enter the number of sets';
                   }
                   return null;
                 },
@@ -83,6 +102,17 @@ class _AddSetScreenState extends State<AddSetScreen> {
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Please enter the repetitions';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _weightController,
+                decoration: InputDecoration(labelText: 'Weight (kg)'),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter the weight';
                   }
                   return null;
                 },

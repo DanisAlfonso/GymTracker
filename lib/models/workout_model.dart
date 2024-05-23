@@ -57,4 +57,8 @@ class WorkoutModel extends ChangeNotifier {
     _exercises.add(exercise);
     notifyListeners();
   }
+
+  List<Workout> getWorkoutsForRoutine(Routine routine) {
+    return _workouts.where((workout) => routine.exercises.contains(workout.exercise)).toList();
+  }
 }
