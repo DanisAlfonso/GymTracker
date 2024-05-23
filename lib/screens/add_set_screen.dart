@@ -39,17 +39,48 @@ class _AddSetScreenState extends State<AddSetScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
         title: const Text('Add Set'),
+        centerTitle: true,
       ),
-      body: Padding(
+      body: Container(
         padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.white, Colors.grey.shade200],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
         child: Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const Text(
+                'Repetitions',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
               TextFormField(
                 controller: _repsController,
-                decoration: const InputDecoration(labelText: 'Repetitions'),
+                decoration: InputDecoration(
+                  hintText: 'Enter repetitions',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -58,9 +89,25 @@ class _AddSetScreenState extends State<AddSetScreen> {
                   return null;
                 },
               ),
+              const SizedBox(height: 20),
+              const Text(
+                'Weight (kg)',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
               TextFormField(
                 controller: _weightController,
-                decoration: const InputDecoration(labelText: 'Weight (kg)'),
+                decoration: InputDecoration(
+                  hintText: 'Enter weight in kg',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -70,9 +117,24 @@ class _AddSetScreenState extends State<AddSetScreen> {
                 },
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _submit,
-                child: const Text('Add Set'),
+              Center(
+                child: ElevatedButton(
+                  onPressed: _submit,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16.0, horizontal: 32.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    backgroundColor: Theme.of(context).canvasColor,
+                  ),
+                  child: const Text(
+                    'Add Set',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
