@@ -1,9 +1,21 @@
-// home_screen.dart
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'training_screen.dart';
+import 'create_routine_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
+  void _showCreateRoutineSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => Padding(
+        padding: MediaQuery.of(context).viewInsets,
+        child: const CreateRoutineScreen(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +38,11 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _showCreateRoutineSheet(context),
+        label: const Text('New Routine'),
+        icon: const Icon(Icons.add),
       ),
     );
   }

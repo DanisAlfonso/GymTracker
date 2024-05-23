@@ -1,4 +1,3 @@
-// create_routine_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
@@ -54,49 +53,46 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create New Routine'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Routine Name'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a name for the routine';
-                  }
-                  return null;
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              controller: _nameController,
+              decoration: const InputDecoration(labelText: 'Routine Name'),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter a name for the routine';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _selectExercises,
+              child: const Text('Select Exercises'),
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: _selectedExercises.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(_selectedExercises[index].name),
+                  );
                 },
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _selectExercises,
-                child: const Text('Select Exercises'),
-              ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _selectedExercises.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(_selectedExercises[index].name),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _submit,
-                child: const Text('Create Routine'),
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _submit,
+              child: const Text('Create Routine'),
+            ),
+          ],
         ),
       ),
     );
