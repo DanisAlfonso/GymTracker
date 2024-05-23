@@ -55,7 +55,18 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create New Routine'),
+        leading: Padding(
+          padding: const EdgeInsets.only(top: 25.0), // Add padding to the top
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+        title: const Padding(
+          padding: EdgeInsets.only(top: 25.0), // Add padding to the top
+          child: Text('Create New Routine'),
+        ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
