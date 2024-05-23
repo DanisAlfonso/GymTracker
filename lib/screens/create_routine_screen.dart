@@ -5,6 +5,8 @@ import '../models/workout_model.dart';
 import 'exercise_library_screen.dart';
 
 class CreateRoutineScreen extends StatefulWidget {
+  const CreateRoutineScreen({super.key});
+
   @override
   _CreateRoutineScreenState createState() => _CreateRoutineScreenState();
 }
@@ -26,7 +28,7 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Please select at least one exercise.'),
         ),
       );
@@ -54,7 +56,7 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create New Routine'),
+        title: const Text('Create New Routine'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -64,7 +66,7 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
             children: [
               TextFormField(
                 controller: _nameController,
-                decoration: InputDecoration(labelText: 'Routine Name'),
+                decoration: const InputDecoration(labelText: 'Routine Name'),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Please enter a name for the routine';
@@ -72,12 +74,12 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _selectExercises,
-                child: Text('Select Exercises'),
+                child: const Text('Select Exercises'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Expanded(
                 child: ListView.builder(
                   itemCount: _selectedExercises.length,
@@ -88,10 +90,10 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
                   },
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _submit,
-                child: Text('Create Routine'),
+                child: const Text('Create Routine'),
               ),
             ],
           ),

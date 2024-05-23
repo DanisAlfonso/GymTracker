@@ -8,12 +8,14 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (context) => WorkoutModel(),
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,19 +23,21 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MainScreen(),
+      home: const MainScreen(),
     );
   }
 }
 
 class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
   @override
   _MainScreenState createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
-  final List<Widget> _screens = [HomeScreen(), TrainingScreen()];
+  final List<Widget> _screens = [const HomeScreen(), const TrainingScreen()];
 
   void _onItemTapped(int index) {
     setState(() {

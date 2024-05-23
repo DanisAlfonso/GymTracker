@@ -6,7 +6,7 @@ import '../models/workout_model.dart';
 class StartRoutineScreen extends StatelessWidget {
   final Routine routine;
 
-  StartRoutineScreen({required this.routine});
+  const StartRoutineScreen({super.key, required this.routine});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class StartRoutineScreen extends StatelessWidget {
 class AddSetScreen extends StatefulWidget {
   final Exercise exercise;
 
-  AddSetScreen({required this.exercise});
+  const AddSetScreen({super.key, required this.exercise});
 
   @override
   _AddSetScreenState createState() => _AddSetScreenState();
@@ -76,7 +76,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Set'),
+        title: const Text('Add Set'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -86,7 +86,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
             children: [
               TextFormField(
                 controller: _setsController,
-                decoration: InputDecoration(labelText: 'Sets'),
+                decoration: const InputDecoration(labelText: 'Sets'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -97,7 +97,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
               ),
               TextFormField(
                 controller: _repsController,
-                decoration: InputDecoration(labelText: 'Repetitions'),
+                decoration: const InputDecoration(labelText: 'Repetitions'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -108,7 +108,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
               ),
               TextFormField(
                 controller: _weightController,
-                decoration: InputDecoration(labelText: 'Weight (kg)'),
+                decoration: const InputDecoration(labelText: 'Weight (kg)'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -117,10 +117,10 @@ class _AddSetScreenState extends State<AddSetScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _submit,
-                child: Text('Add Set'),
+                child: const Text('Add Set'),
               ),
             ],
           ),

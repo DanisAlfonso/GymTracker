@@ -6,11 +6,13 @@ import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
 
 class TrainingScreen extends StatelessWidget {
+  const TrainingScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Training'),
+        title: const Text('Training'),
       ),
       body: Consumer<WorkoutModel>(
         builder: (context, workoutModel, child) {
@@ -37,10 +39,10 @@ class TrainingScreen extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CreateRoutineScreen()),
+            MaterialPageRoute(builder: (context) => const CreateRoutineScreen()),
           );
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

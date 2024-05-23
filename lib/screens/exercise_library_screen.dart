@@ -6,7 +6,7 @@ import '../models/workout_model.dart';
 class ExerciseLibraryScreen extends StatefulWidget {
   final List<Exercise> selectedExercises;
 
-  ExerciseLibraryScreen({required this.selectedExercises});
+  const ExerciseLibraryScreen({super.key, required this.selectedExercises});
 
   @override
   _ExerciseLibraryScreenState createState() => _ExerciseLibraryScreenState();
@@ -37,7 +37,7 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Exercise Library'),
+        title: const Text('Exercise Library'),
       ),
       body: ListView.builder(
         itemCount: exercises.length,
@@ -48,8 +48,8 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
             title: Text(exercise.name),
             subtitle: Text(exercise.description),
             trailing: isSelected
-                ? Icon(Icons.check_box)
-                : Icon(Icons.check_box_outline_blank),
+                ? const Icon(Icons.check_box)
+                : const Icon(Icons.check_box_outline_blank),
             onTap: () => _toggleSelection(exercise),
           );
         },
@@ -58,13 +58,15 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
         onPressed: () {
           Navigator.pop(context, _selectedExercises);
         },
-        child: Icon(Icons.check),
+        child: const Icon(Icons.check),
       ),
     );
   }
 }
 
 class AddExerciseDialog extends StatefulWidget {
+  const AddExerciseDialog({super.key});
+
   @override
   _AddExerciseDialogState createState() => _AddExerciseDialogState();
 }
@@ -89,7 +91,7 @@ class _AddExerciseDialogState extends State<AddExerciseDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Add Exercise'),
+      title: const Text('Add Exercise'),
       content: Form(
         key: _formKey,
         child: Column(
@@ -97,7 +99,7 @@ class _AddExerciseDialogState extends State<AddExerciseDialog> {
           children: [
             TextFormField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Name'),
+              decoration: const InputDecoration(labelText: 'Name'),
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'Please enter the exercise name';
@@ -107,7 +109,7 @@ class _AddExerciseDialogState extends State<AddExerciseDialog> {
             ),
             TextFormField(
               controller: _descriptionController,
-              decoration: InputDecoration(labelText: 'Description'),
+              decoration: const InputDecoration(labelText: 'Description'),
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'Please enter the exercise description';
@@ -123,11 +125,11 @@ class _AddExerciseDialogState extends State<AddExerciseDialog> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('Cancel'),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: _submit,
-          child: Text('Add'),
+          child: const Text('Add'),
         ),
       ],
     );

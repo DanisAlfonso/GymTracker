@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
 
 class SelectExercisesScreen extends StatefulWidget {
+  const SelectExercisesScreen({super.key});
+
   @override
   _SelectExercisesScreenState createState() => _SelectExercisesScreenState();
 }
@@ -29,7 +31,7 @@ class _SelectExercisesScreenState extends State<SelectExercisesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select Exercises'),
+        title: const Text('Select Exercises'),
       ),
       body: Consumer<WorkoutModel>(
         builder: (context, workoutModel, child) {
@@ -40,7 +42,7 @@ class _SelectExercisesScreenState extends State<SelectExercisesScreen> {
               final isSelected = _selectedExercises.contains(exercise);
               return ListTile(
                 title: Text(exercise.name),
-                trailing: isSelected ? Icon(Icons.check) : null,
+                trailing: isSelected ? const Icon(Icons.check) : null,
                 onTap: () => _toggleExercise(exercise),
               );
             },
@@ -49,7 +51,7 @@ class _SelectExercisesScreenState extends State<SelectExercisesScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _submitSelection,
-        child: Icon(Icons.check),
+        child: const Icon(Icons.check),
       ),
     );
   }

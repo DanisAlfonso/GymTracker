@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'training_screen.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Gym Tracker'),
+        title: const Text('Gym Tracker'),
       ),
       body: Center(
         child: Column(
@@ -16,10 +18,10 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => TrainingScreen()),
+                  MaterialPageRoute(builder: (context) => const TrainingScreen()),
                 );
               },
-              child: Text('Training'),
+              child: const Text('Training'),
             ),
           ],
         ),

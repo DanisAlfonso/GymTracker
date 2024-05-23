@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
 
 class AddWorkoutScreen extends StatefulWidget {
+  const AddWorkoutScreen({super.key});
+
   @override
   _AddWorkoutScreenState createState() => _AddWorkoutScreenState();
 }
@@ -35,7 +37,7 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Workout'),
+        title: const Text('Add Workout'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -45,7 +47,7 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
             children: [
               DropdownButtonFormField<Exercise>(
                 value: _selectedExercise,
-                hint: Text('Select Exercise'),
+                hint: const Text('Select Exercise'),
                 onChanged: (Exercise? newValue) {
                   setState(() {
                     _selectedExercise = newValue;
@@ -68,7 +70,7 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
               ),
               TextFormField(
                 controller: _setsController,
-                decoration: InputDecoration(labelText: 'Sets'),
+                decoration: const InputDecoration(labelText: 'Sets'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -79,7 +81,7 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
               ),
               TextFormField(
                 controller: _repsController,
-                decoration: InputDecoration(labelText: 'Repetitions'),
+                decoration: const InputDecoration(labelText: 'Repetitions'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -90,7 +92,7 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
               ),
               TextFormField(
                 controller: _weightController,
-                decoration: InputDecoration(labelText: 'Weight (kg)'),
+                decoration: const InputDecoration(labelText: 'Weight (kg)'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -99,10 +101,10 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _submit,
-                child: Text('Add Workout'),
+                child: const Text('Add Workout'),
               ),
             ],
           ),
