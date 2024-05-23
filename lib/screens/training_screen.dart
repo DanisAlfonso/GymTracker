@@ -1,9 +1,9 @@
 // training_screen.dart
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../models/workout_model.dart';
 import 'create_routine_screen.dart';
 import 'start_routine_screen.dart';
+import 'package:provider/provider.dart';
+import '../models/workout_model.dart';
 
 class TrainingScreen extends StatelessWidget {
   @override
@@ -23,7 +23,9 @@ class TrainingScreen extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => StartRoutineScreen(routine: routine)),
+                    MaterialPageRoute(
+                      builder: (context) => StartRoutineScreen(routine: routine),
+                    ),
                   );
                 },
               );

@@ -3,35 +3,62 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
 
-class ExerciseLibraryScreen extends StatelessWidget {
+class ExerciseLibraryScreen extends StatefulWidget {
+  final List<Exercise> selectedExercises;
+
+  ExerciseLibraryScreen({required this.selectedExercises});
+
+  @override
+  _ExerciseLibraryScreenState createState() => _ExerciseLibraryScreenState();
+}
+
+class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
+  List<Exercise> _selectedExercises = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedExercises = widget.selectedExercises;
+  }
+
+  void _toggleSelection(Exercise exercise) {
+    setState(() {
+      if (_selectedExercises.contains(exercise)) {
+        _selectedExercises.remove(exercise);
+      } else {
+        _selectedExercises.add(exercise);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final exercises = Provider.of<WorkoutModel>(context).exercises;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Exercise Library'),
       ),
-      body: Consumer<WorkoutModel>(
-        builder: (context, workoutModel, child) {
-          return ListView.builder(
-            itemCount: workoutModel.exercises.length,
-            itemBuilder: (context, index) {
-              final exercise = workoutModel.exercises[index];
-              return ListTile(
-                title: Text(exercise.name),
-                subtitle: Text(exercise.description),
-              );
-            },
+      body: ListView.builder(
+        itemCount: exercises.length,
+        itemBuilder: (context, index) {
+          final exercise = exercises[index];
+          final isSelected = _selectedExercises.contains(exercise);
+          return ListTile(
+            title: Text(exercise.name),
+            subtitle: Text(exercise.description),
+            trailing: isSelected
+                ? Icon(Icons.check_box)
+                : Icon(Icons.check_box_outline_blank),
+            onTap: () => _toggleSelection(exercise),
           );
         },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) => AddExerciseDialog(),
-          );
+          Navigator.pop(context, _selectedExercises);
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.check),
       ),
     );
   }

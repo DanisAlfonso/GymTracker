@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
-import 'select_exercises_screen.dart';
+import 'exercise_library_screen.dart';
 
 class CreateRoutineScreen extends StatefulWidget {
   @override
@@ -15,24 +15,35 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
   List<Exercise> _selectedExercises = [];
 
   void _submit() {
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate() && _selectedExercises.isNotEmpty) {
       final routine = Routine(
         name: _nameController.text,
         exercises: _selectedExercises,
       );
 
       Provider.of<WorkoutModel>(context, listen: false).addRoutine(routine);
+
       Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please select at least one exercise.'),
+        ),
+      );
     }
   }
 
   void _selectExercises() async {
-    final selectedExercises = await Navigator.push<List<Exercise>>(
+    final selectedExercises = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SelectExercisesScreen()),
+      MaterialPageRoute(
+        builder: (context) => ExerciseLibraryScreen(
+          selectedExercises: _selectedExercises,
+        ),
+      ),
     );
 
-    if (selectedExercises != null) {
+    if (selectedExercises != null && selectedExercises is List<Exercise>) {
       setState(() {
         _selectedExercises = selectedExercises;
       });
@@ -43,7 +54,7 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Routine'),
+        title: Text('Create New Routine'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -65,6 +76,17 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
               ElevatedButton(
                 onPressed: _selectExercises,
                 child: Text('Select Exercises'),
+              ),
+              SizedBox(height: 20),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _selectedExercises.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(_selectedExercises[index].name),
+                    );
+                  },
+                ),
               ),
               SizedBox(height: 20),
               ElevatedButton(
