@@ -4,7 +4,9 @@ import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
 
 class SelectExercisesScreen extends StatefulWidget {
-  const SelectExercisesScreen({super.key});
+  final List<Exercise> selectedExercises;
+
+  const SelectExercisesScreen({super.key, required this.selectedExercises});
 
   @override
   _SelectExercisesScreenState createState() => _SelectExercisesScreenState();
@@ -13,7 +15,13 @@ class SelectExercisesScreen extends StatefulWidget {
 class _SelectExercisesScreenState extends State<SelectExercisesScreen> {
   final List<Exercise> _selectedExercises = [];
 
-  void _toggleExercise(Exercise exercise) {
+  @override
+  void initState() {
+    super.initState();
+    _selectedExercises.addAll(widget.selectedExercises);
+  }
+
+  void _toggleSelection(Exercise exercise) {
     setState(() {
       if (_selectedExercises.contains(exercise)) {
         _selectedExercises.remove(exercise);
@@ -32,6 +40,12 @@ class _SelectExercisesScreenState extends State<SelectExercisesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Select Exercises'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.check),
+            onPressed: _submitSelection,
+          ),
+        ],
       ),
       body: Consumer<WorkoutModel>(
         builder: (context, workoutModel, child) {
@@ -42,16 +56,12 @@ class _SelectExercisesScreenState extends State<SelectExercisesScreen> {
               final isSelected = _selectedExercises.contains(exercise);
               return ListTile(
                 title: Text(exercise.name),
-                trailing: isSelected ? const Icon(Icons.check) : null,
-                onTap: () => _toggleExercise(exercise),
+                trailing: isSelected ? const Icon(Icons.check_box) : const Icon(Icons.check_box_outline_blank),
+                onTap: () => _toggleSelection(exercise),
               );
             },
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _submitSelection,
-        child: const Icon(Icons.check),
       ),
     );
   }

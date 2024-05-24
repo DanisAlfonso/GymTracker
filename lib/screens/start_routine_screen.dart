@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
 import 'add_set_screen.dart';
 import 'edit_set_screen.dart';
+import 'select_exercises_screen.dart';
 
 class StartRoutineScreen extends StatelessWidget {
   final Routine routine;
@@ -28,12 +29,38 @@ class StartRoutineScreen extends StatelessWidget {
     );
   }
 
+  void _addExercises(BuildContext context) async {
+    final newExercises = await Navigator.push<List<Exercise>>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SelectExercisesScreen(selectedExercises: []),
+      ),
+    );
+
+    if (newExercises != null && newExercises.isNotEmpty) {
+      for (var exercise in newExercises) {
+        Provider.of<WorkoutModel>(context, listen: false).addExerciseToRoutine(routine, exercise);
+      }
+    }
+  }
+
+  void _removeExercise(BuildContext context, Exercise exercise) {
+    Provider.of<WorkoutModel>(context, listen: false).removeExerciseFromRoutine(routine, exercise);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(routine.name),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () => _addExercises(context),
+            tooltip: 'Add Exercises',
+          ),
+        ],
       ),
       body: Consumer<WorkoutModel>(
         builder: (context, workoutModel, child) {
@@ -72,6 +99,21 @@ class StartRoutineScreen extends StatelessWidget {
                       'Sets: $totalSets, Total Weight: ${totalWeight.toStringAsFixed(1)} kg',
                       style: TextStyle(color: Colors.grey[700]),
                     ),
+                    trailing: PopupMenuButton<String>(
+                      onSelected: (value) {
+                        if (value == 'remove') {
+                          _removeExercise(context, exercise);
+                        }
+                      },
+                      itemBuilder: (BuildContext context) {
+                        return [
+                          const PopupMenuItem<String>(
+                            value: 'remove',
+                            child: Text('Remove Exercise'),
+                          ),
+                        ];
+                      },
+                    ),
                     children: [
                       Column(
                         children: exerciseWorkouts.map((workout) {
@@ -109,6 +151,10 @@ class StartRoutineScreen extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ),
+                            backgroundColor: Colors.purple,
+                            foregroundColor: Colors.white,
+                            shadowColor: Colors.black.withOpacity(0.25),
+                            elevation: 10,
                           ),
                         ),
                       ),
@@ -120,18 +166,6 @@ class StartRoutineScreen extends StatelessWidget {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          // Assume we are adding to the first exercise in the routine for simplicity
-          if (routine.exercises.isNotEmpty) {
-            _startExercise(context, routine.exercises[0]);
-          }
-        },
-        icon: const Icon(Icons.add),
-        label: const Text('Add New Set'),
-        tooltip: 'Add a new set for the first exercise in the routine',
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
