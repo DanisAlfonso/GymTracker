@@ -1,11 +1,74 @@
 // training_screen.dart
 import 'package:flutter/material.dart';
+import 'create_routine_screen.dart';
 import 'start_routine_screen.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
 
 class TrainingScreen extends StatelessWidget {
   const TrainingScreen({super.key});
+
+  void _renameRoutine(BuildContext context, Routine routine) {
+    final _nameController = TextEditingController(text: routine.name);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Rename Routine'),
+          content: TextField(
+            controller: _nameController,
+            decoration: const InputDecoration(
+              hintText: 'Enter new routine name',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (_nameController.text.isNotEmpty) {
+                  Provider.of<WorkoutModel>(context, listen: false).renameRoutine(routine, _nameController.text);
+                  Navigator.pop(context);
+                }
+              },
+              child: const Text('Rename'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteRoutine(BuildContext context, Routine routine) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Delete Routine'),
+          content: const Text('Are you sure you want to delete this routine?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Provider.of<WorkoutModel>(context, listen: false).deleteRoutine(routine);
+                Navigator.pop(context);
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,62 +79,77 @@ class TrainingScreen extends StatelessWidget {
       ),
       body: Consumer<WorkoutModel>(
         builder: (context, workoutModel, child) {
-          return Padding(
+          return workoutModel.routines.isNotEmpty
+              ? ListView.builder(
             padding: const EdgeInsets.all(16.0),
-            child: workoutModel.routines.isNotEmpty
-                ? ListView.builder(
-              itemCount: workoutModel.routines.length,
-              itemBuilder: (context, index) {
-                final routine = workoutModel.routines[index];
-                return RoutineCard(routine: routine);
-              },
-            )
-                : Center(
-              child: Text(
-                'No routines created yet.',
-                style: TextStyle(fontSize: 18.0, color: Colors.grey[600]),
-              ),
+            itemCount: workoutModel.routines.length,
+            itemBuilder: (context, index) {
+              final routine = workoutModel.routines[index];
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 8.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                elevation: 5,
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(16.0),
+                  title: Text(
+                    routine.name,
+                    style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    '${routine.exercises.length} exercises',
+                    style: TextStyle(color: Colors.grey[700]),
+                  ),
+                  trailing: PopupMenuButton<String>(
+                    onSelected: (value) {
+                      if (value == 'rename') {
+                        _renameRoutine(context, routine);
+                      } else if (value == 'delete') {
+                        _deleteRoutine(context, routine);
+                      }
+                    },
+                    itemBuilder: (BuildContext context) {
+                      return [
+                        const PopupMenuItem<String>(
+                          value: 'rename',
+                          child: Text('Rename Routine'),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'delete',
+                          child: Text('Delete Routine'),
+                        ),
+                      ];
+                    },
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => StartRoutineScreen(routine: routine),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          )
+              : Center(
+            child: Text(
+              'No routines created yet.',
+              style: TextStyle(fontSize: 18.0, color: Colors.grey[600]),
             ),
           );
         },
       ),
-    );
-  }
-}
-
-class RoutineCard extends StatelessWidget {
-  final Routine routine;
-
-  const RoutineCard({super.key, required this.routine});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
-      elevation: 5,
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(16.0),
-        title: Text(
-          routine.name,
-          style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-        ),
-        subtitle: Text(
-          '${routine.exercises.length} exercises',
-          style: TextStyle(color: Colors.grey[700]),
-        ),
-        trailing: Icon(
-          Icons.arrow_forward_ios,
-          color: Theme.of(context).primaryColor,
-        ),
-        onTap: () {
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => StartRoutineScreen(routine: routine),
-            ),
+            MaterialPageRoute(builder: (context) => const CreateRoutineScreen()),
           );
         },
+        child: const Icon(Icons.add),
       ),
     );
   }

@@ -9,7 +9,7 @@ class Exercise {
 }
 
 class Routine {
-  final String name;
+  String name;
   final List<Exercise> exercises;
 
   Routine({required this.name, required this.exercises});
@@ -17,9 +17,9 @@ class Routine {
 
 class Workout {
   final Exercise exercise;
-  int sets;  // Change to mutable
-  int repetitions;  // Change to mutable
-  double weight;  // Change to mutable
+  int sets;
+  int repetitions;
+  double weight;
   final DateTime date;
 
   Workout({
@@ -29,14 +29,6 @@ class Workout {
     required this.weight,
     required this.date,
   });
-
-  void updateWeight(double newWeight) {
-    weight = newWeight;
-  }
-
-  void updateRepetitions(int newRepetitions) {
-    repetitions = newRepetitions;
-  }
 }
 
 class WorkoutModel extends ChangeNotifier {
@@ -57,29 +49,25 @@ class WorkoutModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateWorkout(Workout workout, double newWeight, int newRepetitions) {
-    workout.updateWeight(newWeight);
-    workout.updateRepetitions(newRepetitions);
-    notifyListeners();
-  }
-
-  void deleteWorkout(Workout workout) {
-    _workouts.remove(workout);
-    notifyListeners();
-  }
-
   void addRoutine(Routine routine) {
     _routines.add(routine);
+    notifyListeners();
+  }
+
+  void renameRoutine(Routine routine, String newName) {
+    routine.name = newName;
+    notifyListeners();
+  }
+
+  void deleteRoutine(Routine routine) {
+    _routines.remove(routine);
+    _workouts.removeWhere((workout) => routine.exercises.contains(workout.exercise));
     notifyListeners();
   }
 
   void addCustomExercise(Exercise exercise) {
     _exercises.add(exercise);
     notifyListeners();
-  }
-
-  List<Workout> getWorkoutsForRoutine(Routine routine) {
-    return _workouts.where((workout) => routine.exercises.contains(workout.exercise)).toList();
   }
 
   void addExerciseToRoutine(Routine routine, Exercise exercise) {
@@ -89,7 +77,22 @@ class WorkoutModel extends ChangeNotifier {
 
   void removeExerciseFromRoutine(Routine routine, Exercise exercise) {
     routine.exercises.remove(exercise);
+    _workouts.removeWhere((workout) => workout.exercise == exercise);
     notifyListeners();
   }
-}
 
+  void deleteWorkout(Workout workout) {
+    _workouts.remove(workout);
+    notifyListeners();
+  }
+
+  void updateWorkout(Workout workout, double newWeight, int newRepetitions) {
+    workout.weight = newWeight;
+    workout.repetitions = newRepetitions;
+    notifyListeners();
+  }
+
+  List<Workout> getWorkoutsForRoutine(Routine routine) {
+    return _workouts.where((workout) => routine.exercises.contains(workout.exercise)).toList();
+  }
+}
