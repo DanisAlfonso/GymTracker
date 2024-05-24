@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'training_screen.dart';
 import 'create_routine_screen.dart';
 

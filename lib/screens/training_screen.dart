@@ -1,6 +1,5 @@
 // training_screen.dart
 import 'package:flutter/material.dart';
-import 'create_routine_screen.dart';
 import 'start_routine_screen.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
@@ -43,7 +42,7 @@ class TrainingScreen extends StatelessWidget {
 class RoutineCard extends StatelessWidget {
   final Routine routine;
 
-  const RoutineCard({required this.routine});
+  const RoutineCard({super.key, required this.routine});
 
   @override
   Widget build(BuildContext context) {

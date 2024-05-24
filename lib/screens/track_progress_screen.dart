@@ -38,7 +38,7 @@ class TrackProgressScreen extends StatelessWidget {
                       title: Text('Set: ${workout.sets} x ${workout.repetitions} reps'),
                       subtitle: Text('Weight: ${workout.weight} kg'),
                     );
-                  }).toList(),
+                  }),
                   ListTile(
                     title: ElevatedButton(
                       onPressed: () => _addSet(context, exercise),
