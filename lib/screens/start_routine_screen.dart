@@ -1,3 +1,4 @@
+// start_routine_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
@@ -22,35 +23,90 @@ class StartRoutineScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(routine.name),
+        centerTitle: true,
       ),
       body: Consumer<WorkoutModel>(
         builder: (context, workoutModel, child) {
           final workouts = workoutModel.getWorkoutsForRoutine(routine);
           return ListView(
+            padding: const EdgeInsets.all(16.0),
             children: routine.exercises.map((exercise) {
               final exerciseWorkouts = workouts.where((workout) => workout.exercise == exercise).toList();
-              return ExpansionTile(
-                title: Text(exercise.name),
-                children: [
-                  Column(
-                    children: exerciseWorkouts.map((workout) {
-                      return ListTile(
-                        title: Text('Reps: ${workout.repetitions}, Weight: ${workout.weight} kg'),
-                      );
-                    }).toList(),
-                  ),
-                  ListTile(
-                    title: ElevatedButton(
-                      onPressed: () => _startExercise(context, exercise),
-                      child: const Text('Add Set'),
+
+              // Calculate total sets and weight for the summary
+              final totalSets = exerciseWorkouts.length;
+              final totalWeight = exerciseWorkouts.fold(0.0, (sum, workout) => sum + workout.weight);
+
+              return Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                elevation: 5,
+                margin: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Theme(
+                  data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                  child: ExpansionTile(
+                    leading: Icon(
+                      Icons.fitness_center,
+                      color: Theme.of(context).primaryColor,
+                      size: 32.0,
                     ),
+                    title: Text(
+                      exercise.name,
+                      style: const TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Sets: $totalSets, Total Weight: ${totalWeight.toStringAsFixed(1)} kg',
+                      style: TextStyle(color: Colors.grey[700]),
+                    ),
+                    children: [
+                      Column(
+                        children: exerciseWorkouts.map((workout) {
+                          return ListTile(
+                            title: Text(
+                              'Reps: ${workout.repetitions}, Weight: ${workout.weight} kg',
+                              style: const TextStyle(fontSize: 16.0),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: ElevatedButton.icon(
+                          onPressed: () => _startExercise(context, exercise),
+                          icon: const Icon(Icons.add),
+                          label: const Text('Add New Set'),
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               );
             }).toList(),
           );
         },
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          // Assume we are adding to the first exercise in the routine for simplicity
+          if (routine.exercises.isNotEmpty) {
+            _startExercise(context, routine.exercises[0]);
+          }
+        },
+        icon: const Icon(Icons.add),
+        label: const Text('Add New Set'),
+        tooltip: 'Add a new set for the first exercise in the routine',
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
