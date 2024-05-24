@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
 import 'add_set_screen.dart';
+import 'edit_set_screen.dart';
 
 class StartRoutineScreen extends StatelessWidget {
   final Routine routine;
@@ -14,6 +15,15 @@ class StartRoutineScreen extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => AddSetScreen(exercise: exercise),
+      ),
+    );
+  }
+
+  void _editSet(BuildContext context, Workout workout) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditSetScreen(workout: workout),
       ),
     );
   }
@@ -69,6 +79,21 @@ class StartRoutineScreen extends StatelessWidget {
                             title: Text(
                               'Reps: ${workout.repetitions}, Weight: ${workout.weight} kg',
                               style: const TextStyle(fontSize: 16.0),
+                            ),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.edit, color: Colors.blue),
+                                  onPressed: () => _editSet(context, workout),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () {
+                                    Provider.of<WorkoutModel>(context, listen: false).deleteWorkout(workout);
+                                  },
+                                ),
+                              ],
                             ),
                           );
                         }).toList(),

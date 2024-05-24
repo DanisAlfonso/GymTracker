@@ -17,9 +17,9 @@ class Routine {
 
 class Workout {
   final Exercise exercise;
-  final int sets;
-  final int repetitions;
-  final double weight;
+  int sets;  // Change to mutable
+  int repetitions;  // Change to mutable
+  double weight;  // Change to mutable
   final DateTime date;
 
   Workout({
@@ -29,6 +29,14 @@ class Workout {
     required this.weight,
     required this.date,
   });
+
+  void updateWeight(double newWeight) {
+    weight = newWeight;
+  }
+
+  void updateRepetitions(int newRepetitions) {
+    repetitions = newRepetitions;
+  }
 }
 
 class WorkoutModel extends ChangeNotifier {
@@ -46,6 +54,17 @@ class WorkoutModel extends ChangeNotifier {
 
   void addWorkout(Workout workout) {
     _workouts.add(workout);
+    notifyListeners();
+  }
+
+  void updateWorkout(Workout workout, double newWeight, int newRepetitions) {
+    workout.updateWeight(newWeight);
+    workout.updateRepetitions(newRepetitions);
+    notifyListeners();
+  }
+
+  void deleteWorkout(Workout workout) {
+    _workouts.remove(workout);
     notifyListeners();
   }
 
