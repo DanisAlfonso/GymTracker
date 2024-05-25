@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'models/workout_model.dart';
 import 'screens/home_screen.dart';
 import 'screens/training_screen.dart';
+import 'screens/settings_screen.dart';
+import 'screens/statistics_screen.dart';
 
 void main() {
   runApp(
@@ -37,7 +39,13 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
-  final List<Widget> _screens = [const HomeScreen(), const TrainingScreen()];
+
+  static const List<Widget> _widgetOptions = <Widget>[
+    HomeScreen(),
+    TrainingScreen(),
+    StatisticsScreen(),
+    SettingsScreen(),
+  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -48,20 +56,31 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _widgetOptions,
+      ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: _onItemTapped,
+        destinations: const [
+          NavigationDestination(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.fitness_center),
             label: 'Training',
           ),
+          NavigationDestination(
+            icon: Icon(Icons.bar_chart),
+            label: 'Statistics',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
         ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
       ),
     );
   }

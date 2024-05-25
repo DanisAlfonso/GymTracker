@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text('Settings'),
       ),
       body: const Center(
         child: Text(
-          'Welcome to Gym Tracker!',
+          'Settings Screen',
           style: TextStyle(fontSize: 24),
         ),
       ),
