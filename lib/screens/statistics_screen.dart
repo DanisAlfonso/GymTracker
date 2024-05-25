@@ -23,20 +23,6 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         .toList();
   }
 
-  double _findMinY(List<FlSpot> spots) {
-    if (spots.isEmpty) {
-      return 0;
-    }
-    return spots.map((spot) => spot.y).reduce((a, b) => a < b ? a : b);
-  }
-
-  double _findMaxY(List<FlSpot> spots) {
-    if (spots.isEmpty) {
-      return 0;
-    }
-    return spots.map((spot) => spot.y).reduce((a, b) => a > b ? a : b);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,8 +35,6 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           builder: (context, workoutModel, child) {
             final exercises = workoutModel.exercises;
             final performanceSpots = _selectedExercise != null ? _generatePerformanceSpots(workoutModel, _selectedExercise!) : <FlSpot>[];
-            final minY = _findMinY(performanceSpots);
-            final maxY = _findMaxY(performanceSpots);
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,38 +100,27 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                             sideTitles: SideTitles(
                               showTitles: true,
                               reservedSize: 40,
-                              interval: (maxY - minY) / 5,
                               getTitlesWidget: (value, meta) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: Text(value.toStringAsFixed(0), style: const TextStyle(color: Colors.black54, fontSize: 12)),
+                                return Text(
+                                  value.toStringAsFixed(0),
+                                  style: const TextStyle(color: Colors.black54, fontSize: 12),
+                                  overflow: TextOverflow.visible,
                                 );
                               },
+                              interval: performanceSpots.isNotEmpty ? ((performanceSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b)) / 10) : 100,
                             ),
-                            axisNameWidget: const Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                'Performance (Reps x Weight)',
-                                style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          rightTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false),
                           ),
                           bottomTitles: AxisTitles(
                             sideTitles: SideTitles(
                               showTitles: true,
+                              reservedSize: 22,
                               getTitlesWidget: (value, meta) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Text(value.toStringAsFixed(0), style: const TextStyle(color: Colors.black54, fontSize: 12)),
+                                return Text(
+                                  value.toStringAsFixed(0),
+                                  style: const TextStyle(color: Colors.black54, fontSize: 12),
+                                  overflow: TextOverflow.visible,
                                 );
                               },
-                            ),
-                            axisNameWidget: const Text(
-                              'Set Number',
-                              style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
@@ -157,18 +130,38 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                         ),
                         minX: 0,
                         maxX: performanceSpots.isNotEmpty ? performanceSpots.length - 1.toDouble() : 0,
-                        minY: minY - (minY * 0.1), // Add some padding to the bottom
-                        maxY: maxY + (maxY * 0.1), // Add some padding to the top
+                        minY: performanceSpots.isNotEmpty ? performanceSpots.map((e) => e.y).reduce((a, b) => a < b ? a : b) : 0,
+                        maxY: performanceSpots.isNotEmpty ? performanceSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b) : 0,
                         lineBarsData: [
                           LineChartBarData(
                             spots: performanceSpots,
                             isCurved: true,
                             color: Colors.blue,
                             barWidth: 4,
-                            dotData: FlDotData(show: true),
                             belowBarData: BarAreaData(show: true, color: Colors.blue.withOpacity(0.3)),
                           ),
                         ],
+                        lineTouchData: LineTouchData(
+                          touchTooltipData: LineTouchTooltipData(
+                            getTooltipItems: (List<LineBarSpot> touchedSpots) {
+                              return touchedSpots.map((spot) {
+                                return LineTooltipItem(
+                                  '${spot.x.toStringAsFixed(0)}, ${spot.y.toStringAsFixed(0)}',
+                                  const TextStyle(color: Colors.white),
+                                );
+                              }).toList();
+                            },
+                          ),
+                          touchCallback: (FlTouchEvent event, LineTouchResponse? touchResponse) {
+                            if (touchResponse != null && touchResponse.lineBarSpots != null) {
+                              final value = touchResponse.lineBarSpots!.first;
+                              setState(() {
+                                // Update something based on the touch event if needed
+                              });
+                            }
+                          },
+                          handleBuiltInTouches: true,
+                        ),
                       ),
                     ),
                   ),
