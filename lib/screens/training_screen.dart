@@ -1,3 +1,4 @@
+// training_screen.dart
 import 'package:flutter/material.dart';
 import 'create_routine_screen.dart';
 import 'start_routine_screen.dart';
@@ -8,14 +9,14 @@ class TrainingScreen extends StatelessWidget {
   const TrainingScreen({super.key});
 
   void _renameRoutine(BuildContext context, Routine routine) {
-    final _nameController = TextEditingController(text: routine.name);
+    final nameController = TextEditingController(text: routine.name);
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text('Rename Routine'),
           content: TextField(
-            controller: _nameController,
+            controller: nameController,
             decoration: const InputDecoration(
               hintText: 'Enter new routine name',
             ),
@@ -29,8 +30,8 @@ class TrainingScreen extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                if (_nameController.text.isNotEmpty) {
-                  Provider.of<WorkoutModel>(context, listen: false).renameRoutine(routine, _nameController.text);
+                if (nameController.text.isNotEmpty) {
+                  Provider.of<WorkoutModel>(context, listen: false).renameRoutine(routine, nameController.text);
                   Navigator.pop(context);
                 }
               },

@@ -1,3 +1,4 @@
+// statistics_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -83,14 +84,14 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                           show: true,
                           drawVerticalLine: true,
                           getDrawingHorizontalLine: (value) {
-                            return FlLine(
-                              color: const Color(0xffe7e8ec),
+                            return const FlLine(
+                              color: Color(0xffe7e8ec),
                               strokeWidth: 1,
                             );
                           },
                           getDrawingVerticalLine: (value) {
-                            return FlLine(
-                              color: const Color(0xffe7e8ec),
+                            return const FlLine(
+                              color: Color(0xffe7e8ec),
                               strokeWidth: 1,
                             );
                           },

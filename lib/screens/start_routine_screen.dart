@@ -33,7 +33,7 @@ class StartRoutineScreen extends StatelessWidget {
     final newExercises = await Navigator.push<List<Exercise>>(
       context,
       MaterialPageRoute(
-        builder: (context) => SelectExercisesScreen(selectedExercises: []),
+        builder: (context) => const SelectExercisesScreen(selectedExercises: []),
       ),
     );
 
@@ -56,7 +56,7 @@ class StartRoutineScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             onPressed: () => _addExercises(context),
             tooltip: 'Add Exercises',
           ),
@@ -126,11 +126,11 @@ class StartRoutineScreen extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
-                                  icon: Icon(Icons.edit, color: Colors.blue),
+                                  icon: const Icon(Icons.edit, color: Colors.blue),
                                   onPressed: () => _editSet(context, workout),
                                 ),
                                 IconButton(
-                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  icon: const Icon(Icons.delete, color: Colors.red),
                                   onPressed: () {
                                     Provider.of<WorkoutModel>(context, listen: false).deleteWorkout(workout);
                                   },
