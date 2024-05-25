@@ -29,7 +29,10 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Select Rest Time'),
+      title: const Text(
+        'Select Rest Time',
+        style: TextStyle(color: Colors.deepPurpleAccent),
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -45,8 +48,13 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
                     minutes = value;
                   });
                 },
+                selectedTextStyle: const TextStyle(color: Colors.deepPurpleAccent, fontSize: 24),
+                textStyle: const TextStyle(color: Colors.grey, fontSize: 18),
               ),
-              const Text('min'),
+              const Text(
+                'min',
+                style: TextStyle(fontSize: 18, color: Colors.deepPurpleAccent),
+              ),
               NumberPicker(
                 minValue: 0,
                 maxValue: 59,
@@ -56,8 +64,13 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
                     seconds = value;
                   });
                 },
+                selectedTextStyle: const TextStyle(color: Colors.deepPurpleAccent, fontSize: 24),
+                textStyle: const TextStyle(color: Colors.grey, fontSize: 18),
               ),
-              const Text('sec'),
+              const Text(
+                'sec',
+                style: TextStyle(fontSize: 18, color: Colors.deepPurpleAccent),
+              ),
             ],
           ),
         ],
@@ -67,13 +80,22 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: const Text('Cancel'),
+          child: const Text(
+            'Cancel',
+            style: TextStyle(color: Colors.deepPurpleAccent),
+          ),
         ),
         ElevatedButton(
           onPressed: () {
             Navigator.pop(context, Duration(minutes: minutes, seconds: seconds));
           },
-          child: const Text('OK'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.deepPurpleAccent,
+          ),
+          child: const Text(
+            'OK',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ],
     );

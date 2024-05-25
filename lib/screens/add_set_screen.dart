@@ -64,7 +64,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
       appBar: AppBar(
         title: const Text('Add Set'),
         centerTitle: true,
-        backgroundColor: Colors.purple,
+        backgroundColor: Colors.deepPurpleAccent,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -86,7 +86,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                     children: [
                       const Text(
                         'Repetitions',
-                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.purple),
+                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent),
                       ),
                       const SizedBox(height: 8),
                       Center(
@@ -99,14 +99,15 @@ class _AddSetScreenState extends State<AddSetScreen> {
                               _repetitions = value;
                             });
                           },
-                          selectedTextStyle: const TextStyle(color: Colors.purple, fontSize: 24),
+                          selectedTextStyle: const TextStyle(color: Colors.deepPurpleAccent, fontSize: 24),
                           textStyle: const TextStyle(color: Colors.grey, fontSize: 18),
                         ),
                       ),
                       const SizedBox(height: 20),
+                      const Divider(),
                       const Text(
                         'Weight (kg)',
-                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.purple),
+                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent),
                       ),
                       const SizedBox(height: 8),
                       Row(
@@ -121,12 +122,12 @@ class _AddSetScreenState extends State<AddSetScreen> {
                                 _weightInt = value;
                               });
                             },
-                            selectedTextStyle: const TextStyle(color: Colors.purple, fontSize: 24),
+                            selectedTextStyle: const TextStyle(color: Colors.deepPurpleAccent, fontSize: 24),
                             textStyle: const TextStyle(color: Colors.grey, fontSize: 18),
                           ),
                           const Text(
                             '.',
-                            style: TextStyle(fontSize: 24, color: Colors.purple),
+                            style: TextStyle(fontSize: 24, color: Colors.deepPurpleAccent),
                           ),
                           NumberPicker(
                             minValue: 0,
@@ -137,15 +138,16 @@ class _AddSetScreenState extends State<AddSetScreen> {
                                 _weightDecimal = value;
                               });
                             },
-                            selectedTextStyle: const TextStyle(color: Colors.purple, fontSize: 24),
+                            selectedTextStyle: const TextStyle(color: Colors.deepPurpleAccent, fontSize: 24),
                             textStyle: const TextStyle(color: Colors.grey, fontSize: 18),
                           ),
                         ],
                       ),
                       const SizedBox(height: 20),
+                      const Divider(),
                       const Text(
                         'Rest Time',
-                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.purple),
+                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent),
                       ),
                       const SizedBox(height: 8),
                       Center(
@@ -156,7 +158,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
-                            backgroundColor: Colors.purple,
+                            backgroundColor: Colors.deepPurpleAccent,
                           ),
                           child: Text(
                             'Pick Rest Time (${_restTime.inMinutes} min ${_restTime.inSeconds % 60} sec)',
@@ -165,15 +167,16 @@ class _AddSetScreenState extends State<AddSetScreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
+                      const Divider(),
                       const Text(
                         'Notes',
-                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.purple),
+                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent),
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _notesController,
                         decoration: InputDecoration(
-                          hintText: 'Enter any notes',
+                          hintText: 'Enter any notes (optional)',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
@@ -193,7 +196,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
-                            backgroundColor: Colors.purple,
+                            backgroundColor: Colors.deepPurpleAccent,
                           ),
                           child: const Text(
                             'Add Set',
