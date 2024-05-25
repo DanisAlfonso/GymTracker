@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'models/workout_model.dart';
 import 'screens/home_screen.dart';
 import 'screens/training_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/statistics_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await clearSharedPreferences(); // Temporarily clear shared preferences for testing
   runApp(
     ChangeNotifierProvider(
       create: (context) => WorkoutModel(),
       child: const MyApp(),
     ),
   );
+}
+
+Future<void> clearSharedPreferences() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.clear();
 }
 
 class MyApp extends StatelessWidget {

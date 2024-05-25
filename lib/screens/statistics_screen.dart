@@ -55,198 +55,361 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     return barGroups;
   }
 
+  List<PieChartSectionData> _generateExerciseFrequency(WorkoutModel workoutModel) {
+    final Map<String, double> exerciseFrequency = {};
+
+    for (var workout in workoutModel.workouts) {
+      String exerciseName = workout.exercise.name;
+      if (!exerciseFrequency.containsKey(exerciseName)) {
+        exerciseFrequency[exerciseName] = 0.0;
+      }
+      exerciseFrequency[exerciseName] = exerciseFrequency[exerciseName]! + workout.weight * workout.repetitions;
+    }
+
+    return exerciseFrequency.entries.map((entry) {
+      return PieChartSectionData(
+        value: entry.value,
+        title: entry.key,
+        color: Colors.primaries[exerciseFrequency.keys.toList().indexOf(entry.key) % Colors.primaries.length],
+        titleStyle: const TextStyle(color: Colors.white, fontSize: 12),
+      );
+    }).toList();
+  }
+
+  List<FlSpot> _generateMonthlyProgress(WorkoutModel workoutModel) {
+    final Map<String, double> monthlyProgress = {};
+
+    for (var workout in workoutModel.workouts) {
+      String month = DateFormat.MMM().format(workout.date);
+      if (!monthlyProgress.containsKey(month)) {
+        monthlyProgress[month] = 0.0;
+      }
+      monthlyProgress[month] = monthlyProgress[month]! + workout.weight * workout.repetitions;
+    }
+
+    List<FlSpot> lineSpots = [];
+    int index = 0;
+    monthlyProgress.forEach((month, totalWeight) {
+      lineSpots.add(FlSpot(index.toDouble(), totalWeight));
+      index++;
+    });
+
+    return lineSpots;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+        appBar: AppBar(
         title: const Text('Statistics'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Consumer<WorkoutModel>(
-          builder: (context, workoutModel, child) {
-            final exercises = workoutModel.exercises;
-            final performanceSpots = _selectedExercise != null ? _generatePerformanceSpots(workoutModel, _selectedExercise!) : <FlSpot>[];
-            final weeklyProgressBars = _generateWeeklyProgress(workoutModel);
+    ),
+    body: Padding(
+    padding: const EdgeInsets.all(16.0),
+    child: Consumer<WorkoutModel>(
+    builder: (context, workoutModel, child) {
+    final exercises = workoutModel.exercises;
+    final performanceSpots = _selectedExercise != null ? _generatePerformanceSpots(workoutModel, _selectedExercise!) : <FlSpot>[];
+    final weeklyProgressBars = _generateWeeklyProgress(workoutModel);
+    final exerciseFrequency = _generateExerciseFrequency(workoutModel);
+    final monthlyProgressSpots = _generateMonthlyProgress(workoutModel);
 
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Select Exercise',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.0),
-                      border: Border.all(color: Colors.grey.shade300),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<Exercise>(
-                        hint: const Text('Select Exercise'),
-                        value: _selectedExercise,
-                        onChanged: (Exercise? newValue) {
-                          setState(() {
-                            _selectedExercise = newValue;
-                          });
-                        },
-                        items: exercises.map((Exercise exercise) {
-                          return DropdownMenuItem<Exercise>(
-                            value: exercise,
-                            child: Text(exercise.name),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-                  if (_selectedExercise != null) ...[
-                    Text(
-                      '${_selectedExercise!.name} Performance Progress',
-                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      height: 200,
-                      child: LineChart(
-                        LineChartData(
-                          gridData: FlGridData(
-                            show: true,
-                            drawVerticalLine: true,
-                            getDrawingHorizontalLine: (value) {
-                              return const FlLine(
-                                color: Color(0xffe7e8ec),
-                                strokeWidth: 1,
-                              );
-                            },
-                            getDrawingVerticalLine: (value) {
-                              return const FlLine(
-                                color: Color(0xffe7e8ec),
-                                strokeWidth: 1,
-                              );
-                            },
-                          ),
-                          titlesData: FlTitlesData(
-                            leftTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                showTitles: true,
-                                reservedSize: 40,
-                                getTitlesWidget: (value, meta) {
-                                  return Text(
-                                    value.toStringAsFixed(0),
-                                    style: const TextStyle(color: Colors.black54, fontSize: 12),
-                                    overflow: TextOverflow.visible,
-                                  );
-                                },
-                                interval: performanceSpots.isNotEmpty ? ((performanceSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b)) / 10) : 100,
-                              ),
-                            ),
-                            bottomTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                showTitles: true,
-                                reservedSize: 22,
-                                getTitlesWidget: (value, meta) {
-                                  return Text(
-                                    value.toStringAsFixed(0),
-                                    style: const TextStyle(color: Colors.black54, fontSize: 12),
-                                    overflow: TextOverflow.visible,
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          borderData: FlBorderData(
-                            show: true,
-                            border: Border.all(color: const Color(0xffe7e8ec)),
-                          ),
-                          minX: 0,
-                          maxX: performanceSpots.isNotEmpty ? performanceSpots.length - 1.toDouble() : 0,
-                          minY: performanceSpots.isNotEmpty ? performanceSpots.map((e) => e.y).reduce((a, b) => a < b ? a : b) : 0,
-                          maxY: performanceSpots.isNotEmpty ? performanceSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b) : 0,
-                          lineBarsData: [
-                            LineChartBarData(
-                              spots: performanceSpots,
-                              isCurved: true,
-                              color: Colors.blue,
-                              barWidth: 4,
-                              belowBarData: BarAreaData(show: true, color: Colors.blue.withOpacity(0.3)),
-                            ),
-                          ],
-                          lineTouchData: LineTouchData(
-                            touchTooltipData: LineTouchTooltipData(
-                              getTooltipItems: (List<LineBarSpot> touchedSpots) {
-                                return touchedSpots.map((spot) {
-                                  return LineTooltipItem(
-                                    '${spot.x.toStringAsFixed(0)}, ${spot.y.toStringAsFixed(0)}',
-                                    const TextStyle(color: Colors.white),
-                                  );
-                                }).toList();
-                              },
-                            ),
-                            touchCallback: (FlTouchEvent event, LineTouchResponse? touchResponse) {
-                              if (touchResponse != null && touchResponse.lineBarSpots != null) {
-                                final value = touchResponse.lineBarSpots!.first;
-                                setState(() {
-                                  // Update something based on the touch event if needed
-                                });
-                              }
-                            },
-                            handleBuiltInTouches: true,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 32),
-                  Text(
-                    'Weekly Progress Overview',
-                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    height: 200,
-                    child: BarChart(
-                      BarChartData(
-                        barGroups: weeklyProgressBars,
-                        titlesData: FlTitlesData(
-                          bottomTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              getTitlesWidget: (double value, TitleMeta meta) {
-                                const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-                                return Text(days[value.toInt()]);
-                              },
-                            ),
-                          ),
-                          leftTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              reservedSize: 40,
-                              getTitlesWidget: (value, meta) {
-                                return Text(
-                                  value.toStringAsFixed(0),
-                                  style: const TextStyle(color: Colors.black54, fontSize: 12),
-                                  overflow: TextOverflow.visible,
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        gridData: FlGridData(show: true),
-                        borderData: FlBorderData(show: false),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
+    return SingleChildScrollView(
+    child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+    const Text(
+    'Select Exercise',
+    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    ),
+    const SizedBox(height: 16),
+    Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+    decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(8.0),
+    border: Border.all(color: Colors.grey.shade300),
+    ),
+    child: DropdownButtonHideUnderline(
+    child: DropdownButton<Exercise>(
+    hint: const Text('Select Exercise'),
+    value: _selectedExercise,
+    onChanged: (Exercise? newValue) {
+    setState(() {
+    _selectedExercise = newValue;
+    });
+    },
+    items: exercises.map((Exercise exercise) {
+    return DropdownMenuItem<Exercise>(
+    value: exercise,
+    child: Text(exercise.name),
+    );
+    }).toList(),
+    ),
+    ),
+    ),
+    const SizedBox(height: 32),
+    if (_selectedExercise != null) ...[
+    Text(
+    '${_selectedExercise!.name} Performance Progress',
+    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    ),
+    const SizedBox(height: 16),
+    SizedBox(
+    height: 200,
+    child: LineChart(
+    LineChartData(
+    gridData: FlGridData(
+    show: true,
+    drawVerticalLine: true,
+    getDrawingHorizontalLine: (value) {
+    return const FlLine(
+    color: Color(0xffe7e8ec),
+    strokeWidth: 1,
+    );
+    },
+    getDrawingVerticalLine: (value) {
+    return const FlLine(
+    color: Color(0xffe7e8ec),
+    strokeWidth: 1,
+    );
+    },
+    ),
+    titlesData: FlTitlesData(
+    leftTitles: AxisTitles(
+    sideTitles: SideTitles(
+    showTitles: true,
+    reservedSize: 40,
+    getTitlesWidget: (value, meta) {
+    return Text(
+    value.toStringAsFixed(0),
+    style: const TextStyle(color: Colors.black54, fontSize: 12),
+    overflow: TextOverflow.visible,
+    );
+    },
+    interval: performanceSpots.isNotEmpty ? ((performanceSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b)) / 10) : 100,
+    ),
+    ),
+    bottomTitles: AxisTitles(
+    sideTitles: SideTitles(
+    showTitles: true,
+    reservedSize: 22,
+    getTitlesWidget: (value, meta) {
+    return Text(
+    value.toStringAsFixed(0),
+    style: const TextStyle(color: Colors.black54, fontSize: 12),
+    overflow: TextOverflow.visible,
+    );
+    },
+    ),
+    ),
+    ),                          borderData: FlBorderData(
+      show: true,
+      border: Border.all(color: const Color(0xffe7e8ec)),
+    ),
+      minX: 0,
+      maxX: performanceSpots.isNotEmpty ? performanceSpots.length - 1.toDouble() : 0,
+      minY: performanceSpots.isNotEmpty ? performanceSpots.map((e) => e.y).reduce((a, b) => a < b ? a : b) : 0,
+      maxY: performanceSpots.isNotEmpty ? performanceSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b) : 0,
+      lineBarsData: [
+        LineChartBarData(
+          spots: performanceSpots,
+          isCurved: true,
+          color: Colors.blue,
+          barWidth: 4,
+          belowBarData: BarAreaData(show: true, color: Colors.blue.withOpacity(0.3)),
+        ),
+      ],
+      lineTouchData: LineTouchData(
+        touchTooltipData: LineTouchTooltipData(
+          getTooltipItems: (List<LineBarSpot> touchedSpots) {
+            return touchedSpots.map((spot) {
+              return LineTooltipItem(
+                '${spot.x.toStringAsFixed(0)}, ${spot.y.toStringAsFixed(0)}',
+                const TextStyle(color: Colors.white),
+              );
+            }).toList();
           },
         ),
+        touchCallback: (FlTouchEvent event, LineTouchResponse? touchResponse) {
+          if (touchResponse != null && touchResponse.lineBarSpots != null) {
+            final value = touchResponse.lineBarSpots!.first;
+            setState(() {
+              // Update something based on the touch event if needed
+            });
+          }
+        },
+        handleBuiltInTouches: true,
       ),
+    ),
+    ),
+    ),
+    ],
+      const SizedBox(height: 32),
+      Text(
+        'Weekly Progress Overview',
+        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 16),
+      SizedBox(
+        height: 200,
+        child: BarChart(
+          BarChartData(
+            barGroups: weeklyProgressBars,
+            titlesData: FlTitlesData(
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  getTitlesWidget: (double value, TitleMeta meta) {
+                    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                    return Text(days[value.toInt()]);
+                  },
+                ),
+              ),
+              leftTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 40,
+                  getTitlesWidget: (value, meta) {
+                    return Text(
+                      value.toStringAsFixed(0),
+                      style: const TextStyle(color: Colors.black54, fontSize: 12),
+                      overflow: TextOverflow.visible,
+                    );
+                  },
+                ),
+              ),
+            ),
+            gridData: FlGridData(show: true),
+            borderData: FlBorderData(show: false),
+          ),
+        ),
+      ),
+      const SizedBox(height: 32),
+      Text(
+        'Exercise Frequency Distribution',
+        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 16),
+      SizedBox(
+        height: 200,
+        child: PieChart(
+          PieChartData(
+            sections: exerciseFrequency,
+            sectionsSpace: 2,
+            centerSpaceRadius: 40,
+            pieTouchData: PieTouchData(
+              touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                if (event.isInterestedForInteractions && pieTouchResponse != null && pieTouchResponse.touchedSection != null) {
+                  final touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
+                  setState(() {
+                    // Handle touch events if needed
+                  });
+                }
+              },
+            ),
+          ),
+        ),
+      ),
+      const SizedBox(height: 32),
+      Text(
+        'Monthly Progress Overview',
+        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 16),
+      SizedBox(
+        height: 200,
+        child: LineChart(
+          LineChartData(
+            gridData: FlGridData(
+              show: true,
+              drawVerticalLine: true,
+              getDrawingHorizontalLine: (value) {
+                return const FlLine(
+                  color: Color(0xffe7e8ec),
+                  strokeWidth: 1,
+                );
+              },
+              getDrawingVerticalLine: (value) {
+                return const FlLine(
+                  color: Color(0xffe7e8ec),
+                  strokeWidth: 1,
+                );
+              },
+            ),
+            titlesData: FlTitlesData(
+              leftTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 40,
+                  getTitlesWidget: (value, meta) {
+                    return Text(
+                      value.toStringAsFixed(0),
+                      style: const TextStyle(color: Colors.black54, fontSize: 12),
+                      overflow: TextOverflow.visible,
+                    );
+                  },
+                  interval: monthlyProgressSpots.isNotEmpty ? ((monthlyProgressSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b)) / 10) : 100,
+                ),
+              ),
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 22,
+                  getTitlesWidget: (value, meta) {
+                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    return Text(months[value.toInt() % 12]);
+                  },
+                ),
+              ),
+            ),
+            borderData: FlBorderData(
+              show: true,
+              border: Border.all(color: const Color(0xffe7e8ec)),
+            ),
+            minX: 0,
+            maxX: monthlyProgressSpots.isNotEmpty ? monthlyProgressSpots.length - 1.toDouble() : 0,
+            minY: monthlyProgressSpots.isNotEmpty ? monthlyProgressSpots.map((e) => e.y).reduce((a, b) => a < b ? a : b) : 0,
+            maxY: monthlyProgressSpots.isNotEmpty ? monthlyProgressSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b) : 0,
+            lineBarsData: [
+              LineChartBarData(
+                spots: monthlyProgressSpots,
+                isCurved: true,
+                color: Colors.green,
+                barWidth: 4,
+                belowBarData: BarAreaData(show: true, color: Colors.green.withOpacity(0.3)),
+              ),
+            ],
+            lineTouchData: LineTouchData(
+              touchTooltipData: LineTouchTooltipData(
+                getTooltipItems: (List<LineBarSpot> touchedSpots) {
+                  return touchedSpots.map((spot) {
+                    return LineTooltipItem(
+                      '${spot.x.toStringAsFixed(0)}, ${spot.y.toStringAsFixed(0)}',
+                      const TextStyle(color: Colors.white),
+                    );
+                  }).toList();
+                },
+              ),
+              touchCallback: (FlTouchEvent event, LineTouchResponse? touchResponse) {
+                if (touchResponse != null && touchResponse.lineBarSpots != null) {
+                  final value = touchResponse.lineBarSpots!.first;
+                  setState(() {
+                    // Update something based on the touch event if needed
+                  });
+                }
+              },
+              handleBuiltInTouches: true,
+            ),
+          ),
+        ),
+      ),
+    ],
+    ),
+    );
+    },
+    ),
+    ),
     );
   }
 }
+

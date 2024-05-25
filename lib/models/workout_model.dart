@@ -80,15 +80,10 @@ class Workout {
   }
 }
 
-
 class WorkoutModel extends ChangeNotifier {
   final List<Workout> _workouts = [];
   final List<Routine> _routines = [];
-  final List<Exercise> _exercises = [
-    Exercise(name: 'Bench Press', description: 'Chest exercise'),
-    Exercise(name: 'Squat', description: 'Leg exercise'),
-    // Add more predefined exercises here
-  ];
+  List<Exercise> _exercises = [];
 
   List<Workout> get workouts => _workouts;
   List<Routine> get routines => _routines;
@@ -186,8 +181,28 @@ class WorkoutModel extends ChangeNotifier {
 
     if (exercisesString != null) {
       final exercisesJson = jsonDecode(exercisesString) as List;
-      _exercises.clear();
-      _exercises.addAll(exercisesJson.map((e) => Exercise.fromJson(e)).toList());
+      _exercises = exercisesJson.map((e) => Exercise.fromJson(e)).toList();
+    } else {
+      _exercises = [
+        Exercise(name: 'Bench Press', description: 'Chest exercise'),
+        Exercise(name: 'Squat', description: 'Leg exercise'),
+        Exercise(name: 'Deadlift', description: 'Full body exercise'),
+        Exercise(name: 'Overhead Press', description: 'Shoulder exercise'),
+        Exercise(name: 'Barbell Row', description: 'Back exercise'),
+        Exercise(name: 'Pull Up', description: 'Upper body exercise'),
+        Exercise(name: 'Dumbbell Curl', description: 'Bicep exercise'),
+        Exercise(name: 'Tricep Dip', description: 'Tricep exercise'),
+        Exercise(name: 'Lateral Raise', description: 'Shoulder exercise'),
+        Exercise(name: 'Leg Press', description: 'Leg exercise'),
+        Exercise(name: 'Calf Raise', description: 'Calf exercise'),
+        Exercise(name: 'Plank', description: 'Core exercise'),
+        Exercise(name: 'Russian Twist', description: 'Core exercise'),
+        Exercise(name: 'Lunge', description: 'Leg exercise'),
+        Exercise(name: 'Chest Fly', description: 'Chest exercise'),
+        Exercise(name: 'Face Pull', description: 'Shoulder exercise'),
+        Exercise(name: 'Hammer Curl', description: 'Bicep exercise'),
+        Exercise(name: 'Skull Crusher', description: 'Tricep exercise'),
+      ];
     }
 
     notifyListeners();
