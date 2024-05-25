@@ -116,17 +116,38 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                             sideTitles: SideTitles(
                               showTitles: true,
                               reservedSize: 40,
+                              interval: (maxY - minY) / 5,
                               getTitlesWidget: (value, meta) {
-                                return Text(value.toStringAsFixed(0), style: const TextStyle(color: Colors.black54, fontSize: 12));
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: Text(value.toStringAsFixed(0), style: const TextStyle(color: Colors.black54, fontSize: 12)),
+                                );
                               },
                             ),
+                            axisNameWidget: const Padding(
+                              padding: EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                'Performance (Reps x Weight)',
+                                style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                          rightTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
                           ),
                           bottomTitles: AxisTitles(
                             sideTitles: SideTitles(
                               showTitles: true,
                               getTitlesWidget: (value, meta) {
-                                return Text(value.toStringAsFixed(0), style: const TextStyle(color: Colors.black54, fontSize: 12));
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Text(value.toStringAsFixed(0), style: const TextStyle(color: Colors.black54, fontSize: 12)),
+                                );
                               },
+                            ),
+                            axisNameWidget: const Text(
+                              'Set Number',
+                              style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
@@ -136,8 +157,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                         ),
                         minX: 0,
                         maxX: performanceSpots.isNotEmpty ? performanceSpots.length - 1.toDouble() : 0,
-                        minY: minY - (minY * 0.1),  // Add some padding to the bottom
-                        maxY: maxY + (maxY * 0.1),  // Add some padding to the top
+                        minY: minY - (minY * 0.1), // Add some padding to the bottom
+                        maxY: maxY + (maxY * 0.1), // Add some padding to the top
                         lineBarsData: [
                           LineChartBarData(
                             spots: performanceSpots,
