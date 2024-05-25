@@ -23,6 +23,13 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         .toList();
   }
 
+  double _findMinY(List<FlSpot> spots) {
+    if (spots.isEmpty) {
+      return 0;
+    }
+    return spots.map((spot) => spot.y).reduce((a, b) => a < b ? a : b);
+  }
+
   double _findMaxY(List<FlSpot> spots) {
     if (spots.isEmpty) {
       return 0;
@@ -42,6 +49,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           builder: (context, workoutModel, child) {
             final exercises = workoutModel.exercises;
             final performanceSpots = _selectedExercise != null ? _generatePerformanceSpots(workoutModel, _selectedExercise!) : <FlSpot>[];
+            final minY = _findMinY(performanceSpots);
             final maxY = _findMaxY(performanceSpots);
 
             return Column(
@@ -128,7 +136,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                         ),
                         minX: 0,
                         maxX: performanceSpots.isNotEmpty ? performanceSpots.length - 1.toDouble() : 0,
-                        minY: 0,
+                        minY: minY - (minY * 0.1),  // Add some padding to the bottom
                         maxY: maxY + (maxY * 0.1),  // Add some padding to the top
                         lineBarsData: [
                           LineChartBarData(
