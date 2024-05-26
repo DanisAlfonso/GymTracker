@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/theme_model.dart';
 
 class AppPreferencesScreen extends StatefulWidget {
   @override
@@ -7,7 +9,6 @@ class AppPreferencesScreen extends StatefulWidget {
 }
 
 class _AppPreferencesScreenState extends State<AppPreferencesScreen> {
-  bool _isDarkMode = false;
   bool _notificationsEnabled = true;
   String _selectedLanguage = 'English';
 
@@ -20,15 +21,17 @@ class _AppPreferencesScreenState extends State<AppPreferencesScreen> {
   Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _isDarkMode = prefs.getBool('isDarkMode') ?? false;
       _notificationsEnabled = prefs.getBool('notificationsEnabled') ?? true;
       _selectedLanguage = prefs.getString('selectedLanguage') ?? 'English';
     });
+    Provider.of<ThemeModel>(context, listen: false)
+        .setDarkMode(prefs.getBool('isDarkMode') ?? false);
   }
 
   Future<void> _savePreferences() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isDarkMode', _isDarkMode);
+    await prefs.setBool(
+        'isDarkMode', Provider.of<ThemeModel>(context, listen: false).isDark);
     await prefs.setBool('notificationsEnabled', _notificationsEnabled);
     await prefs.setString('selectedLanguage', _selectedLanguage);
     ScaffoldMessenger.of(context).showSnackBar(
@@ -38,6 +41,8 @@ class _AppPreferencesScreenState extends State<AppPreferencesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeModel = Provider.of<ThemeModel>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('App Preferences'),
@@ -48,11 +53,9 @@ class _AppPreferencesScreenState extends State<AppPreferencesScreen> {
           children: [
             SwitchListTile(
               title: Text('Dark Mode'),
-              value: _isDarkMode,
+              value: themeModel.isDark,
               onChanged: (bool value) {
-                setState(() {
-                  _isDarkMode = value;
-                });
+                themeModel.setDarkMode(value);
               },
             ),
             SwitchListTile(
@@ -73,7 +76,7 @@ class _AppPreferencesScreenState extends State<AppPreferencesScreen> {
                   _selectedLanguage = newValue!;
                 });
               },
-              items: <String>['English', 'Spanish', 'French', 'German', 'Chinese']
+              items: <String>['English', 'Spanish', 'French', 'German']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,

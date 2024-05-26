@@ -1,0 +1,3043 @@
+import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+
+class Exercise {
+  final String name;
+  final String description;
+
+  Exercise({required this.name, required this.description});
+
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'description': description,
+  };
+
+  factory Exercise.fromJson(Map<String, dynamic> json) {
+    return Exercise(
+      name: json['name'],
+      description: json['description'],
+    );
+  }
+}
+
+class Routine {
+  String name;
+  final List<Exercise> exercises;
+
+  Routine({required this.name, required this.exercises});
+
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'exercises': exercises.map((e) => e.toJson()).toList(),
+  };
+
+  factory Routine.fromJson(Map<String, dynamic> json) {
+    return Routine(
+      name: json['name'],
+      exercises: (json['exercises'] as List)
+          .map((e) => Exercise.fromJson(e))
+          .toList(),
+    );
+  }
+}
+
+class Workout {
+  final Exercise exercise;
+  int repetitions;
+  double weight;
+  Duration restTime;
+  String? notes;
+  final DateTime date;
+
+  Workout({
+    required this.exercise,
+    required this.repetitions,
+    required this.weight,
+    required this.restTime,
+    this.notes,
+    required this.date,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'exercise': exercise.toJson(),
+    'repetitions': repetitions,
+    'weight': weight,
+    'restTime': restTime.inSeconds,
+    'notes': notes,
+    'date': date.toIso8601String(),
+  };
+
+  factory Workout.fromJson(Map<String, dynamic> json) {
+    return Workout(
+      exercise: Exercise.fromJson(json['exercise']),
+      repetitions: json['repetitions'],
+      weight: json['weight'],
+      restTime: Duration(seconds: json['restTime']),
+      notes: json['notes'],
+      date: DateTime.parse(json['date']),
+    );
+  }
+}
+
+class WorkoutModel extends ChangeNotifier {
+  final List<Workout> _workouts = [];
+  final List<Routine> _routines = [];
+  List<Exercise> _exercises = [];
+
+  List<Workout> get workouts => _workouts;
+  List<Routine> get routines => _routines;
+  List<Exercise> get exercises => _exercises;
+
+  WorkoutModel() {
+    _loadData();
+  }
+
+  void addWorkout(Workout workout) {
+    _workouts.add(workout);
+    _saveData();
+    notifyListeners();
+  }
+
+  void addRoutine(Routine routine) {
+    _routines.add(routine);
+    _saveData();
+    notifyListeners();
+  }
+
+  void renameRoutine(Routine routine, String newName) {
+    routine.name = newName;
+    _saveData();
+    notifyListeners();
+  }
+
+  void deleteRoutine(Routine routine) {
+    _routines.remove(routine);
+    _workouts.removeWhere((workout) => routine.exercises.contains(workout.exercise));
+    _saveData();
+    notifyListeners();
+  }
+
+  void addCustomExercise(Exercise exercise) {
+    _exercises.add(exercise);
+    _saveData();
+    notifyListeners();
+  }
+
+  void addExerciseToRoutine(Routine routine, Exercise exercise) {
+    routine.exercises.add(exercise);
+    _saveData();
+    notifyListeners();
+  }
+
+  void removeExerciseFromRoutine(Routine routine, Exercise exercise) {
+    routine.exercises.remove(exercise);
+    _workouts.removeWhere((workout) => workout.exercise == exercise);
+    _saveData();
+    notifyListeners();
+  }
+
+  void deleteWorkout(Workout workout) {
+    _workouts.remove(workout);
+    _saveData();
+    notifyListeners();
+  }
+
+  void updateWorkout(Workout workout, double newWeight, int newRepetitions) {
+    workout.weight = newWeight;
+    workout.repetitions = newRepetitions;
+    _saveData();
+    notifyListeners();
+  }
+
+  List<Workout> getWorkoutsForRoutine(Routine routine) {
+    return _workouts.where((workout) => routine.exercises.contains(workout.exercise)).toList();
+  }
+
+  Future<void> _saveData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    prefs.setString('workouts', jsonEncode(_workouts.map((w) => w.toJson()).toList()));
+    prefs.setString('routines', jsonEncode(_routines.map((r) => r.toJson()).toList()));
+    prefs.setString('exercises', jsonEncode(_exercises.map((e) => e.toJson()).toList()));
+  }
+
+  Future<void> _loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final workoutsString = prefs.getString('workouts');
+    final routinesString = prefs.getString('routines');
+    final exercisesString = prefs.getString('exercises');
+
+    if (workoutsString != null) {
+      final workoutsJson = jsonDecode(workoutsString) as List;
+      _workouts.addAll(workoutsJson.map((w) => Workout.fromJson(w)).toList());
+    }
+
+    if (routinesString != null) {
+      final routinesJson = jsonDecode(routinesString) as List;
+      _routines.addAll(routinesJson.map((r) => Routine.fromJson(r)).toList());
+    }
+
+    if (exercisesString != null) {
+      final exercisesJson = jsonDecode(exercisesString) as List;
+      _exercises = exercisesJson.map((e) => Exercise.fromJson(e)).toList();
+    } else {
+      _exercises = [
+        // Abdominals
+        Exercise(name: 'Cable Crunch', description: 'Abdominals'),
+        Exercise(name: 'Decline Crunch', description: 'Abdominals'),
+        Exercise(name: 'Hanging Knee Raise', description: 'Abdominals'),
+        Exercise(name: 'Hanging Leg Raise', description: 'Abdominals'),
+        // Adductors
+        Exercise(name: 'Hip Adduction (Machine)', description: 'Adductors'),
+        // Biceps
+        Exercise(name: 'Concentration Curl', description: 'Biceps'),
+        Exercise(name: 'Bicep Curl (Barbell)', description: 'Biceps'),
+        Exercise(name: 'Bicep Curl (Cable)', description: 'Biceps'),
+        Exercise(name: 'Seated Incline Curl', description: 'Biceps'),
+        Exercise(name: 'EZ Bar Curl', description: 'Biceps'),
+        Exercise(name: 'Hammer Curl (Dumbbell)', description: 'Biceps'),
+        Exercise(name: 'Overhead Curl (Cable)', description: 'Biceps'),
+        Exercise(name: 'Preacher Curl', description: 'Biceps'),
+        Exercise(name: 'Reverse Curl', description: 'Biceps'),
+        Exercise(name: 'Single Arm Curl (Cable)', description: 'Biceps'),
+        // Calves
+        Exercise(name: 'Calf Press (Machine)', description: 'Calves'),
+        Exercise(name: 'Seated Calf Raise', description: 'Calves'),
+        Exercise(name: 'Single Leg Standing Calf Raise', description: 'Calves'),
+        Exercise(name: 'Single Leg Standing Calf Raise (Machine)', description: 'Calves'),
+        Exercise(name: 'Standing Calf Raise (Machine)', description: 'Calves'),
+        // Chest
+        Exercise(name: 'Bench Press (Barbell)', description: 'Chest'),
+        Exercise(name: 'Bench Press (Dumbbell)', description: 'Chest'),
+        Exercise(name: 'Bench Press (Smith Machine)', description: 'Chest'),
+        Exercise(name: 'Chest Dip', description: 'Chest'),
+        Exercise(name: 'Chest Fly (Dumbbell)', description: 'Chest'),
+        Exercise(name: 'Incline Bench Press (Barbell)', description: 'Chest'),
+        Exercise(name: 'Incline Bench Press (Smith Machine)', description: 'Chest'),
+        Exercise(name: 'Incline Chest Fly (Dumbbell)', description: 'Chest'),
+        Exercise(name: 'Iso-Lateral Chest (Machine)', description: 'Chest'),
+        // Glutes
+        Exercise(name: 'Hip Thrust (Barbell)', description: 'Glutes'),
+        Exercise(name: 'Hip Thrust (Machine)', description: 'Glutes'),
+        // Hamstrings
+        Exercise(name: 'Deadlift (Barbell)', description: 'Hamstrings'),
+        Exercise(name: 'Lying Leg Curl (Machine)', description: 'Hamstrings'),
+        Exercise(name: 'Reverse Lunge (Barbell)', description: 'Hamstrings'),
+        Exercise(name: 'Reverse Lunge (Dumbbell)', description: 'Hamstrings'),
+        Exercise(name: 'Romanian Deadlift (Barbell)', description: 'Hamstrings'),
+        Exercise(name: 'Seated Leg Curl (Machine)', description: 'Hamstrings'),
+        // Lats
+        Exercise(name: 'Chin Up', description: 'Lats'),
+        Exercise(name: 'Chin Up (Weighted)', description: 'Lats'),
+        Exercise(name: 'Lat Pulldown - Close Grip (Cable)', description: 'Lats'),
+        Exercise(name: 'Lat Pulldown (Cable)', description: 'Lats'),
+        Exercise(name: 'Pull Up', description: 'Lats'),
+        Exercise(name: 'Pull Up (Weighted)', description: 'Lats'),
+        Exercise(name: 'Rope Straight Arm Pulldown', description: 'Lats'),
+        // Quadriceps
+        Exercise(name: 'Full Squat', description: 'Quadriceps'),
+        Exercise(name: 'Hack Squat (Machine)', description: 'Quadriceps'),
+        Exercise(name: 'Leg Extension (Machine)', description: 'Quadriceps'),
+        Exercise(name: 'Leg Press (Machine)', description: 'Quadriceps'),
+        Exercise(name: 'Lunge (Barbell)', description: 'Quadriceps'),
+        Exercise(name: 'Lunge (Dumbbell)', description: 'Quadriceps'),
+        Exercise(name: 'Pause Squat (Barbell)', description: 'Quadriceps'),
+        Exercise(name: 'Pendulum Squat (Machine)', description: 'Quadriceps'),
+        Exercise(name: 'Squat (Smith Machine)', description: 'Quadriceps'),
+        Exercise(name: 'Squat (Dumbbell)', description: 'Quadriceps'),
+        // Shoulders
+        Exercise(name: 'Shoulder (Machine Plates)', description: 'Shoulders'),
+        Exercise(name: 'Single Arm Lateral Raise (Cable)', description: 'Shoulders'),
+        Exercise(name: 'Standing Military Press (Barbell)', description: 'Shoulders'),
+        Exercise(name: 'Face Pull', description: 'Shoulders'),
+        Exercise(name: 'Lateral Raise (Dumbbell)', description: 'Shoulders'),
+        Exercise(name: 'Lateral Raise (Machine)', description: 'Shoulders'),
+        Exercise(name: 'Seated Lateral Raise (Dumbbell)', description: 'Shoulders'),
+        Exercise(name: 'Seated Press (Dumbbell)', description: 'Shoulders'),
+        // Traps
+        Exercise(name: 'Shrug (Barbell)', description: 'Traps'),
+        Exercise(name: 'Shrug (Dumbbell)', description: 'Traps'),
+        // Triceps
+        Exercise(name: 'Bench Press - Close Grip', description: 'Triceps'),
+        Exercise(name: 'Single Arm Tricep Extension (Dumbbell)', description: 'Triceps'),
+        Exercise(name: 'Single Arm Tricep Pushdown (Cable)', description: 'Triceps'),
+        Exercise(name: 'Skullcrusher (Dumbbell)', description: 'Triceps'),
+        Exercise(name: 'Skullcrusher (Barbell)', description: 'Triceps'),
+        Exercise(name: 'Triceps Extension (Cable)', description: 'Triceps'),
+        Exercise(name: 'Triceps Pushdown', description: 'Triceps'),
+        Exercise(name: 'Triceps Rope Pushdown', description: 'Triceps'),
+        // Upper Back
+        Exercise(name: 'Seated Cable Row - Bar Grip', description: 'Upper Back'),
+        Exercise(name: 'Seated Cable Row - V Grip (Cable)', description: 'Upper Back'),
+        Exercise(name: 'Bent Over Row (Barbell)', description: 'Upper Back'),
+        Exercise(name: 'Bent Over Row (Dumbbell)', description: 'Upper Back'),
+        Exercise(name: 'Rear Delt Reverse Fly (Dumbbell)', description: 'Upper Back'),
+        Exercise(name: 'Rear Delt Reverse Fly (Machine)', description: 'Upper Back'),
+        Exercise(name: 'Reverse Grip Lat Pulldown (Cable)', description: 'Upper Back'),
+      ];
+    }
+
+    notifyListeners();
+  }
+}
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class ThemeModel extends ChangeNotifier {
+  bool _isDark = false;
+
+  bool get isDark => _isDark;
+
+  void setDarkMode(bool isDark) async {
+    _isDark = isDark;
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isDarkMode', _isDark);
+  }
+
+  Future<void> loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    _isDark = prefs.getBool('isDarkMode') ?? false;
+    notifyListeners();
+  }
+}
+// training_screen.dart
+import 'package:flutter/material.dart';
+import 'create_routine_screen.dart';
+import 'start_routine_screen.dart';
+import 'package:provider/provider.dart';
+import '../models/workout_model.dart';
+
+class TrainingScreen extends StatelessWidget {
+  const TrainingScreen({super.key});
+
+  void _renameRoutine(BuildContext context, Routine routine) {
+    final nameController = TextEditingController(text: routine.name);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Rename Routine'),
+          content: TextField(
+            controller: nameController,
+            decoration: const InputDecoration(
+              hintText: 'Enter new routine name',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (nameController.text.isNotEmpty) {
+                  Provider.of<WorkoutModel>(context, listen: false).renameRoutine(routine, nameController.text);
+                  Navigator.pop(context);
+                }
+              },
+              child: const Text('Rename'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteRoutine(BuildContext context, Routine routine) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Delete Routine'),
+          content: const Text('Are you sure you want to delete this routine?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Provider.of<WorkoutModel>(context, listen: false).deleteRoutine(routine);
+                Navigator.pop(context);
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Training'),
+        centerTitle: true,
+      ),
+      body: Consumer<WorkoutModel>(
+        builder: (context, workoutModel, child) {
+          return workoutModel.routines.isNotEmpty
+              ? ListView.builder(
+            padding: const EdgeInsets.all(16.0),
+            itemCount: workoutModel.routines.length,
+            itemBuilder: (context, index) {
+              final routine = workoutModel.routines[index];
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 8.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                elevation: 5,
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(16.0),
+                  title: Text(
+                    routine.name,
+                    style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    '${routine.exercises.length} exercises',
+                    style: TextStyle(color: Colors.grey[700]),
+                  ),
+                  trailing: PopupMenuButton<String>(
+                    onSelected: (value) {
+                      if (value == 'rename') {
+                        _renameRoutine(context, routine);
+                      } else if (value == 'delete') {
+                        _deleteRoutine(context, routine);
+                      }
+                    },
+                    itemBuilder: (BuildContext context) {
+                      return [
+                        const PopupMenuItem<String>(
+                          value: 'rename',
+                          child: Text('Rename Routine'),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'delete',
+                          child: Text('Delete Routine'),
+                        ),
+                      ];
+                    },
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => StartRoutineScreen(routine: routine),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          )
+              : Center(
+            child: Text(
+              'No routines created yet.',
+              style: TextStyle(fontSize: 18.0, color: Colors.grey[600]),
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CreateRoutineScreen()),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class WorkoutPreferencesScreen extends StatefulWidget {
+  @override
+  _WorkoutPreferencesScreenState createState() => _WorkoutPreferencesScreenState();
+}
+
+class _WorkoutPreferencesScreenState extends State<WorkoutPreferencesScreen> {
+  final _formKey = GlobalKey<FormState>();
+  bool _useKg = true;
+  int _defaultRestMinutes = 1;
+  int _defaultRestSeconds = 30;
+  bool _workoutReminders = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPreferences();
+  }
+
+  Future<void> _loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _useKg = prefs.getBool('useKg') ?? true;
+      _defaultRestMinutes = prefs.getInt('defaultRestMinutes') ?? 1;
+      _defaultRestSeconds = prefs.getInt('defaultRestSeconds') ?? 30;
+      _workoutReminders = prefs.getBool('workoutReminders') ?? false;
+    });
+  }
+
+  Future<void> _savePreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('useKg', _useKg);
+    await prefs.setInt('defaultRestMinutes', _defaultRestMinutes);
+    await prefs.setInt('defaultRestSeconds', _defaultRestSeconds);
+    await prefs.setBool('workoutReminders', _workoutReminders);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Preferences Saved')),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Workout Preferences'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              SwitchListTile(
+                title: Text('Use Kilograms (kg)'),
+                value: _useKg,
+                onChanged: (bool value) {
+                  setState(() {
+                    _useKg = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
+              Text('Default Rest Time', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      decoration: InputDecoration(labelText: 'Minutes'),
+                      keyboardType: TextInputType.number,
+                      initialValue: _defaultRestMinutes.toString(),
+                      onChanged: (value) {
+                        setState(() {
+                          _defaultRestMinutes = int.parse(value);
+                        });
+                      },
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter minutes';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: TextFormField(
+                      decoration: InputDecoration(labelText: 'Seconds'),
+                      keyboardType: TextInputType.number,
+                      initialValue: _defaultRestSeconds.toString(),
+                      onChanged: (value) {
+                        setState(() {
+                          _defaultRestSeconds = int.parse(value);
+                        });
+                      },
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter seconds';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              SwitchListTile(
+                title: Text('Enable Workout Reminders'),
+                value: _workoutReminders,
+                onChanged: (bool value) {
+                  setState(() {
+                    _workoutReminders = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _savePreferences,
+                child: Text('Save Preferences'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class BackupRestoreScreen extends StatefulWidget {
+  @override
+  _BackupRestoreScreenState createState() => _BackupRestoreScreenState();
+}
+
+class _BackupRestoreScreenState extends State<BackupRestoreScreen> {
+  Future<void> _backupData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final Map<String, dynamic> data = {
+      'workouts': prefs.getString('workouts'),
+      'routines': prefs.getString('routines'),
+      'exercises': prefs.getString('exercises'),
+      'userProfile': {
+        'name': prefs.getString('name'),
+        'age': prefs.getInt('age'),
+        'weight': prefs.getDouble('weight'),
+        'height': prefs.getDouble('height'),
+      },
+      'workoutPreferences': {
+        'useKg': prefs.getBool('useKg'),
+        'defaultRestMinutes': prefs.getInt('defaultRestMinutes'),
+        'defaultRestSeconds': prefs.getInt('defaultRestSeconds'),
+        'workoutReminders': prefs.getBool('workoutReminders'),
+      },
+      'appPreferences': {
+        'isDarkMode': prefs.getBool('isDarkMode'),
+        'notificationsEnabled': prefs.getBool('notificationsEnabled'),
+        'selectedLanguage': prefs.getString('selectedLanguage'),
+      },
+    };
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/backup.json');
+    await file.writeAsString(jsonEncode(data));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Backup Successful')),
+    );
+  }
+
+  Future<void> _restoreData() async {
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/backup.json');
+    if (await file.exists()) {
+      final data = jsonDecode(await file.readAsString());
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('workouts', data['workouts']);
+      await prefs.setString('routines', data['routines']);
+      await prefs.setString('exercises', data['exercises']);
+      await prefs.setString('name', data['userProfile']['name']);
+      await prefs.setInt('age', data['userProfile']['age']);
+      await prefs.setDouble('weight', data['userProfile']['weight']);
+      await prefs.setDouble('height', data['userProfile']['height']);
+      await prefs.setBool('useKg', data['workoutPreferences']['useKg']);
+      await prefs.setInt('defaultRestMinutes', data['workoutPreferences']['defaultRestMinutes']);
+      await prefs.setInt('defaultRestSeconds', data['workoutPreferences']['defaultRestSeconds']);
+      await prefs.setBool('workoutReminders', data['workoutPreferences']['workoutReminders']);
+      await prefs.setBool('isDarkMode', data['appPreferences']['isDarkMode']);
+      await prefs.setBool('notificationsEnabled', data['appPreferences']['notificationsEnabled']);
+      await prefs.setString('selectedLanguage', data['appPreferences']['selectedLanguage']);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Restore Successful')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('No Backup Found')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Backup and Restore'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ElevatedButton(
+              onPressed: _backupData,
+              child: Text('Backup Data'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _restoreData,
+              child: Text('Restore Data'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:fl_chart/fl_chart.dart';
+import '../models/workout_model.dart';
+import 'dart:collection';
+import 'package:intl/intl.dart';
+
+class StatisticsScreen extends StatefulWidget {
+  const StatisticsScreen({super.key});
+
+  @override
+  _StatisticsScreenState createState() => _StatisticsScreenState();
+}
+
+class _StatisticsScreenState extends State<StatisticsScreen> {
+  Exercise? _selectedExercise;
+
+  List<FlSpot> _generatePerformanceSpots(WorkoutModel workoutModel, Exercise exercise) {
+    final workouts = workoutModel.workouts.where((workout) => workout.exercise == exercise).toList();
+    workouts.sort((a, b) => a.date.compareTo(b.date));
+    return workouts
+        .asMap()
+        .entries
+        .map<FlSpot>((entry) => FlSpot(entry.key.toDouble(), entry.value.repetitions * entry.value.weight))
+        .toList();
+  }
+
+  List<BarChartGroupData> _generateWeeklyProgress(WorkoutModel workoutModel) {
+    final Map<String, double> weeklyProgress = {};
+
+    for (var workout in workoutModel.workouts) {
+      String day = DateFormat.E().format(workout.date);
+      if (!weeklyProgress.containsKey(day)) {
+        weeklyProgress[day] = 0.0;
+      }
+      weeklyProgress[day] = weeklyProgress[day]! + workout.weight * workout.repetitions;
+    }
+
+    List<BarChartGroupData> barGroups = [];
+    int index = 0;
+    weeklyProgress.forEach((day, totalWeight) {
+      barGroups.add(BarChartGroupData(
+        x: index,
+        barRods: [
+          BarChartRodData(
+            toY: totalWeight,
+            color: Colors.blue,
+          ),
+        ],
+        showingTooltipIndicators: [0],
+      ));
+      index++;
+    });
+
+    return barGroups;
+  }
+
+  List<PieChartSectionData> _generateExerciseFrequency(WorkoutModel workoutModel) {
+    final Map<String, double> exerciseFrequency = {};
+
+    for (var workout in workoutModel.workouts) {
+      String exerciseName = workout.exercise.name;
+      if (!exerciseFrequency.containsKey(exerciseName)) {
+        exerciseFrequency[exerciseName] = 0.0;
+      }
+      exerciseFrequency[exerciseName] = exerciseFrequency[exerciseName]! + workout.weight * workout.repetitions;
+    }
+
+    return exerciseFrequency.entries.map((entry) {
+      return PieChartSectionData(
+        value: entry.value,
+        title: entry.key,
+        color: Colors.primaries[exerciseFrequency.keys.toList().indexOf(entry.key) % Colors.primaries.length],
+        titleStyle: const TextStyle(color: Colors.white, fontSize: 12),
+      );
+    }).toList();
+  }
+
+  List<FlSpot> _generateMonthlyProgress(WorkoutModel workoutModel) {
+    final Map<String, double> monthlyProgress = {};
+
+    for (var workout in workoutModel.workouts) {
+      String month = DateFormat.MMM().format(workout.date);
+      if (!monthlyProgress.containsKey(month)) {
+        monthlyProgress[month] = 0.0;
+      }
+      monthlyProgress[month] = monthlyProgress[month]! + workout.weight * workout.repetitions;
+    }
+
+    List<FlSpot> lineSpots = [];
+    int index = 0;
+    monthlyProgress.forEach((month, totalWeight) {
+      lineSpots.add(FlSpot(index.toDouble(), totalWeight));
+      index++;
+    });
+
+    return lineSpots;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+        title: const Text('Statistics'),
+    ),
+    body: Padding(
+    padding: const EdgeInsets.all(16.0),
+    child: Consumer<WorkoutModel>(
+    builder: (context, workoutModel, child) {
+    final exercises = workoutModel.exercises;
+    final performanceSpots = _selectedExercise != null ? _generatePerformanceSpots(workoutModel, _selectedExercise!) : <FlSpot>[];
+    final weeklyProgressBars = _generateWeeklyProgress(workoutModel);
+    final exerciseFrequency = _generateExerciseFrequency(workoutModel);
+    final monthlyProgressSpots = _generateMonthlyProgress(workoutModel);
+
+    return SingleChildScrollView(
+    child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+    const Text(
+    'Select Exercise',
+    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    ),
+    const SizedBox(height: 16),
+    Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+    decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(8.0),
+    border: Border.all(color: Colors.grey.shade300),
+    ),
+    child: DropdownButtonHideUnderline(
+    child: DropdownButton<Exercise>(
+    hint: const Text('Select Exercise'),
+    value: _selectedExercise,
+    onChanged: (Exercise? newValue) {
+    setState(() {
+    _selectedExercise = newValue;
+    });
+    },
+    items: exercises.map((Exercise exercise) {
+    return DropdownMenuItem<Exercise>(
+    value: exercise,
+    child: Text(exercise.name),
+    );
+    }).toList(),
+    ),
+    ),
+    ),
+    const SizedBox(height: 32),
+    if (_selectedExercise != null) ...[
+    Text(
+    '${_selectedExercise!.name} Performance Progress',
+    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    ),
+    const SizedBox(height: 16),
+    SizedBox(
+    height: 200,
+    child: LineChart(
+    LineChartData(
+    gridData: FlGridData(
+    show: true,
+    drawVerticalLine: true,
+    getDrawingHorizontalLine: (value) {
+    return const FlLine(
+    color: Color(0xffe7e8ec),
+    strokeWidth: 1,
+    );
+    },
+    getDrawingVerticalLine: (value) {
+    return const FlLine(
+    color: Color(0xffe7e8ec),
+    strokeWidth: 1,
+    );
+    },
+    ),
+    titlesData: FlTitlesData(
+    leftTitles: AxisTitles(
+    sideTitles: SideTitles(
+    showTitles: true,
+    reservedSize: 40,
+    getTitlesWidget: (value, meta) {
+    return Text(
+    value.toStringAsFixed(0),
+    style: const TextStyle(color: Colors.black54, fontSize: 12),
+    overflow: TextOverflow.visible,
+    );
+    },
+    interval: performanceSpots.isNotEmpty ? ((performanceSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b)) / 10) : 100,
+    ),
+    ),
+    bottomTitles: AxisTitles(
+    sideTitles: SideTitles(
+    showTitles: true,
+    reservedSize: 22,
+    getTitlesWidget: (value, meta) {
+    return Text(
+    value.toStringAsFixed(0),
+    style: const TextStyle(color: Colors.black54, fontSize: 12),
+    overflow: TextOverflow.visible,
+    );
+    },
+    ),
+    ),
+    ),                          borderData: FlBorderData(
+      show: true,
+      border: Border.all(color: const Color(0xffe7e8ec)),
+    ),
+      minX: 0,
+      maxX: performanceSpots.isNotEmpty ? performanceSpots.length - 1.toDouble() : 0,
+      minY: performanceSpots.isNotEmpty ? performanceSpots.map((e) => e.y).reduce((a, b) => a < b ? a : b) : 0,
+      maxY: performanceSpots.isNotEmpty ? performanceSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b) : 0,
+      lineBarsData: [
+        LineChartBarData(
+          spots: performanceSpots,
+          isCurved: true,
+          color: Colors.blue,
+          barWidth: 4,
+          belowBarData: BarAreaData(show: true, color: Colors.blue.withOpacity(0.3)),
+        ),
+      ],
+      lineTouchData: LineTouchData(
+        touchTooltipData: LineTouchTooltipData(
+          getTooltipItems: (List<LineBarSpot> touchedSpots) {
+            return touchedSpots.map((spot) {
+              return LineTooltipItem(
+                '${spot.x.toStringAsFixed(0)}, ${spot.y.toStringAsFixed(0)}',
+                const TextStyle(color: Colors.white),
+              );
+            }).toList();
+          },
+        ),
+        touchCallback: (FlTouchEvent event, LineTouchResponse? touchResponse) {
+          if (touchResponse != null && touchResponse.lineBarSpots != null) {
+            final value = touchResponse.lineBarSpots!.first;
+            setState(() {
+              // Update something based on the touch event if needed
+            });
+          }
+        },
+        handleBuiltInTouches: true,
+      ),
+    ),
+    ),
+    ),
+    ],
+      const SizedBox(height: 32),
+      Text(
+        'Weekly Progress Overview',
+        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 16),
+      SizedBox(
+        height: 200,
+        child: BarChart(
+          BarChartData(
+            barGroups: weeklyProgressBars,
+            titlesData: FlTitlesData(
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  getTitlesWidget: (double value, TitleMeta meta) {
+                    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                    return Text(days[value.toInt()]);
+                  },
+                ),
+              ),
+              leftTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 40,
+                  getTitlesWidget: (value, meta) {
+                    return Text(
+                      value.toStringAsFixed(0),
+                      style: const TextStyle(color: Colors.black54, fontSize: 12),
+                      overflow: TextOverflow.visible,
+                    );
+                  },
+                ),
+              ),
+            ),
+            gridData: FlGridData(show: true),
+            borderData: FlBorderData(show: false),
+          ),
+        ),
+      ),
+      const SizedBox(height: 32),
+      Text(
+        'Exercise Frequency Distribution',
+        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 16),
+      SizedBox(
+        height: 200,
+        child: PieChart(
+          PieChartData(
+            sections: exerciseFrequency,
+            sectionsSpace: 2,
+            centerSpaceRadius: 40,
+            pieTouchData: PieTouchData(
+              touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                if (event.isInterestedForInteractions && pieTouchResponse != null && pieTouchResponse.touchedSection != null) {
+                  final touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
+                  setState(() {
+                    // Handle touch events if needed
+                  });
+                }
+              },
+            ),
+          ),
+        ),
+      ),
+      const SizedBox(height: 32),
+      Text(
+        'Monthly Progress Overview',
+        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 16),
+      SizedBox(
+        height: 200,
+        child: LineChart(
+          LineChartData(
+            gridData: FlGridData(
+              show: true,
+              drawVerticalLine: true,
+              getDrawingHorizontalLine: (value) {
+                return const FlLine(
+                  color: Color(0xffe7e8ec),
+                  strokeWidth: 1,
+                );
+              },
+              getDrawingVerticalLine: (value) {
+                return const FlLine(
+                  color: Color(0xffe7e8ec),
+                  strokeWidth: 1,
+                );
+              },
+            ),
+            titlesData: FlTitlesData(
+              leftTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 40,
+                  getTitlesWidget: (value, meta) {
+                    return Text(
+                      value.toStringAsFixed(0),
+                      style: const TextStyle(color: Colors.black54, fontSize: 12),
+                      overflow: TextOverflow.visible,
+                    );
+                  },
+                  interval: monthlyProgressSpots.isNotEmpty ? ((monthlyProgressSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b)) / 10) : 100,
+                ),
+              ),
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 22,
+                  getTitlesWidget: (value, meta) {
+                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    return Text(months[value.toInt() % 12]);
+                  },
+                ),
+              ),
+            ),
+            borderData: FlBorderData(
+              show: true,
+              border: Border.all(color: const Color(0xffe7e8ec)),
+            ),
+            minX: 0,
+            maxX: monthlyProgressSpots.isNotEmpty ? monthlyProgressSpots.length - 1.toDouble() : 0,
+            minY: monthlyProgressSpots.isNotEmpty ? monthlyProgressSpots.map((e) => e.y).reduce((a, b) => a < b ? a : b) : 0,
+            maxY: monthlyProgressSpots.isNotEmpty ? monthlyProgressSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b) : 0,
+            lineBarsData: [
+              LineChartBarData(
+                spots: monthlyProgressSpots,
+                isCurved: true,
+                color: Colors.green,
+                barWidth: 4,
+                belowBarData: BarAreaData(show: true, color: Colors.green.withOpacity(0.3)),
+              ),
+            ],
+            lineTouchData: LineTouchData(
+              touchTooltipData: LineTouchTooltipData(
+                getTooltipItems: (List<LineBarSpot> touchedSpots) {
+                  return touchedSpots.map((spot) {
+                    return LineTooltipItem(
+                      '${spot.x.toStringAsFixed(0)}, ${spot.y.toStringAsFixed(0)}',
+                      const TextStyle(color: Colors.white),
+                    );
+                  }).toList();
+                },
+              ),
+              touchCallback: (FlTouchEvent event, LineTouchResponse? touchResponse) {
+                if (touchResponse != null && touchResponse.lineBarSpots != null) {
+                  final value = touchResponse.lineBarSpots!.first;
+                  setState(() {
+                    // Update something based on the touch event if needed
+                  });
+                }
+              },
+              handleBuiltInTouches: true,
+            ),
+          ),
+        ),
+      ),
+    ],
+    ),
+    );
+    },
+    ),
+    ),
+    );
+  }
+}
+
+// start_routine_screen.dart
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/workout_model.dart';
+import 'add_set_screen.dart';
+import 'edit_set_screen.dart';
+import 'select_exercises_screen.dart';
+
+class StartRoutineScreen extends StatelessWidget {
+  final Routine routine;
+
+  const StartRoutineScreen({super.key, required this.routine});
+
+  void _startExercise(BuildContext context, Exercise exercise) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddSetScreen(exercise: exercise),
+      ),
+    );
+  }
+
+  void _editSet(BuildContext context, Workout workout) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditSetScreen(workout: workout),
+      ),
+    );
+  }
+
+  void _addExercises(BuildContext context) async {
+    final newExercises = await Navigator.push<List<Exercise>>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SelectExercisesScreen(selectedExercises: []),
+      ),
+    );
+
+    if (newExercises != null && newExercises.isNotEmpty) {
+      for (var exercise in newExercises) {
+        Provider.of<WorkoutModel>(context, listen: false).addExerciseToRoutine(routine, exercise);
+      }
+    }
+  }
+
+  void _removeExercise(BuildContext context, Exercise exercise) {
+    Provider.of<WorkoutModel>(context, listen: false).removeExerciseFromRoutine(routine, exercise);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(routine.name),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () => _addExercises(context),
+            tooltip: 'Add Exercises',
+          ),
+        ],
+      ),
+      body: Consumer<WorkoutModel>(
+        builder: (context, workoutModel, child) {
+          final workouts = workoutModel.getWorkoutsForRoutine(routine);
+          return ListView(
+            padding: const EdgeInsets.all(16.0),
+            children: routine.exercises.map((exercise) {
+              final exerciseWorkouts = workouts.where((workout) => workout.exercise == exercise).toList();
+
+              // Calculate total sets and weight for the summary
+              final totalSets = exerciseWorkouts.length;
+              final totalWeight = exerciseWorkouts.fold(0.0, (sum, workout) => sum + workout.weight);
+
+              return Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                elevation: 5,
+                margin: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Theme(
+                  data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                  child: ExpansionTile(
+                    leading: Icon(
+                      Icons.fitness_center,
+                      color: Theme.of(context).primaryColor,
+                      size: 32.0,
+                    ),
+                    title: Text(
+                      exercise.name,
+                      style: const TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Sets: $totalSets, Total Weight: ${totalWeight.toStringAsFixed(1)} kg',
+                      style: TextStyle(color: Colors.grey[700]),
+                    ),
+                    trailing: PopupMenuButton<String>(
+                      onSelected: (value) {
+                        if (value == 'remove') {
+                          _removeExercise(context, exercise);
+                        }
+                      },
+                      itemBuilder: (BuildContext context) {
+                        return [
+                          const PopupMenuItem<String>(
+                            value: 'remove',
+                            child: Text('Remove Exercise'),
+                          ),
+                        ];
+                      },
+                    ),
+                    children: [
+                      Column(
+                        children: exerciseWorkouts.map((workout) {
+                          return ListTile(
+                            title: Text(
+                              'Reps: ${workout.repetitions}, Weight: ${workout.weight} kg',
+                              style: const TextStyle(fontSize: 16.0),
+                            ),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.edit, color: Colors.blue),
+                                  onPressed: () => _editSet(context, workout),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () {
+                                    Provider.of<WorkoutModel>(context, listen: false).deleteWorkout(workout);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: ElevatedButton.icon(
+                          onPressed: () => _startExercise(context, exercise),
+                          icon: const Icon(Icons.add),
+                          label: const Text('Add New Set'),
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            backgroundColor: Colors.purple,
+                            foregroundColor: Colors.white,
+                            shadowColor: Colors.black.withOpacity(0.25),
+                            elevation: 10,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          );
+        },
+      ),
+    );
+  }
+}
+import 'package:flutter/material.dart';
+import 'user_profile_screen.dart';
+import 'workout_preferences_screen.dart';
+import 'app_preferences_screen.dart';
+import 'backup_restore_screen.dart';
+import 'about_screen.dart';
+
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Settings'),
+      ),
+      body: ListView(
+        children: [
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text('User Profile'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UserProfileScreen()),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.fitness_center),
+            title: Text('Workout Preferences'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => WorkoutPreferencesScreen()),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('App Preferences'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AppPreferencesScreen()),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.backup),
+            title: Text('Backup and Restore'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => BackupRestoreScreen()),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.info),
+            title: Text('About'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AboutScreen()),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../models/theme_model.dart';
+
+class AppPreferencesScreen extends StatefulWidget {
+  @override
+  _AppPreferencesScreenState createState() => _AppPreferencesScreenState();
+}
+
+class _AppPreferencesScreenState extends State<AppPreferencesScreen> {
+  bool _notificationsEnabled = true;
+  String _selectedLanguage = 'English';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPreferences();
+  }
+
+  Future<void> _loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _notificationsEnabled = prefs.getBool('notificationsEnabled') ?? true;
+      _selectedLanguage = prefs.getString('selectedLanguage') ?? 'English';
+    });
+    Provider.of<ThemeModel>(context, listen: false)
+        .setDarkMode(prefs.getBool('isDarkMode') ?? false);
+  }
+
+  Future<void> _savePreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(
+        'isDarkMode', Provider.of<ThemeModel>(context, listen: false).isDark);
+    await prefs.setBool('notificationsEnabled', _notificationsEnabled);
+    await prefs.setString('selectedLanguage', _selectedLanguage);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Preferences Saved')),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final themeModel = Provider.of<ThemeModel>(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('App Preferences'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
+          children: [
+            SwitchListTile(
+              title: Text('Dark Mode'),
+              value: themeModel.isDark,
+              onChanged: (bool value) {
+                themeModel.setDarkMode(value);
+              },
+            ),
+            SwitchListTile(
+              title: Text('Enable Notifications'),
+              value: _notificationsEnabled,
+              onChanged: (bool value) {
+                setState(() {
+                  _notificationsEnabled = value;
+                });
+              },
+            ),
+            const SizedBox(height: 20),
+            Text('Language', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            DropdownButton<String>(
+              value: _selectedLanguage,
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedLanguage = newValue!;
+                });
+              },
+              items: <String>['English', 'Spanish', 'French', 'German']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _savePreferences,
+              child: Text('Save Preferences'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+import 'package:flutter/material.dart';
+import 'package:numberpicker/numberpicker.dart';
+
+class DurationPickerDialog extends StatefulWidget {
+  final int initialMinutes;
+  final int initialSeconds;
+
+  const DurationPickerDialog({
+    Key? key,
+    required this.initialMinutes,
+    required this.initialSeconds,
+  }) : super(key: key);
+
+  @override
+  _DurationPickerDialogState createState() => _DurationPickerDialogState();
+}
+
+class _DurationPickerDialogState extends State<DurationPickerDialog> {
+  late int minutes;
+  late int seconds;
+
+  @override
+  void initState() {
+    super.initState();
+    minutes = widget.initialMinutes;
+    seconds = widget.initialSeconds;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text(
+        'Select Rest Time',
+        style: TextStyle(color: Colors.deepPurpleAccent),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              NumberPicker(
+                minValue: 0,
+                maxValue: 59,
+                value: minutes,
+                onChanged: (value) {
+                  setState(() {
+                    minutes = value;
+                  });
+                },
+                selectedTextStyle: const TextStyle(color: Colors.deepPurpleAccent, fontSize: 24),
+                textStyle: const TextStyle(color: Colors.grey, fontSize: 18),
+              ),
+              const Text(
+                'min',
+                style: TextStyle(fontSize: 18, color: Colors.deepPurpleAccent),
+              ),
+              NumberPicker(
+                minValue: 0,
+                maxValue: 59,
+                value: seconds,
+                onChanged: (value) {
+                  setState(() {
+                    seconds = value;
+                  });
+                },
+                selectedTextStyle: const TextStyle(color: Colors.deepPurpleAccent, fontSize: 24),
+                textStyle: const TextStyle(color: Colors.grey, fontSize: 18),
+              ),
+              const Text(
+                'sec',
+                style: TextStyle(fontSize: 18, color: Colors.deepPurpleAccent),
+              ),
+            ],
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text(
+            'Cancel',
+            style: TextStyle(color: Colors.deepPurpleAccent),
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context, Duration(minutes: minutes, seconds: seconds));
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.deepPurpleAccent,
+          ),
+          child: const Text(
+            'OK',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ],
+    );
+  }
+}
+// select_exercises_screen.dart
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/workout_model.dart';
+
+class SelectExercisesScreen extends StatefulWidget {
+  final List<Exercise> selectedExercises;
+
+  const SelectExercisesScreen({super.key, required this.selectedExercises});
+
+  @override
+  _SelectExercisesScreenState createState() => _SelectExercisesScreenState();
+}
+
+class _SelectExercisesScreenState extends State<SelectExercisesScreen> {
+  List<Exercise> _selectedExercises = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedExercises = widget.selectedExercises;
+  }
+
+  void _toggleSelection(Exercise exercise) {
+    setState(() {
+      if (_selectedExercises.contains(exercise)) {
+        _selectedExercises.remove(exercise);
+      } else {
+        _selectedExercises.add(exercise);
+      }
+    });
+  }
+
+  void _submitSelection() {
+    Navigator.pop(context, _selectedExercises);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final exercises = Provider.of<WorkoutModel>(context).exercises;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Select Exercises'),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.check),
+            onPressed: _submitSelection,
+            tooltip: 'Confirm Selection',
+          ),
+        ],
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16.0),
+        itemCount: exercises.length,
+        itemBuilder: (context, index) {
+          final exercise = exercises[index];
+          final isSelected = _selectedExercises.contains(exercise);
+
+          return Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            elevation: 5,
+            margin: const EdgeInsets.symmetric(vertical: 8.0),
+            child: ListTile(
+              leading: Icon(
+                Icons.fitness_center,
+                color: isSelected ? Theme.of(context).primaryColor : Colors.grey,
+                size: 32.0,
+              ),
+              title: Text(
+                exercise.name,
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  color: isSelected ? Theme.of(context).primaryColor : Colors.black,
+                ),
+              ),
+              subtitle: Text(
+                exercise.description,
+                style: TextStyle(
+                  color: isSelected ? Theme.of(context).primaryColor : Colors.grey[700],
+                ),
+              ),
+              trailing: Icon(
+                isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+                color: isSelected ? Theme.of(context).primaryColor : Colors.grey,
+              ),
+              onTap: () => _toggleSelection(exercise),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+class AboutScreen extends StatelessWidget {
+  const AboutScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('About'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
+          children: [
+            ListTile(
+              title: Text('App Version'),
+              subtitle: Text('1.0.0'), // Replace with your app version
+            ),
+            Divider(),
+            ListTile(
+              title: Text('Privacy Policy'),
+              onTap: () {
+                _launchURL('https://yourprivacypolicyurl.com'); // Replace with your privacy policy URL
+              },
+            ),
+            ListTile(
+              title: Text('Terms of Service'),
+              onTap: () {
+                _launchURL('https://yourtermsofserviceurl.com'); // Replace with your terms of service URL
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text('Acknowledgments'),
+              subtitle: Text(
+                  'I would like to express our sincere gratitude to all the users of this application. Your support and feedback are invaluable to me.'),
+            ),
+            Divider(),
+            ListTile(
+              title: Text('Open Source'),
+              subtitle: Text('This application is open source. You can view the source code and contribute to the project on GitHub.'),
+              onTap: () {
+                _launchURL('https://github.com/DanisAlfonso/gym_tracker'); // Replace with your GitHub repository URL
+              },
+            ),
+            ListTile(
+              title: Text('License'),
+              subtitle: Text('This application is licensed under the MIT License.'),
+              onTap: () {
+                _launchURL('https://opensource.org/licenses/MIT'); // Replace with your license URL if different
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text('Contact Me'),
+              subtitle: Text('danis.ramirez.hn@gmail.com'), // Replace with your contact email
+              onTap: () {
+                _launchURL('mailto:danis.ramirez.hn@gmail.com'); // Replace with your contact email
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+}
+// edit_set_screen.dart
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/workout_model.dart';
+
+class EditSetScreen extends StatefulWidget {
+  final Workout workout;
+
+  const EditSetScreen({super.key, required this.workout});
+
+  @override
+  _EditSetScreenState createState() => _EditSetScreenState();
+}
+
+class _EditSetScreenState extends State<EditSetScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _weightController = TextEditingController();
+  final _repsController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _weightController.text = widget.workout.weight.toString();
+    _repsController.text = widget.workout.repetitions.toString();
+  }
+
+  void _submit() {
+    if (_formKey.currentState!.validate()) {
+      final newWeight = double.parse(_weightController.text);
+      final newRepetitions = int.parse(_repsController.text);
+
+      Provider.of<WorkoutModel>(context, listen: false).updateWorkout(widget.workout, newWeight, newRepetitions);
+
+      Navigator.pop(context);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+        title: const Text('Edit Set'),
+        centerTitle: true,
+      ),
+      body: Container(
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.white, Colors.grey.shade200],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Repetitions',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextFormField(
+                controller: _repsController,
+                decoration: InputDecoration(
+                  hintText: 'Enter repetitions',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter the repetitions';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Weight (kg)',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextFormField(
+                controller: _weightController,
+                decoration: InputDecoration(
+                  hintText: 'Enter weight in kg',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter the weight';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              Center(
+                child: ElevatedButton(
+                  onPressed: _submit,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16.0, horizontal: 32.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    backgroundColor: Theme.of(context).canvasColor,
+                  ),
+                  child: const Text(
+                    'Update Set',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class UserProfileScreen extends StatefulWidget {
+  @override
+  _UserProfileScreenState createState() => _UserProfileScreenState();
+}
+
+class _UserProfileScreenState extends State<UserProfileScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _ageController = TextEditingController();
+  final _weightController = TextEditingController();
+  final _heightController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProfile();
+  }
+
+  Future<void> _loadUserProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _nameController.text = prefs.getString('name') ?? '';
+      _ageController.text = prefs.getInt('age')?.toString() ?? '';
+      _weightController.text = prefs.getDouble('weight')?.toString() ?? '';
+      _heightController.text = prefs.getDouble('height')?.toString() ?? '';
+    });
+  }
+
+  Future<void> _saveUserProfile() async {
+    if (_formKey.currentState!.validate()) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('name', _nameController.text);
+      await prefs.setInt('age', int.parse(_ageController.text));
+      await prefs.setDouble('weight', double.parse(_weightController.text));
+      await prefs.setDouble('height', double.parse(_heightController.text));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Profile Saved')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('User Profile'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              Center(
+                child: GestureDetector(
+                  onTap: () {
+                    // Implement profile picture selection
+                  },
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.grey[300],
+                    child: Icon(Icons.person, size: 50),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _nameController,
+                decoration: InputDecoration(labelText: 'Name'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter your name';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _ageController,
+                decoration: InputDecoration(labelText: 'Age'),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter your age';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _weightController,
+                decoration: InputDecoration(labelText: 'Weight (kg)'),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter your weight';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _heightController,
+                decoration: InputDecoration(labelText: 'Height (cm)'),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter your height';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _saveUserProfile,
+                child: Text('Save Profile'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/workout_model.dart';
+
+class ExerciseLibraryScreen extends StatefulWidget {
+  final List<Exercise> selectedExercises;
+
+  const ExerciseLibraryScreen({super.key, required this.selectedExercises});
+
+  @override
+  _ExerciseLibraryScreenState createState() => _ExerciseLibraryScreenState();
+}
+
+class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
+  List<Exercise> _selectedExercises = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedExercises = widget.selectedExercises;
+  }
+
+  void _toggleSelection(Exercise exercise) {
+    setState(() {
+      if (_selectedExercises.contains(exercise)) {
+        _selectedExercises.remove(exercise);
+      } else {
+        _selectedExercises.add(exercise);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final exercises = Provider.of<WorkoutModel>(context).exercises;
+
+    // Group exercises by category
+    final Map<String, List<Exercise>> groupedExercises = {};
+    for (var exercise in exercises) {
+      if (groupedExercises[exercise.description] == null) {
+        groupedExercises[exercise.description] = [];
+      }
+      groupedExercises[exercise.description]!.add(exercise);
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Exercise Library'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
+          children: groupedExercises.entries.map((entry) {
+            return Card(
+              elevation: 4,
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: ExpansionTile(
+                title: Text(
+                  entry.key,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                children: entry.value.map((exercise) {
+                  final isSelected = _selectedExercises.contains(exercise);
+                  return ListTile(
+                    title: Text(exercise.name),
+                    trailing: Icon(
+                      isSelected ? Icons.check_circle : Icons.check_circle_outline,
+                      color: isSelected ? Colors.green : Colors.grey,
+                    ),
+                    onTap: () => _toggleSelection(exercise),
+                  );
+                }).toList(),
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pop(context, _selectedExercises);
+        },
+        child: const Icon(Icons.check),
+      ),
+    );
+  }
+}
+
+class AddExerciseDialog extends StatefulWidget {
+  const AddExerciseDialog({super.key});
+
+  @override
+  _AddExerciseDialogState createState() => _AddExerciseDialogState();
+}
+
+class _AddExerciseDialogState extends State<AddExerciseDialog> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _descriptionController = TextEditingController();
+
+  void _submit() {
+    if (_formKey.currentState!.validate()) {
+      final exercise = Exercise(
+        name: _nameController.text,
+        description: _descriptionController.text,
+      );
+
+      Provider.of<WorkoutModel>(context, listen: false).addCustomExercise(exercise);
+      Navigator.pop(context, exercise);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Add Exercise'),
+      content: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              controller: _nameController,
+              decoration: const InputDecoration(labelText: 'Name'),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter the exercise name';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: _descriptionController,
+              decoration: const InputDecoration(labelText: 'Description'),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter the exercise description';
+                }
+                return null;
+              },
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: _submit,
+          child: const Text('Add'),
+        ),
+      ],
+    );
+  }
+}
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/workout_model.dart';
+import 'duration_picker_dialog.dart';
+import 'package:numberpicker/numberpicker.dart';
+
+class AddWorkoutScreen extends StatefulWidget {
+  const AddWorkoutScreen({super.key});
+
+  @override
+  _AddWorkoutScreenState createState() => _AddWorkoutScreenState();
+}
+
+class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _weightController = TextEditingController();
+  final _notesController = TextEditingController();
+
+  int _repetitions = 1;
+  Duration _restTime = Duration.zero;
+  Exercise? _selectedExercise;
+
+  void _submit() {
+    if (_formKey.currentState!.validate() && _selectedExercise != null) {
+      final weight = double.parse(_weightController.text);
+      final notes = _notesController.text.isEmpty ? null : _notesController.text;
+
+      final workout = Workout(
+        exercise: _selectedExercise!,
+        repetitions: _repetitions,
+        weight: weight,
+        restTime: _restTime,
+        notes: notes,
+        date: DateTime.now(),
+      );
+
+      Provider.of<WorkoutModel>(context, listen: false).addWorkout(workout);
+
+      Navigator.pop(context);
+    }
+  }
+
+  Future<void> _pickRestTime() async {
+    final pickedTime = await showDialog<Duration>(
+      context: context,
+      builder: (context) => DurationPickerDialog(
+        initialMinutes: _restTime.inMinutes,
+        initialSeconds: _restTime.inSeconds % 60,
+      ),
+    );
+
+    if (pickedTime != null) {
+      setState(() {
+        _restTime = pickedTime;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Add Workout'),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Select Exercise',
+                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                DropdownButtonFormField<Exercise>(
+                  value: _selectedExercise,
+                  hint: const Text('Select Exercise'),
+                  onChanged: (Exercise? newValue) {
+                    setState(() {
+                      _selectedExercise = newValue;
+                    });
+                  },
+                  items: Provider.of<WorkoutModel>(context)
+                      .exercises
+                      .map<DropdownMenuItem<Exercise>>((Exercise exercise) {
+                    return DropdownMenuItem<Exercise>(
+                      value: exercise,
+                      child: Text(exercise.name),
+                    );
+                  }).toList(),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select an exercise';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Repetitions',
+                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                Center(
+                  child: NumberPicker(
+                    minValue: 1,
+                    maxValue: 100,
+                    value: _repetitions,
+                    onChanged: (value) {
+                      setState(() {
+                        _repetitions = value;
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Weight (kg)',
+                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  controller: _weightController,
+                  decoration: InputDecoration(
+                    hintText: 'Enter weight in kg',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter the weight';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Rest Time',
+                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: _pickRestTime,
+                  child: Text(
+                    'Pick Rest Time (${_restTime.inMinutes} min ${_restTime.inSeconds % 60} sec)',
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Notes',
+                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  controller: _notesController,
+                  decoration: InputDecoration(
+                    hintText: 'Enter any notes',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 3,
+                ),
+                const SizedBox(height: 20),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: _submit,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16.0, horizontal: 32.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    child: const Text(
+                      'Add Workout',
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/workout_model.dart';
+
+class TrackProgressScreen extends StatelessWidget {
+  const TrackProgressScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Track Progress'),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Consumer<WorkoutModel>(
+          builder: (context, workoutModel, child) {
+            return ListView.builder(
+              itemCount: workoutModel.workouts.length,
+              itemBuilder: (context, index) {
+                final workout = workoutModel.workouts[index];
+                return Card(
+                  child: ListTile(
+                    title: Text(workout.exercise.name),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Repetitions: ${workout.repetitions}'),
+                        Text('Weight: ${workout.weight} kg'),
+                        Text('Rest Time: ${workout.restTime.inMinutes} min ${workout.restTime.inSeconds % 60} sec'),
+                        if (workout.notes != null) Text('Notes: ${workout.notes}'),
+                      ],
+                    ),
+                    trailing: Text(
+                      '${workout.date.day}/${workout.date.month}/${workout.date.year}',
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
+}// create_routine_screen.dart
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/workout_model.dart';
+import 'exercise_library_screen.dart';
+
+class CreateRoutineScreen extends StatefulWidget {
+  const CreateRoutineScreen({super.key});
+
+  @override
+  _CreateRoutineScreenState createState() => _CreateRoutineScreenState();
+}
+
+class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  List<Exercise> _selectedExercises = [];
+
+  void _submit() {
+    if (_formKey.currentState!.validate() && _selectedExercises.isNotEmpty) {
+      final routine = Routine(
+        name: _nameController.text,
+        exercises: _selectedExercises,
+      );
+
+      Provider.of<WorkoutModel>(context, listen: false).addRoutine(routine);
+
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select at least one exercise.'),
+        ),
+      );
+    }
+  }
+
+  void _selectExercises() async {
+    final selectedExercises = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ExerciseLibraryScreen(
+          selectedExercises: _selectedExercises,
+        ),
+      ),
+    );
+
+    if (selectedExercises != null && selectedExercises is List<Exercise>) {
+      setState(() {
+        _selectedExercises = selectedExercises;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.only(top: 25.0), // Add padding to the top
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+        title: const Padding(
+          padding: EdgeInsets.only(top: 25.0), // Add padding to the top
+          child: Text('Create New Routine'),
+        ),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Routine Name',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Form(
+                key: _formKey,
+                child: TextFormField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    hintText: 'Enter routine name',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter a name for the routine';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+              Center(
+                child: ElevatedButton(
+                  onPressed: _selectExercises,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16.0, horizontal: 32.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: const Text('Select Exercises'),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _selectedExercises.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    margin: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: ListTile(
+                      title: Text(_selectedExercises[index].name),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              Center(
+                child: ElevatedButton(
+                  onPressed: _submit,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16.0, horizontal: 32.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: const Text('Create Routine'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+import 'package:flutter/material.dart';
+import 'package:numberpicker/numberpicker.dart';
+import 'package:provider/provider.dart';
+import '../models/workout_model.dart';
+import 'duration_picker_dialog.dart';
+
+class AddSetScreen extends StatefulWidget {
+  final Exercise exercise;
+
+  const AddSetScreen({super.key, required this.exercise});
+
+  @override
+  _AddSetScreenState createState() => _AddSetScreenState();
+}
+
+class _AddSetScreenState extends State<AddSetScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _notesController = TextEditingController();
+
+  int _repetitions = 1;
+  int _weightInt = 0;
+  int _weightDecimal = 0;
+  Duration _restTime = Duration.zero;
+
+  void _submit() {
+    if (_formKey.currentState!.validate()) {
+      final weight = _weightInt + (_weightDecimal / 10.0);
+      final notes = _notesController.text.isEmpty ? null : _notesController.text;
+
+      final workout = Workout(
+        exercise: widget.exercise,
+        repetitions: _repetitions,
+        weight: weight,
+        restTime: _restTime,
+        notes: notes,
+        date: DateTime.now(),
+      );
+
+      Provider.of<WorkoutModel>(context, listen: false).addWorkout(workout);
+
+      Navigator.pop(context);
+    }
+  }
+
+  Future<void> _pickRestTime() async {
+    final pickedTime = await showDialog<Duration>(
+      context: context,
+      builder: (context) => DurationPickerDialog(
+        initialMinutes: _restTime.inMinutes,
+        initialSeconds: _restTime.inSeconds % 60,
+      ),
+    );
+
+    if (pickedTime != null) {
+      setState(() {
+        _restTime = pickedTime;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Add Set'),
+        centerTitle: true,
+        backgroundColor: Colors.deepPurpleAccent,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                elevation: 5,
+                margin: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Repetitions',
+                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent),
+                      ),
+                      const SizedBox(height: 8),
+                      Center(
+                        child: NumberPicker(
+                          minValue: 1,
+                          maxValue: 100,
+                          value: _repetitions,
+                          onChanged: (value) {
+                            setState(() {
+                              _repetitions = value;
+                            });
+                          },
+                          selectedTextStyle: const TextStyle(color: Colors.deepPurpleAccent, fontSize: 24),
+                          textStyle: const TextStyle(color: Colors.grey, fontSize: 18),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Divider(),
+                      const Text(
+                        'Weight (kg)',
+                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          NumberPicker(
+                            minValue: 0,
+                            maxValue: 200,
+                            value: _weightInt,
+                            onChanged: (value) {
+                              setState(() {
+                                _weightInt = value;
+                              });
+                            },
+                            selectedTextStyle: const TextStyle(color: Colors.deepPurpleAccent, fontSize: 24),
+                            textStyle: const TextStyle(color: Colors.grey, fontSize: 18),
+                          ),
+                          const Text(
+                            '.',
+                            style: TextStyle(fontSize: 24, color: Colors.deepPurpleAccent),
+                          ),
+                          NumberPicker(
+                            minValue: 0,
+                            maxValue: 9,
+                            value: _weightDecimal,
+                            onChanged: (value) {
+                              setState(() {
+                                _weightDecimal = value;
+                              });
+                            },
+                            selectedTextStyle: const TextStyle(color: Colors.deepPurpleAccent, fontSize: 24),
+                            textStyle: const TextStyle(color: Colors.grey, fontSize: 18),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      const Divider(),
+                      const Text(
+                        'Rest Time',
+                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent),
+                      ),
+                      const SizedBox(height: 8),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: _pickRestTime,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            backgroundColor: Colors.deepPurpleAccent,
+                          ),
+                          child: Text(
+                            'Pick Rest Time (${_restTime.inMinutes} min ${_restTime.inSeconds % 60} sec)',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Divider(),
+                      const Text(
+                        'Notes',
+                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _notesController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter any notes (optional)',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                        ),
+                        keyboardType: TextInputType.multiline,
+                        maxLines: 3,
+                      ),
+                      const SizedBox(height: 20),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: _submit,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            backgroundColor: Colors.deepPurpleAccent,
+                          ),
+                          child: const Text(
+                            'Add Set',
+                            style: TextStyle(fontSize: 16.0, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/workout_model.dart';
+import 'package:fl_chart/fl_chart.dart';
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final workoutModel = Provider.of<WorkoutModel>(context);
+    final recentWorkouts = workoutModel.workouts.take(5).toList();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Home'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
+          children: [
+            const Text(
+              'Welcome to Gym Tracker!',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            _buildCurrentWorkoutPlan(context),
+            const SizedBox(height: 20),
+            _buildProgressOverview(context),
+            const SizedBox(height: 20),
+            _buildRecentActivities(context, recentWorkouts),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCurrentWorkoutPlan(BuildContext context) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Current Workout Plan',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Plan Name: Full Body Workout',
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 5),
+            Text(
+              'Next Workout: Bench Press, Squats',
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                // Navigate to workout details
+              },
+              child: const Text('View Details'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProgressOverview(BuildContext context) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Progress Overview',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              height: 200,
+              child: LineChart(
+                LineChartData(
+                  lineBarsData: [
+                    LineChartBarData(
+                      spots: [
+                        FlSpot(0, 3),
+                        FlSpot(1, 2.5),
+                        FlSpot(2, 4),
+                        FlSpot(3, 3.5),
+                        FlSpot(4, 4.5),
+                      ],
+                      isCurved: true,
+                      barWidth: 4,
+                      color: Colors.blue,
+                      belowBarData: BarAreaData(
+                        show: true,
+                        color: Colors.blue.withOpacity(0.3),
+                      ),
+                    ),
+                  ],
+                  borderData: FlBorderData(show: true),
+                  gridData: FlGridData(show: true),
+                  titlesData: FlTitlesData(
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: true),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: true),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecentActivities(BuildContext context, List<Workout> recentWorkouts) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Recent Activities',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            ...recentWorkouts.map((workout) => ListTile(
+              title: Text('${workout.exercise.name} - ${workout.repetitions} reps'),
+              subtitle: Text('${workout.weight} kg, ${workout.date.toLocal()}'),
+            )).toList(),
+            if (recentWorkouts.isEmpty)
+              const Text(
+                'No recent activities',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'models/workout_model.dart';
+import 'models/theme_model.dart';
+import 'screens/home_screen.dart';
+import 'screens/training_screen.dart';
+import 'screens/settings_screen.dart';
+import 'screens/statistics_screen.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await clearSharedPreferences(); // Temporarily clear shared preferences for testing
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => WorkoutModel()),
+        ChangeNotifierProvider(create: (context) => ThemeModel()..loadPreferences()),
+      ],
+      child: const MyApp(),
+    ),
+  );
+}
+
+Future<void> clearSharedPreferences() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.clear();
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ThemeModel>(
+      builder: (context, themeModel, child) {
+        return MaterialApp(
+          title: 'Gym Tracker',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            brightness: themeModel.isDark ? Brightness.dark : Brightness.light,
+          ),
+          home: const MainScreen(),
+        );
+      },
+    );
+  }
+}
+
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
+  @override
+  _MainScreenState createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  int _selectedIndex = 0;
+
+  static const List<Widget> _widgetOptions = <Widget>[
+    HomeScreen(),
+    TrainingScreen(),
+    StatisticsScreen(),
+    SettingsScreen(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _widgetOptions,
+      ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: _onItemTapped,
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.fitness_center),
+            label: 'Training',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.bar_chart),
+            label: 'Statistics',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+      ),
+    );
+  }
+}

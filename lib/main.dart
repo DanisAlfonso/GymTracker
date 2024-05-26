@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'models/workout_model.dart';
+import 'models/theme_model.dart';
 import 'screens/home_screen.dart';
 import 'screens/training_screen.dart';
 import 'screens/settings_screen.dart';
@@ -11,8 +12,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await clearSharedPreferences(); // Temporarily clear shared preferences for testing
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => WorkoutModel(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => WorkoutModel()),
+        ChangeNotifierProvider(create: (context) => ThemeModel()..loadPreferences()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -28,12 +32,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Gym Tracker',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MainScreen(),
+    return Consumer<ThemeModel>(
+      builder: (context, themeModel, child) {
+        return MaterialApp(
+          title: 'Gym Tracker',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            brightness: themeModel.isDark ? Brightness.dark : Brightness.light,
+          ),
+          home: const MainScreen(),
+        );
+      },
     );
   }
 }
