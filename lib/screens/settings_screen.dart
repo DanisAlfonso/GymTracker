@@ -3,6 +3,7 @@ import 'user_profile_screen.dart';
 import 'workout_preferences_screen.dart';
 import 'app_preferences_screen.dart';
 import 'backup_restore_screen.dart';
+import 'about_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -59,7 +60,10 @@ class SettingsScreen extends StatelessWidget {
             leading: Icon(Icons.info),
             title: Text('About'),
             onTap: () {
-              // Navigate to About screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AboutScreen()),
+              );
             },
           ),
         ],
