@@ -28,10 +28,13 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textColor = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+
     return AlertDialog(
-      title: const Text(
+      title: Text(
         'Select Rest Time',
-        style: TextStyle(color: Colors.deepPurpleAccent),
+        style: TextStyle(color: textColor),
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -48,12 +51,12 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
                     minutes = value;
                   });
                 },
-                selectedTextStyle: const TextStyle(color: Colors.deepPurpleAccent, fontSize: 24),
-                textStyle: const TextStyle(color: Colors.grey, fontSize: 18),
+                selectedTextStyle: TextStyle(color: theme.primaryColor, fontSize: 24),
+                textStyle: TextStyle(color: textColor, fontSize: 18),
               ),
-              const Text(
+              Text(
                 'min',
-                style: TextStyle(fontSize: 18, color: Colors.deepPurpleAccent),
+                style: TextStyle(fontSize: 18, color: textColor),
               ),
               NumberPicker(
                 minValue: 0,
@@ -64,12 +67,12 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
                     seconds = value;
                   });
                 },
-                selectedTextStyle: const TextStyle(color: Colors.deepPurpleAccent, fontSize: 24),
-                textStyle: const TextStyle(color: Colors.grey, fontSize: 18),
+                selectedTextStyle: TextStyle(color: theme.primaryColor, fontSize: 24),
+                textStyle: TextStyle(color: textColor, fontSize: 18),
               ),
-              const Text(
+              Text(
                 'sec',
-                style: TextStyle(fontSize: 18, color: Colors.deepPurpleAccent),
+                style: TextStyle(fontSize: 18, color: textColor),
               ),
             ],
           ),
@@ -80,9 +83,9 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: const Text(
+          child: Text(
             'Cancel',
-            style: TextStyle(color: Colors.deepPurpleAccent),
+            style: TextStyle(color: theme.primaryColor),
           ),
         ),
         ElevatedButton(
@@ -90,7 +93,7 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
             Navigator.pop(context, Duration(minutes: minutes, seconds: seconds));
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.deepPurpleAccent,
+            backgroundColor: theme.primaryColor,
           ),
           child: const Text(
             'OK',
