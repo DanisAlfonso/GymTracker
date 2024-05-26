@@ -39,6 +39,18 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
             brightness: themeModel.isDark ? Brightness.dark : Brightness.light,
+            inputDecorationTheme: InputDecorationTheme(
+              filled: true,
+              fillColor: themeModel.isDark ? Colors.grey[800] : Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: themeModel.isDark ? Colors.white : Colors.blue,
+                ),
+              ),
+            ),
           ),
           home: const MainScreen(),
         );

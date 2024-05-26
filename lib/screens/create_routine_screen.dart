@@ -1,4 +1,3 @@
-// create_routine_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
@@ -93,7 +92,7 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     filled: true,
-                    fillColor: Colors.grey[200],
+                    fillColor: Theme.of(context).inputDecorationTheme.fillColor,
                   ),
                   validator: (value) {
                     if (value!.isEmpty) {
