@@ -6,7 +6,7 @@
   "dark_mode": "Modo Oscuro",
   "notifications": "Habilitar Notificaciones",
   "save": "Guardar Preferencias",
-  "select_exercise": "Seleccionar Ejercicio",
+  "select_exercises": "Seleccionar Ejercicios",
   "about": "Acerca de",
   "app_version": "Versión de la App",
   "privacy_policy": "Política de Privacidad",
@@ -26,7 +26,7 @@
   "notes": "Notas",
   "enter_notes": "Ingrese cualquier nota (opcional)",
   "add_workout": "Añadir Entrenamiento",
-  "please_select_exercise": "Por favor, seleccione un ejercicio",
+  "please_select_exercise": "Por favor, seleccione al menos un ejercicio.",
   "enter_weight": "Ingrese el peso en kg",
   "please_enter_weight": "Por favor, ingrese el peso",
   "backup_restore": "Respaldo y Restauración",
@@ -34,5 +34,9 @@
   "restore_data": "Restaurar Datos",
   "backup_successful": "Respaldo Exitoso",
   "restore_successful": "Restauración Exitosa",
-  "no_backup_found": "No se encontró respaldo"
+  "no_backup_found": "No se encontró respaldo",
+  "create_routine": "Crear Nueva Rutina",
+  "routine_name": "Nombre de la Rutina",
+  "enter_routine_name": "Ingrese el nombre de la rutina",
+  "please_enter_routine_name": "Por favor, ingrese un nombre para la rutina"
 }

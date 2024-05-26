@@ -6,7 +6,7 @@
   "dark_mode": "Dark Mode",
   "notifications": "Enable Notifications",
   "save": "Save Preferences",
-  "select_exercise": "Select Exercise",
+  "select_exercises": "Select Exercises",
   "about": "About",
   "app_version": "App Version",
   "privacy_policy": "Privacy Policy",
@@ -26,7 +26,7 @@
   "notes": "Notes",
   "enter_notes": "Enter any notes (optional)",
   "add_workout": "Add Workout",
-  "please_select_exercise": "Please select an exercise",
+  "please_select_exercise": "Please select at least one exercise.",
   "enter_weight": "Enter weight in kg",
   "please_enter_weight": "Please enter the weight",
   "backup_restore": "Backup and Restore",
@@ -34,5 +34,9 @@
   "restore_data": "Restore Data",
   "backup_successful": "Backup Successful",
   "restore_successful": "Restore Successful",
-  "no_backup_found": "No Backup Found"
+  "no_backup_found": "No Backup Found",
+  "create_routine": "Create New Routine",
+  "routine_name": "Routine Name",
+  "enter_routine_name": "Enter routine name",
+  "please_enter_routine_name": "Please enter a name for the routine"
 }

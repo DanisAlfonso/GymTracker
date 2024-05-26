@@ -1,8 +1,8 @@
-// create_routine_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
 import 'exercise_library_screen.dart';
+import '../app_localizations.dart'; // Import AppLocalizations
 
 class CreateRoutineScreen extends StatefulWidget {
   const CreateRoutineScreen({super.key});
@@ -17,6 +17,7 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
   List<Exercise> _selectedExercises = [];
 
   void _submit() {
+    final appLocalizations = AppLocalizations.of(context);
     if (_formKey.currentState!.validate() && _selectedExercises.isNotEmpty) {
       final routine = Routine(
         name: _nameController.text,
@@ -28,8 +29,8 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select at least one exercise.'),
+        SnackBar(
+          content: Text(appLocalizations!.translate('please_select_exercise')),
         ),
       );
     }
@@ -54,6 +55,8 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
@@ -63,9 +66,9 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
-        title: const Padding(
-          padding: EdgeInsets.only(top: 25.0), // Add padding to the top
-          child: Text('Create New Routine'),
+        title: Padding(
+          padding: const EdgeInsets.only(top: 25.0), // Add padding to the top
+          child: Text(appLocalizations!.translate('create_routine')),
         ),
         centerTitle: true,
       ),
@@ -75,8 +78,8 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Routine Name',
+              Text(
+                appLocalizations!.translate('routine_name'),
                 style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -88,7 +91,7 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
                 child: TextFormField(
                   controller: _nameController,
                   decoration: InputDecoration(
-                    hintText: 'Enter routine name',
+                    hintText: appLocalizations.translate('enter_routine_name'),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -97,7 +100,7 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
                   ),
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter a name for the routine';
+                      return appLocalizations.translate('please_enter_routine_name');
                     }
                     return null;
                   },
@@ -114,7 +117,7 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
-                  child: const Text('Select Exercises'),
+                  child: Text(appLocalizations.translate('select_exercises')),
                 ),
               ),
               const SizedBox(height: 20),
@@ -142,7 +145,7 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
-                  child: const Text('Create Routine'),
+                  child: Text(appLocalizations.translate('create_routine')),
                 ),
               ),
             ],
