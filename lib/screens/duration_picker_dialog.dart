@@ -32,9 +32,11 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
     final textColor = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     return AlertDialog(
-      title: Text(
-        'Select Rest Time',
-        style: TextStyle(color: textColor),
+      title: Center(
+        child: Text(
+          'Select Rest Time',
+          style: TextStyle(color: textColor),
+        ),
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
