@@ -1,4 +1,3 @@
-// select_exercises_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
@@ -13,12 +12,12 @@ class SelectExercisesScreen extends StatefulWidget {
 }
 
 class _SelectExercisesScreenState extends State<SelectExercisesScreen> {
-  List<Exercise> _selectedExercises = [];
+  late List<Exercise> _selectedExercises;
 
   @override
   void initState() {
     super.initState();
-    _selectedExercises = widget.selectedExercises;
+    _selectedExercises = List.from(widget.selectedExercises);
   }
 
   void _toggleSelection(Exercise exercise) {
@@ -31,10 +30,6 @@ class _SelectExercisesScreenState extends State<SelectExercisesScreen> {
     });
   }
 
-  void _submitSelection() {
-    Navigator.pop(context, _selectedExercises);
-  }
-
   @override
   Widget build(BuildContext context) {
     final exercises = Provider.of<WorkoutModel>(context).exercises;
@@ -42,56 +37,51 @@ class _SelectExercisesScreenState extends State<SelectExercisesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Select Exercises'),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.check),
-            onPressed: _submitSelection,
-            tooltip: 'Confirm Selection',
-          ),
-        ],
       ),
-      body: ListView.builder(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
-        itemCount: exercises.length,
-        itemBuilder: (context, index) {
-          final exercise = exercises[index];
-          final isSelected = _selectedExercises.contains(exercise);
-
-          return Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-            elevation: 5,
-            margin: const EdgeInsets.symmetric(vertical: 8.0),
-            child: ListTile(
-              leading: Icon(
-                Icons.fitness_center,
-                color: isSelected ? Theme.of(context).primaryColor : Colors.grey,
-                size: 32.0,
+        child: ListView.builder(
+          itemCount: exercises.length,
+          itemBuilder: (context, index) {
+            final exercise = exercises[index];
+            final isSelected = _selectedExercises.contains(exercise);
+            return Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
-              title: Text(
-                exercise.name,
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                  color: isSelected ? Theme.of(context).primaryColor : Colors.black,
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(16),
+                title: Text(
+                  exercise.name,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              subtitle: Text(
-                exercise.description,
-                style: TextStyle(
-                  color: isSelected ? Theme.of(context).primaryColor : Colors.grey[700],
+                subtitle: Text(
+                  exercise.description,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
                 ),
+                trailing: Icon(
+                  isSelected ? Icons.check_circle : Icons.check_circle_outline,
+                  color: isSelected ? Colors.green : Colors.grey,
+                ),
+                onTap: () => _toggleSelection(exercise),
               ),
-              trailing: Icon(
-                isSelected ? Icons.check_box : Icons.check_box_outline_blank,
-                color: isSelected ? Theme.of(context).primaryColor : Colors.grey,
-              ),
-              onTap: () => _toggleSelection(exercise),
-            ),
-          );
+            );
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pop(context, _selectedExercises);
         },
+        child: const Icon(Icons.check),
       ),
     );
   }
