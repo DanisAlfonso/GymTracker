@@ -6,6 +6,7 @@
   "dark_mode": "Modo Oscuro",
   "notifications": "Habilitar Notificaciones",
   "save": "Guardar Preferencias",
+  "select_exercise": "Seleccionar Ejercicio",
   "about": "Acerca de",
   "app_version": "Versión de la App",
   "privacy_policy": "Política de Privacidad",
@@ -25,8 +26,13 @@
   "notes": "Notas",
   "enter_notes": "Ingrese cualquier nota (opcional)",
   "add_workout": "Añadir Entrenamiento",
-  "select_exercise": "Seleccionar Ejercicio",
   "please_select_exercise": "Por favor, seleccione un ejercicio",
   "enter_weight": "Ingrese el peso en kg",
-  "please_enter_weight": "Por favor, ingrese el peso"
+  "please_enter_weight": "Por favor, ingrese el peso",
+  "backup_restore": "Respaldo y Restauración",
+  "backup_data": "Respaldar Datos",
+  "restore_data": "Restaurar Datos",
+  "backup_successful": "Respaldo Exitoso",
+  "restore_successful": "Restauración Exitosa",
+  "no_backup_found": "No se encontró respaldo"
 }
