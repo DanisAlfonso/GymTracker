@@ -1,4 +1,3 @@
-// exercise_library_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
@@ -35,47 +34,51 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
   Widget build(BuildContext context) {
     final exercises = Provider.of<WorkoutModel>(context).exercises;
 
+    // Group exercises by category
+    final Map<String, List<Exercise>> groupedExercises = {};
+    for (var exercise in exercises) {
+      if (groupedExercises[exercise.description] == null) {
+        groupedExercises[exercise.description] = [];
+      }
+      groupedExercises[exercise.description]!.add(exercise);
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Exercise Library'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: ListView.builder(
-          itemCount: exercises.length,
-          itemBuilder: (context, index) {
-            final exercise = exercises[index];
-            final isSelected = _selectedExercises.contains(exercise);
+        child: ListView(
+          children: groupedExercises.entries.map((entry) {
             return Card(
               elevation: 4,
+              margin: const EdgeInsets.symmetric(vertical: 8),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              child: ListTile(
-                contentPadding: const EdgeInsets.all(16),
+              child: ExpansionTile(
                 title: Text(
-                  exercise.name,
+                  entry.key,
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                subtitle: Text(
-                  exercise.description,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
-                  ),
-                ),
-                trailing: Icon(
-                  isSelected ? Icons.check_circle : Icons.check_circle_outline,
-                  color: isSelected ? Colors.green : Colors.grey,
-                ),
-                onTap: () => _toggleSelection(exercise),
+                children: entry.value.map((exercise) {
+                  final isSelected = _selectedExercises.contains(exercise);
+                  return ListTile(
+                    title: Text(exercise.name),
+                    trailing: Icon(
+                      isSelected ? Icons.check_circle : Icons.check_circle_outline,
+                      color: isSelected ? Colors.green : Colors.grey,
+                    ),
+                    onTap: () => _toggleSelection(exercise),
+                  );
+                }).toList(),
               ),
             );
-          },
+          }).toList(),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -108,7 +111,7 @@ class _AddExerciseDialogState extends State<AddExerciseDialog> {
       );
 
       Provider.of<WorkoutModel>(context, listen: false).addCustomExercise(exercise);
-      Navigator.pop(context);
+      Navigator.pop(context, exercise);
     }
   }
 
