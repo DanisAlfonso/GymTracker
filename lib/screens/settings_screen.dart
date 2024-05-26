@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'user_profile_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -15,7 +16,10 @@ class SettingsScreen extends StatelessWidget {
             leading: Icon(Icons.person),
             title: Text('User Profile'),
             onTap: () {
-              // Navigate to User Profile screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UserProfileScreen()),
+              );
             },
           ),
           ListTile(
