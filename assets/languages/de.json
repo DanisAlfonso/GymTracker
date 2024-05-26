@@ -17,5 +17,12 @@
   "open_source_text": "Diese Anwendung ist Open Source. Sie können den Quellcode anzeigen und zum Projekt auf GitHub beitragen.",
   "license": "Lizenz",
   "license_text": "Diese Anwendung ist unter der MIT-Lizenz lizenziert.",
-  "contact_me": "Kontaktiere mich"
+  "contact_me": "Kontaktiere mich",
+  "add_set": "Satz Hinzufügen",
+  "repetitions": "Wiederholungen",
+  "weight_kg": "Gewicht (kg)",
+  "rest_time": "Ruhezeit",
+  "pick_rest_time": "Ruhezeit Wählen",
+  "notes": "Notizen",
+  "enter_notes": "Geben Sie Notizen ein (optional)"
 }

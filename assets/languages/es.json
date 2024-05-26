@@ -17,5 +17,12 @@
   "open_source_text": "Esta aplicación es de código abierto. Puede ver el código fuente y contribuir al proyecto en GitHub.",
   "license": "Licencia",
   "license_text": "Esta aplicación está licenciada bajo la Licencia MIT.",
-  "contact_me": "Contáctame"
+  "contact_me": "Contáctame",
+  "add_set": "Añadir Serie",
+  "repetitions": "Repeticiones",
+  "weight_kg": "Peso (kg)",
+  "rest_time": "Tiempo de Descanso",
+  "pick_rest_time": "Elegir Tiempo de Descanso",
+  "notes": "Notas",
+  "enter_notes": "Ingrese cualquier nota (opcional)"
 }

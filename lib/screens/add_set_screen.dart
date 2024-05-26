@@ -1,9 +1,9 @@
-// add_set_screen.dart
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
 import 'duration_picker_dialog.dart';
+import '../app_localizations.dart'; // Import AppLocalizations
 
 class AddSetScreen extends StatefulWidget {
   final Exercise exercise;
@@ -61,9 +61,11 @@ class _AddSetScreenState extends State<AddSetScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Set'),
+        title: Text(appLocalizations!.translate('add_set')),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -84,8 +86,8 @@ class _AddSetScreenState extends State<AddSetScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Repetitions',
+                      Text(
+                        appLocalizations!.translate('repetitions'),
                         style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
@@ -105,8 +107,8 @@ class _AddSetScreenState extends State<AddSetScreen> {
                       ),
                       const SizedBox(height: 20),
                       const Divider(),
-                      const Text(
-                        'Weight (kg)',
+                      Text(
+                        appLocalizations.translate('weight_kg'),
                         style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
@@ -145,8 +147,8 @@ class _AddSetScreenState extends State<AddSetScreen> {
                       ),
                       const SizedBox(height: 20),
                       const Divider(),
-                      const Text(
-                        'Rest Time',
+                      Text(
+                        appLocalizations.translate('rest_time'),
                         style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
@@ -161,22 +163,22 @@ class _AddSetScreenState extends State<AddSetScreen> {
                             backgroundColor: Theme.of(context).primaryColor,
                           ),
                           child: Text(
-                            'Pick Rest Time (${_restTime.inMinutes} min ${_restTime.inSeconds % 60} sec)',
+                            '${appLocalizations.translate('pick_rest_time')} (${_restTime.inMinutes} min ${_restTime.inSeconds % 60} sec)',
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
                       ),
                       const SizedBox(height: 20),
                       const Divider(),
-                      const Text(
-                        'Notes',
+                      Text(
+                        appLocalizations.translate('notes'),
                         style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _notesController,
                         decoration: InputDecoration(
-                          hintText: 'Enter any notes (optional)',
+                          hintText: appLocalizations.translate('enter_notes'),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
@@ -198,9 +200,9 @@ class _AddSetScreenState extends State<AddSetScreen> {
                             ),
                             backgroundColor: Theme.of(context).primaryColor,
                           ),
-                          child: const Text(
-                            'Add Set',
-                            style: TextStyle(fontSize: 16.0, color: Colors.white),
+                          child: Text(
+                            appLocalizations.translate('add_set'),
+                            style: const TextStyle(fontSize: 16.0, color: Colors.white),
                           ),
                         ),
                       ),

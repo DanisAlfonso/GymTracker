@@ -17,5 +17,12 @@
   "open_source_text": "This application is open source. You can view the source code and contribute to the project on GitHub.",
   "license": "License",
   "license_text": "This application is licensed under the MIT License.",
-  "contact_me": "Contact Me"
+  "contact_me": "Contact Me",
+  "add_set": "Add Set",
+  "repetitions": "Repetitions",
+  "weight_kg": "Weight (kg)",
+  "rest_time": "Rest Time",
+  "pick_rest_time": "Pick Rest Time",
+  "notes": "Notes",
+  "enter_notes": "Enter any notes (optional)"
 }
