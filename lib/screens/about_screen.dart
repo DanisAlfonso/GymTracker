@@ -1,61 +1,63 @@
-// about_screen.dart
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../app_localizations.dart'; // Import the AppLocalizations
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('About'),
+        title: Text(appLocalizations!.translate('about')), // Use localized string
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
             ListTile(
-              title: Text('App Version'),
+              title: Text(appLocalizations.translate('app_version')),
               subtitle: Text('1.0.0'), // Replace with your app version
             ),
             Divider(),
             ListTile(
-              title: Text('Privacy Policy'),
+              title: Text(appLocalizations.translate('privacy_policy')),
               onTap: () {
                 _launchURL('https://yourprivacypolicyurl.com'); // Replace with your privacy policy URL
               },
             ),
             ListTile(
-              title: Text('Terms of Service'),
+              title: Text(appLocalizations.translate('terms_of_service')),
               onTap: () {
                 _launchURL('https://yourtermsofserviceurl.com'); // Replace with your terms of service URL
               },
             ),
             Divider(),
             ListTile(
-              title: Text('Acknowledgments'),
+              title: Text(appLocalizations.translate('acknowledgments')),
               subtitle: Text(
-                  'I would like to express our sincere gratitude to all the users of this application. Your support and feedback are invaluable to me.'),
+                  appLocalizations.translate('acknowledgments_text')),
             ),
             Divider(),
             ListTile(
-              title: Text('Open Source'),
-              subtitle: Text('This application is open source. You can view the source code and contribute to the project on GitHub.'),
+              title: Text(appLocalizations.translate('open_source')),
+              subtitle: Text(appLocalizations.translate('open_source_text')),
               onTap: () {
                 _launchURL('https://github.com/DanisAlfonso/gym_tracker'); // Replace with your GitHub repository URL
               },
             ),
             ListTile(
-              title: Text('License'),
-              subtitle: Text('This application is licensed under the MIT License.'),
+              title: Text(appLocalizations.translate('license')),
+              subtitle: Text(appLocalizations.translate('license_text')),
               onTap: () {
                 _launchURL('https://opensource.org/licenses/MIT'); // Replace with your license URL if different
               },
             ),
             Divider(),
             ListTile(
-              title: Text('Contact Me'),
+              title: Text(appLocalizations.translate('contact_me')),
               subtitle: Text('danis.ramirez.hn@gmail.com'), // Replace with your contact email
               onTap: () {
                 _launchURL('mailto:danis.ramirez.hn@gmail.com'); // Replace with your contact email

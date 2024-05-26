@@ -1,0 +1,21 @@
+{
+  "app_title": "Suivi de Gym",
+  "settings": "Paramètres",
+  "preferences": "Préférences",
+  "language": "Langue",
+  "dark_mode": "Mode Sombre",
+  "notifications": "Activer les Notifications",
+  "save": "Enregistrer les Préférences",
+  "select_exercise": "Sélectionner un Exercice",
+  "about": "À Propos",
+  "app_version": "Version de l'App",
+  "privacy_policy": "Politique de Confidentialité",
+  "terms_of_service": "Conditions de Service",
+  "acknowledgments": "Remerciements",
+  "acknowledgments_text": "Je voudrais exprimer notre sincère gratitude à tous les utilisateurs de cette application. Votre soutien et vos commentaires sont inestimables pour moi.",
+  "open_source": "Open Source",
+  "open_source_text": "Cette application est open source. Vous pouvez voir le code source et contribuer au projet sur GitHub.",
+  "license": "Licence",
+  "license_text": "Cette application est sous licence MIT.",
+  "contact_me": "Contactez-moi"
+}

@@ -1,4 +1,3 @@
-// settings_screen.dart
 import 'package:flutter/material.dart';
 import 'user_profile_screen.dart';
 import 'workout_preferences_screen.dart';
@@ -7,7 +6,9 @@ import 'backup_restore_screen.dart';
 import 'about_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
+  final Function(Locale) onLocaleChange;
+
+  const SettingsScreen({super.key, required this.onLocaleChange});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,7 @@ class SettingsScreen extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AppPreferencesScreen()),
+                MaterialPageRoute(builder: (context) => AppPreferencesScreen(onLocaleChange: onLocaleChange)),
               );
             },
           ),

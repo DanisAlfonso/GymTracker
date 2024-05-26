@@ -1,0 +1,21 @@
+{
+  "app_title": "Gym Tracker",
+  "settings": "Settings",
+  "preferences": "Preferences",
+  "language": "Language",
+  "dark_mode": "Dark Mode",
+  "notifications": "Enable Notifications",
+  "save": "Save Preferences",
+  "select_exercise": "Select Exercise",
+  "about": "About",
+  "app_version": "App Version",
+  "privacy_policy": "Privacy Policy",
+  "terms_of_service": "Terms of Service",
+  "acknowledgments": "Acknowledgments",
+  "acknowledgments_text": "I would like to express our sincere gratitude to all the users of this application. Your support and feedback are invaluable to me.",
+  "open_source": "Open Source",
+  "open_source_text": "This application is open source. You can view the source code and contribute to the project on GitHub.",
+  "license": "License",
+  "license_text": "This application is licensed under the MIT License.",
+  "contact_me": "Contact Me"
+}

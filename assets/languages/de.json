@@ -1,0 +1,21 @@
+{
+  "app_title": "Fitness-Tracker",
+  "settings": "Einstellungen",
+  "preferences": "Präferenzen",
+  "language": "Sprache",
+  "dark_mode": "Dunkler Modus",
+  "notifications": "Benachrichtigungen Aktivieren",
+  "save": "Präferenzen Speichern",
+  "select_exercise": "Übung Auswählen",
+  "about": "Über",
+  "app_version": "App-Version",
+  "privacy_policy": "Datenschutzrichtlinie",
+  "terms_of_service": "Nutzungsbedingungen",
+  "acknowledgments": "Danksagungen",
+  "acknowledgments_text": "Ich möchte allen Nutzern dieser Anwendung unsere aufrichtige Dankbarkeit aussprechen. Ihre Unterstützung und Ihr Feedback sind für mich von unschätzbarem Wert.",
+  "open_source": "Open Source",
+  "open_source_text": "Diese Anwendung ist Open Source. Sie können den Quellcode anzeigen und zum Projekt auf GitHub beitragen.",
+  "license": "Lizenz",
+  "license_text": "Diese Anwendung ist unter der MIT-Lizenz lizenziert.",
+  "contact_me": "Kontaktiere mich"
+}

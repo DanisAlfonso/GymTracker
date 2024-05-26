@@ -1,0 +1,21 @@
+{
+  "app_title": "Rastreador de Gimnasio",
+  "settings": "Configuraciones",
+  "preferences": "Preferencias",
+  "language": "Idioma",
+  "dark_mode": "Modo Oscuro",
+  "notifications": "Habilitar Notificaciones",
+  "save": "Guardar Preferencias",
+  "select_exercise": "Seleccionar Ejercicio",
+  "about": "Acerca de",
+  "app_version": "Versión de la App",
+  "privacy_policy": "Política de Privacidad",
+  "terms_of_service": "Términos de Servicio",
+  "acknowledgments": "Agradecimientos",
+  "acknowledgments_text": "Me gustaría expresar nuestro más sincero agradecimiento a todos los usuarios de esta aplicación. Su apoyo y comentarios son invaluables para mí.",
+  "open_source": "Código Abierto",
+  "open_source_text": "Esta aplicación es de código abierto. Puede ver el código fuente y contribuir al proyecto en GitHub.",
+  "license": "Licencia",
+  "license_text": "Esta aplicación está licenciada bajo la Licencia MIT.",
+  "contact_me": "Contáctame"
+}
