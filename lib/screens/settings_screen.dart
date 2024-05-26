@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'user_profile_screen.dart';
 import 'workout_preferences_screen.dart';
+import 'app_preferences_screen.dart';
+import 'backup_restore_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -37,14 +39,20 @@ class SettingsScreen extends StatelessWidget {
             leading: Icon(Icons.settings),
             title: Text('App Preferences'),
             onTap: () {
-              // Navigate to App Preferences screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AppPreferencesScreen()),
+              );
             },
           ),
           ListTile(
             leading: Icon(Icons.backup),
             title: Text('Backup and Restore'),
             onTap: () {
-              // Navigate to Backup and Restore screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => BackupRestoreScreen()),
+              );
             },
           ),
           ListTile(
