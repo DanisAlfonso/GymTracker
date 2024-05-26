@@ -6,7 +6,6 @@
   "dark_mode": "Dark Mode",
   "notifications": "Enable Notifications",
   "save": "Save Preferences",
-  "select_exercise": "Select Exercise",
   "about": "About",
   "app_version": "App Version",
   "privacy_policy": "Privacy Policy",
@@ -24,5 +23,10 @@
   "rest_time": "Rest Time",
   "pick_rest_time": "Pick Rest Time",
   "notes": "Notes",
-  "enter_notes": "Enter any notes (optional)"
+  "enter_notes": "Enter any notes (optional)",
+  "add_workout": "Add Workout",
+  "select_exercise": "Select Exercise",
+  "please_select_exercise": "Please select an exercise",
+  "enter_weight": "Enter weight in kg",
+  "please_enter_weight": "Please enter the weight"
 }

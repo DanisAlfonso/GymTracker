@@ -1,9 +1,9 @@
-// add_workout_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
 import 'duration_picker_dialog.dart';
 import 'package:numberpicker/numberpicker.dart';
+import '../app_localizations.dart'; // Import AppLocalizations
 
 class AddWorkoutScreen extends StatefulWidget {
   const AddWorkoutScreen({super.key});
@@ -59,9 +59,11 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Workout'),
+        title: Text(appLocalizations!.translate('add_workout')),
         centerTitle: true,
       ),
       body: Padding(
@@ -72,14 +74,14 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Select Exercise',
+                Text(
+                  appLocalizations!.translate('select_exercise'),
                   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<Exercise>(
                   value: _selectedExercise,
-                  hint: const Text('Select Exercise'),
+                  hint: Text(appLocalizations.translate('select_exercise')),
                   onChanged: (Exercise? newValue) {
                     setState(() {
                       _selectedExercise = newValue;
@@ -95,7 +97,7 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                   }).toList(),
                   validator: (value) {
                     if (value == null) {
-                      return 'Please select an exercise';
+                      return appLocalizations.translate('please_select_exercise');
                     }
                     return null;
                   },
@@ -108,8 +110,8 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'Repetitions',
+                Text(
+                  appLocalizations.translate('repetitions'),
                   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
@@ -126,15 +128,15 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'Weight (kg)',
+                Text(
+                  appLocalizations.translate('weight_kg'),
                   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _weightController,
                   decoration: InputDecoration(
-                    hintText: 'Enter weight in kg',
+                    hintText: appLocalizations.translate('enter_weight'),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -144,33 +146,33 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return 'Please enter the weight';
+                      return appLocalizations.translate('please_enter_weight');
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'Rest Time',
+                Text(
+                  appLocalizations.translate('rest_time'),
                   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 TextButton(
                   onPressed: _pickRestTime,
                   child: Text(
-                    'Pick Rest Time (${_restTime.inMinutes} min ${_restTime.inSeconds % 60} sec)',
+                    '${appLocalizations.translate('pick_rest_time')} (${_restTime.inMinutes} min ${_restTime.inSeconds % 60} sec)',
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'Notes',
+                Text(
+                  appLocalizations.translate('notes'),
                   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _notesController,
                   decoration: InputDecoration(
-                    hintText: 'Enter any notes',
+                    hintText: appLocalizations.translate('enter_notes'),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -191,8 +193,8 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
-                    child: const Text(
-                      'Add Workout',
+                    child: Text(
+                      appLocalizations.translate('add_workout'),
                       style: TextStyle(fontSize: 16.0),
                     ),
                   ),

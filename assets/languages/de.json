@@ -6,7 +6,6 @@
   "dark_mode": "Dunkler Modus",
   "notifications": "Benachrichtigungen Aktivieren",
   "save": "Präferenzen Speichern",
-  "select_exercise": "Übung Auswählen",
   "about": "Über",
   "app_version": "App-Version",
   "privacy_policy": "Datenschutzrichtlinie",
@@ -24,5 +23,10 @@
   "rest_time": "Ruhezeit",
   "pick_rest_time": "Ruhezeit Wählen",
   "notes": "Notizen",
-  "enter_notes": "Geben Sie Notizen ein (optional)"
+  "enter_notes": "Geben Sie Notizen ein (optional)",
+  "add_workout": "Workout Hinzufügen",
+  "select_exercise": "Übung Auswählen",
+  "please_select_exercise": "Bitte wählen Sie eine Übung aus",
+  "enter_weight": "Gewicht in kg eingeben",
+  "please_enter_weight": "Bitte geben Sie das Gewicht ein"
 }
