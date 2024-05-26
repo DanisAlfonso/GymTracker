@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'user_profile_screen.dart';
+import 'workout_preferences_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -26,7 +27,10 @@ class SettingsScreen extends StatelessWidget {
             leading: Icon(Icons.fitness_center),
             title: Text('Workout Preferences'),
             onTap: () {
-              // Navigate to Workout Preferences screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => WorkoutPreferencesScreen()),
+              );
             },
           ),
           ListTile(
