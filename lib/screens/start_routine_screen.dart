@@ -48,6 +48,33 @@ class StartRoutineScreen extends StatelessWidget {
     Provider.of<WorkoutModel>(context, listen: false).removeExerciseFromRoutine(routine, exercise);
   }
 
+  void _confirmDeleteWorkout(BuildContext context, Workout workout) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Set'),
+          content: const Text('Are you sure you want to delete this set?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Provider.of<WorkoutModel>(context, listen: false).deleteWorkout(workout);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,7 +152,7 @@ class StartRoutineScreen extends StatelessWidget {
                                 IconButton(
                                   icon: const Icon(Icons.delete, color: Colors.red),
                                   onPressed: () {
-                                    Provider.of<WorkoutModel>(context, listen: false).deleteWorkout(workout);
+                                    _confirmDeleteWorkout(context, workout);
                                   },
                                 ),
                               ],
