@@ -12,7 +12,7 @@ import 'app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await clearSharedPreferences(); // Temporarily clear shared preferences for testing
+  // await clearSharedPreferences(); // Temporarily clear shared preferences for testing - Remove or comment out this line
   runApp(
     MultiProvider(
       providers: [
@@ -24,10 +24,10 @@ void main() async {
   );
 }
 
-Future<void> clearSharedPreferences() async {
+/* Future<void> clearSharedPreferences() async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.clear();
-}
+} */
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
