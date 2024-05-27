@@ -1,7 +1,7 @@
-// exercise_library_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
+import '../app_localizations.dart'; // Import AppLocalizations
 
 class ExerciseLibraryScreen extends StatefulWidget {
   final List<Exercise> selectedExercises;
@@ -34,6 +34,7 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
   @override
   Widget build(BuildContext context) {
     final exercises = Provider.of<WorkoutModel>(context).exercises;
+    final appLocalizations = AppLocalizations.of(context);
 
     // Group exercises by category
     final Map<String, List<Exercise>> groupedExercises = {};
@@ -46,7 +47,7 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Exercise Library'),
+        title: Text(appLocalizations!.translate('exercise_library')),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -60,7 +61,7 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
               ),
               child: ExpansionTile(
                 title: Text(
-                  entry.key,
+                  appLocalizations.translate(entry.key),
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -69,7 +70,7 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
                 children: entry.value.map((exercise) {
                   final isSelected = _selectedExercises.contains(exercise);
                   return ListTile(
-                    title: Text(exercise.name),
+                    title: Text(appLocalizations.translate(exercise.localizationKey)),
                     trailing: Icon(
                       isSelected ? Icons.check_circle : Icons.check_circle_outline,
                       color: isSelected ? Colors.green : Colors.grey,
@@ -109,6 +110,7 @@ class _AddExerciseDialogState extends State<AddExerciseDialog> {
       final exercise = Exercise(
         name: _nameController.text,
         description: _descriptionController.text,
+        localizationKey: '', // Provide an empty localization key for custom exercises
       );
 
       Provider.of<WorkoutModel>(context, listen: false).addCustomExercise(exercise);
@@ -118,8 +120,10 @@ class _AddExerciseDialogState extends State<AddExerciseDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
+
     return AlertDialog(
-      title: const Text('Add Exercise'),
+      title: Text(appLocalizations!.translate('add_exercise')),
       content: Form(
         key: _formKey,
         child: Column(
@@ -127,20 +131,20 @@ class _AddExerciseDialogState extends State<AddExerciseDialog> {
           children: [
             TextFormField(
               controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Name'),
+              decoration: InputDecoration(labelText: appLocalizations.translate('name')),
               validator: (value) {
                 if (value!.isEmpty) {
-                  return 'Please enter the exercise name';
+                  return appLocalizations.translate('please_enter_exercise_name');
                 }
                 return null;
               },
             ),
             TextFormField(
               controller: _descriptionController,
-              decoration: const InputDecoration(labelText: 'Description'),
+              decoration: InputDecoration(labelText: appLocalizations.translate('description')),
               validator: (value) {
                 if (value!.isEmpty) {
-                  return 'Please enter the exercise description';
+                  return appLocalizations.translate('please_enter_exercise_description');
                 }
                 return null;
               },
@@ -153,11 +157,11 @@ class _AddExerciseDialogState extends State<AddExerciseDialog> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: const Text('Cancel'),
+          child: Text(appLocalizations.translate('cancel')),
         ),
         ElevatedButton(
           onPressed: _submit,
-          child: const Text('Add'),
+          child: Text(appLocalizations.translate('add')),
         ),
       ],
     );
