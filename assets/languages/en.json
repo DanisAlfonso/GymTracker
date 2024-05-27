@@ -196,5 +196,10 @@
   "exercise_rear_delt_reverse_fly_machine": "Rear Delt Reverse Fly (Machine)",
   "exercise_rear_delt_reverse_fly_machine_description": "Upper Back",
   "exercise_reverse_grip_lat_pulldown_cable": "Reverse Grip Lat Pulldown (Cable)",
-  "exercise_reverse_grip_lat_pulldown_cable_description": "Upper Back"
+  "exercise_reverse_grip_lat_pulldown_cable_description": "Upper Back",
+  "select_rest_time": "Select Rest Time",
+  "min": "min",
+  "sec": "sec",
+  "cancel": "Cancel",
+  "ok": "OK"
 }

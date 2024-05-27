@@ -1,6 +1,6 @@
-// duration_picker_dialog.dart
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
+import '../app_localizations.dart';
 
 class DurationPickerDialog extends StatefulWidget {
   final int initialMinutes;
@@ -31,11 +31,12 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textColor = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    final localization = AppLocalizations.of(context);
 
     return AlertDialog(
       title: Center(
         child: Text(
-          'Select Rest Time',
+          localization?.translate('select_rest_time') ?? 'Select Rest Time',
           style: TextStyle(color: textColor),
         ),
       ),
@@ -58,7 +59,7 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
                 textStyle: TextStyle(color: textColor, fontSize: 18),
               ),
               Text(
-                'min',
+                localization?.translate('min') ?? 'min',
                 style: TextStyle(fontSize: 18, color: textColor),
               ),
               NumberPicker(
@@ -74,7 +75,7 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
                 textStyle: TextStyle(color: textColor, fontSize: 18),
               ),
               Text(
-                'sec',
+                localization?.translate('sec') ?? 'sec',
                 style: TextStyle(fontSize: 18, color: textColor),
               ),
             ],
@@ -87,7 +88,7 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
             Navigator.pop(context);
           },
           child: Text(
-            'Cancel',
+            localization?.translate('cancel') ?? 'Cancel',
             style: TextStyle(color: theme.primaryColor),
           ),
         ),
@@ -98,9 +99,9 @@ class _DurationPickerDialogState extends State<DurationPickerDialog> {
           style: ElevatedButton.styleFrom(
             backgroundColor: theme.primaryColor,
           ),
-          child: const Text(
-            'OK',
-            style: TextStyle(color: Colors.white),
+          child: Text(
+            localization?.translate('ok') ?? 'OK',
+            style: const TextStyle(color: Colors.white),
           ),
         ),
       ],

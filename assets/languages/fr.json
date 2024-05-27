@@ -196,5 +196,10 @@
   "exercise_rear_delt_reverse_fly_machine": "Écarté Inversé Arrière (Machine)",
   "exercise_rear_delt_reverse_fly_machine_description": "Haut du Dos",
   "exercise_reverse_grip_lat_pulldown_cable": "Tirage Vertical Prise Inversée (Câble)",
-  "exercise_reverse_grip_lat_pulldown_cable_description": "Haut du Dos"
+  "exercise_reverse_grip_lat_pulldown_cable_description": "Haut du Dos",
+  "select_rest_time": "Choisir le Temps de Repos",
+  "min": "min",
+  "sec": "sec",
+  "cancel": "Annuler",
+  "ok": "OK"
 }

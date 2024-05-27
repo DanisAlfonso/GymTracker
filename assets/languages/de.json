@@ -196,5 +196,10 @@
   "exercise_rear_delt_reverse_fly_machine": "Reverse Fly (Maschine)",
   "exercise_rear_delt_reverse_fly_machine_description": "Oberer Rücken",
   "exercise_reverse_grip_lat_pulldown_cable": "Reverse Grip Lat Pulldown (Kabel)",
-  "exercise_reverse_grip_lat_pulldown_cable_description": "Oberer Rücken"
+  "exercise_reverse_grip_lat_pulldown_cable_description": "Oberer Rücken",
+  "select_rest_time": "Ruhezeit Wählen",
+  "min": "Minuten",
+  "sec": "Sekunden",
+  "cancel": "Abbrechen",
+  "ok": "OK"
 }

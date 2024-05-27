@@ -196,5 +196,10 @@
   "exercise_rear_delt_reverse_fly_machine": "Apertura Invertida de Deltoides Posterior (Máquina)",
   "exercise_rear_delt_reverse_fly_machine_description": "Espalda Alta",
   "exercise_reverse_grip_lat_pulldown_cable": "Jalón de Espalda con Agarre Invertido (Cable)",
-  "exercise_reverse_grip_lat_pulldown_cable_description": "Espalda Alta"
+  "exercise_reverse_grip_lat_pulldown_cable_description": "Espalda Alta",
+  "select_rest_time": "Elegir Tiempo de Descanso",
+  "min": "min",
+  "sec": "seg",
+  "cancel": "Cancelar",
+  "ok": "Aceptar"
 }
