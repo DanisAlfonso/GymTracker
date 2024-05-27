@@ -54,13 +54,6 @@ class StartRoutineScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(routine.name),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _addExercises(context),
-            tooltip: 'Add Exercise',
-          ),
-        ],
       ),
       body: Consumer<WorkoutModel>(
         builder: (context, workoutModel, child) {
