@@ -201,5 +201,16 @@
   "min": "min",
   "sec": "seg",
   "cancel": "Cancelar",
-  "ok": "Aceptar"
+  "ok": "Aceptar",
+  "edit_set": "Editar Serie",
+  "enter_repetitions": "Ingrese repeticiones",
+  "please_enter_repetitions": "Por favor, ingrese las repeticiones",
+  "update_set": "Actualizar Serie",
+  "exercise_library": "Biblioteca de Ejercicios",
+  "add_exercise": "Añadir Ejercicio",
+  "name": "Nombre",
+  "description": "Descripción",
+  "please_enter_exercise_name": "Por favor, ingrese el nombre del ejercicio",
+  "please_enter_exercise_description": "Por favor, ingrese la descripción del ejercicio",
+  "add": "Añadir"
 }

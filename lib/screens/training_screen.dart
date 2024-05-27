@@ -1,4 +1,3 @@
-// training_screen.dart
 import 'package:flutter/material.dart';
 import 'create_routine_screen.dart';
 import 'start_routine_screen.dart';
@@ -142,14 +141,15 @@ class TrainingScreen extends StatelessWidget {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const CreateRoutineScreen()),
           );
         },
-        child: const Icon(Icons.add),
+        icon: const Icon(Icons.add),
+        label: const Text('Create New Routine'),
       ),
     );
   }

@@ -201,5 +201,17 @@
   "min": "min",
   "sec": "sec",
   "cancel": "Cancel",
-  "ok": "OK"
+  "ok": "OK",
+  "edit_set": "Edit Set",
+  "enter_repetitions": "Enter repetitions",
+  "please_enter_repetitions": "Please enter the repetitions",
+  "update_set": "Update Set",
+  "exercise_library": "Exercise Library",
+  "add_exercise": "Add Exercise",
+  "name": "Name",
+  "description": "Description",
+  "please_enter_exercise_name": "Please enter the exercise name",
+  "please_enter_exercise_description": "Please enter the exercise description",
+  "add": "Add"
 }
+

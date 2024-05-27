@@ -1,7 +1,7 @@
-// edit_set_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
+import '../app_localizations.dart';
 
 class EditSetScreen extends StatefulWidget {
   final Workout workout;
@@ -37,6 +37,7 @@ class _EditSetScreenState extends State<EditSetScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
@@ -46,7 +47,7 @@ class _EditSetScreenState extends State<EditSetScreen> {
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
-        title: const Text('Edit Set'),
+        title: Text(localization?.translate('edit_set') ?? 'Edit Set'),
         centerTitle: true,
       ),
       body: Container(
@@ -63,9 +64,9 @@ class _EditSetScreenState extends State<EditSetScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Repetitions',
-                style: TextStyle(
+              Text(
+                localization?.translate('repetitions') ?? 'Repetitions',
+                style: const TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -74,7 +75,7 @@ class _EditSetScreenState extends State<EditSetScreen> {
               TextFormField(
                 controller: _repsController,
                 decoration: InputDecoration(
-                  hintText: 'Enter repetitions',
+                  hintText: localization?.translate('enter_repetitions') ?? 'Enter repetitions',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
@@ -84,15 +85,15 @@ class _EditSetScreenState extends State<EditSetScreen> {
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return 'Please enter the repetitions';
+                    return localization?.translate('please_enter_repetitions') ?? 'Please enter the repetitions';
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Weight (kg)',
-                style: TextStyle(
+              Text(
+                localization?.translate('weight_kg') ?? 'Weight (kg)',
+                style: const TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
                 ),
@@ -101,7 +102,7 @@ class _EditSetScreenState extends State<EditSetScreen> {
               TextFormField(
                 controller: _weightController,
                 decoration: InputDecoration(
-                  hintText: 'Enter weight in kg',
+                  hintText: localization?.translate('enter_weight') ?? 'Enter weight in kg',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
@@ -111,7 +112,7 @@ class _EditSetScreenState extends State<EditSetScreen> {
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return 'Please enter the weight';
+                    return localization?.translate('please_enter_weight') ?? 'Please enter the weight';
                   }
                   return null;
                 },
@@ -128,9 +129,9 @@ class _EditSetScreenState extends State<EditSetScreen> {
                     ),
                     backgroundColor: Theme.of(context).canvasColor,
                   ),
-                  child: const Text(
-                    'Update Set',
-                    style: TextStyle(
+                  child: Text(
+                    localization?.translate('update_set') ?? 'Update Set',
+                    style: const TextStyle(
                       fontSize: 16.0,
                     ),
                   ),

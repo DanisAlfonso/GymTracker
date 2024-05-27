@@ -37,7 +37,7 @@ class _SelectExercisesScreenState extends State<SelectExercisesScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Select Exercises'),
+        title: const Text('Select Exercises abc'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

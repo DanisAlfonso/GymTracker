@@ -201,5 +201,16 @@
   "min": "Minuten",
   "sec": "Sekunden",
   "cancel": "Abbrechen",
-  "ok": "OK"
+  "ok": "OK",
+  "edit_set": "Satz Bearbeiten",
+  "enter_repetitions": "Wiederholungen eingeben",
+  "please_enter_repetitions": "Bitte geben Sie die Wiederholungen ein",
+  "update_set": "Satz Aktualisieren",
+  "exercise_library": "Übungsbibliothek",
+  "add_exercise": "Übung Hinzufügen",
+  "name": "Name",
+  "description": "Beschreibung",
+  "please_enter_exercise_name": "Bitte geben Sie den Namen der Übung ein",
+  "please_enter_exercise_description": "Bitte geben Sie die Beschreibung der Übung ein",
+  "add": "Hinzufügen"
 }
