@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
 import 'add_set_screen.dart';
 import 'edit_set_screen.dart';
-import 'select_exercises_screen.dart';
+import 'exercise_library_screen.dart'; // Updated import
 
 class StartRoutineScreen extends StatelessWidget {
   final Routine routine;
@@ -33,7 +33,7 @@ class StartRoutineScreen extends StatelessWidget {
     final newExercises = await Navigator.push<List<Exercise>>(
       context,
       MaterialPageRoute(
-        builder: (context) => const SelectExercisesScreen(selectedExercises: []),
+        builder: (context) => ExerciseLibraryScreen(selectedExercises: []), // Use ExerciseLibraryScreen
       ),
     );
 
@@ -58,7 +58,7 @@ class StartRoutineScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () => _addExercises(context),
-            tooltip: 'Add Exercises',
+            tooltip: 'Add Exercise',
           ),
         ],
       ),
@@ -165,6 +165,12 @@ class StartRoutineScreen extends StatelessWidget {
             }).toList(),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _addExercises(context),
+        icon: const Icon(Icons.add),
+        label: const Text('Add Exercise'),
+        tooltip: 'Add Exercise',
       ),
     );
   }

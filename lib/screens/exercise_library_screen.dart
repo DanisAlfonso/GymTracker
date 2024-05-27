@@ -1,3 +1,4 @@
+// exercise_library_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
@@ -83,11 +84,12 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
           }).toList(),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.pop(context, _selectedExercises);
         },
-        child: const Icon(Icons.check),
+        icon: const Icon(Icons.check),
+        label: const Text('Done'),
       ),
     );
   }
