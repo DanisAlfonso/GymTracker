@@ -1,9 +1,11 @@
+// add_set_screen.dart
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
 import 'duration_picker_dialog.dart';
 import '../app_localizations.dart'; // Import AppLocalizations
+import 'package:intl/intl.dart'; // For formatting the date
 
 class AddSetScreen extends StatefulWidget {
   final Exercise exercise;
@@ -22,6 +24,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
   int _weightInt = 0;
   int _weightDecimal = 0;
   Duration _restTime = Duration.zero;
+  DateTime _selectedDate = DateTime.now();
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
@@ -34,7 +37,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
         weight: weight,
         restTime: _restTime,
         notes: notes,
-        date: DateTime.now(),
+        date: _selectedDate, // Use the selected date
       );
 
       Provider.of<WorkoutModel>(context, listen: false).addWorkout(workout);
@@ -55,6 +58,21 @@ class _AddSetScreenState extends State<AddSetScreen> {
     if (pickedTime != null) {
       setState(() {
         _restTime = pickedTime;
+      });
+    }
+  }
+
+  Future<void> _pickDate() async {
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (pickedDate != null && pickedDate != _selectedDate) {
+      setState(() {
+        _selectedDate = pickedDate;
       });
     }
   }
@@ -164,6 +182,29 @@ class _AddSetScreenState extends State<AddSetScreen> {
                           ),
                           child: Text(
                             '${appLocalizations.translate('pick_rest_time')} (${_restTime.inMinutes} min ${_restTime.inSeconds % 60} sec)',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Divider(),
+                      Text(
+                        appLocalizations.translate('training_day'),
+                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: _pickDate,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            backgroundColor: Theme.of(context).primaryColor,
+                          ),
+                          child: Text(
+                            '${DateFormat.yMd().format(_selectedDate)}',
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
