@@ -1,4 +1,3 @@
-// weekly_progress.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -28,6 +27,7 @@ class WeeklyProgressSection extends StatelessWidget {
           BarChartRodData(
             toY: totalWeight,
             color: Colors.blue,
+            borderRadius: BorderRadius.circular(6),
           ),
         ],
         showingTooltipIndicators: [0],
@@ -51,7 +51,7 @@ class WeeklyProgressSection extends StatelessWidget {
               'Weekly Progress Overview',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),  // Increased space between title and chart
             SizedBox(
               height: 200,
               child: BarChart(
@@ -63,7 +63,10 @@ class WeeklyProgressSection extends StatelessWidget {
                         showTitles: true,
                         getTitlesWidget: (double value, TitleMeta meta) {
                           const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-                          return Text(days[value.toInt()]);
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(days[value.toInt()]),
+                          );
                         },
                       ),
                     ),
@@ -72,10 +75,34 @@ class WeeklyProgressSection extends StatelessWidget {
                         showTitles: true,
                         reservedSize: 40,
                         getTitlesWidget: (value, meta) {
-                          return Text(
-                            value.toStringAsFixed(0),
-                            style: const TextStyle(color: Colors.black54, fontSize: 12),
-                            overflow: TextOverflow.visible,
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Text(
+                              value.toStringAsFixed(0),
+                              style: const TextStyle(color: Colors.black54, fontSize: 12),
+                              overflow: TextOverflow.visible,
+                            ),
+                          );
+                        },
+                      ),
+                      axisNameWidget: const Text(
+                        'Volume',
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                      ),
+                      axisNameSize: 32,
+                    ),
+                    rightTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 40,
+                        getTitlesWidget: (value, meta) {
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Text(
+                              value.toStringAsFixed(0),
+                              style: const TextStyle(color: Colors.black54, fontSize: 12),
+                              overflow: TextOverflow.visible,
+                            ),
                           );
                         },
                       ),
@@ -83,6 +110,19 @@ class WeeklyProgressSection extends StatelessWidget {
                   ),
                   gridData: FlGridData(show: true),
                   borderData: FlBorderData(show: false),
+                  barTouchData: BarTouchData(
+                    touchTooltipData: BarTouchTooltipData(
+                     // tooltipBgColor: Colors.blueGrey,
+                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                        return BarTooltipItem(
+                          rod.toY.toString(),
+                          const TextStyle(color: Colors.white),
+                        );
+                      },
+                      fitInsideHorizontally: true,
+                      fitInsideVertically: true,
+                    ),
+                  ),
                 ),
               ),
             ),
