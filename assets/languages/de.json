@@ -212,5 +212,7 @@
   "description": "Beschreibung",
   "please_enter_exercise_name": "Bitte geben Sie den Namen der Übung ein",
   "please_enter_exercise_description": "Bitte geben Sie die Beschreibung der Übung ein",
-  "add": "Hinzufügen"
+  "add": "Hinzufügen",
+  "previous_performance": "Bisherige Leistung",
+  "set_number": "Satznummer"
 }

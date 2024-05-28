@@ -212,6 +212,9 @@
   "description": "Description",
   "please_enter_exercise_name": "Please enter the exercise name",
   "please_enter_exercise_description": "Please enter the exercise description",
-  "add": "Add"
+  "add": "Add",
+  "training_day": "Training Day",
+  "previous_performance": "Previous Performance",
+  "set_number": "Set Number"
 }
 

@@ -1,4 +1,3 @@
-// add_set_screen.dart
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
@@ -20,11 +19,58 @@ class _AddSetScreenState extends State<AddSetScreen> {
   final _formKey = GlobalKey<FormState>();
   final _notesController = TextEditingController();
 
+  int _setNumber = 1;
   int _repetitions = 1;
   int _weightInt = 0;
   int _weightDecimal = 0;
   Duration _restTime = Duration.zero;
   DateTime _selectedDate = DateTime.now();
+  List<Workout> _previousWorkouts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchPreviousWorkouts();
+  }
+
+  void _fetchPreviousWorkouts() {
+    final workoutModel = Provider.of<WorkoutModel>(context, listen: false);
+    setState(() {
+      _previousWorkouts = workoutModel.workouts
+          .where((workout) => workout.exercise.name == widget.exercise.name)
+          .toList();
+    });
+  }
+
+  Workout? _getPreviousSetData() {
+    if (_previousWorkouts.isEmpty) return null;
+
+    // Group workouts by date
+    Map<DateTime, List<Workout>> groupedWorkouts = {};
+    for (var workout in _previousWorkouts) {
+      DateTime date = DateTime(workout.date.year, workout.date.month, workout.date.day);
+      if (!groupedWorkouts.containsKey(date)) {
+        groupedWorkouts[date] = [];
+      }
+      groupedWorkouts[date]!.add(workout);
+    }
+
+    // Get the latest workout date
+    DateTime? latestDate = groupedWorkouts.keys.isNotEmpty
+        ? groupedWorkouts.keys.reduce((a, b) => a.isAfter(b) ? a : b)
+        : null;
+
+    if (latestDate == null) return null;
+
+    // Get the sets for the latest workout date
+    List<Workout> latestWorkouts = groupedWorkouts[latestDate]!;
+
+    // Ensure the sets are ordered by the time they were performed
+    latestWorkouts.sort((a, b) => a.date.compareTo(b.date));
+
+    // Return the workout for the selected set number, if available
+    return _setNumber <= latestWorkouts.length ? latestWorkouts[_setNumber - 1] : null;
+  }
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
@@ -80,6 +126,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
   @override
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context);
+    final previousSetData = _getPreviousSetData();
 
     return Scaffold(
       appBar: AppBar(
@@ -93,6 +140,28 @@ class _AddSetScreenState extends State<AddSetScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (previousSetData != null)
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  elevation: 5,
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          appLocalizations.translate('previous_performance') +
+                              ': ${previousSetData.date.toLocal().toString().split(' ')[0]} - '
+                                  '${previousSetData.repetitions} reps, ${previousSetData.weight} kg',
+                          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
@@ -105,7 +174,28 @@ class _AddSetScreenState extends State<AddSetScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        appLocalizations!.translate('repetitions'),
+                        appLocalizations.translate('set_number'),
+                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      Center(
+                        child: NumberPicker(
+                          minValue: 1,
+                          maxValue: 10,
+                          value: _setNumber,
+                          onChanged: (value) {
+                            setState(() {
+                              _setNumber = value;
+                            });
+                          },
+                          selectedTextStyle: TextStyle(color: Theme.of(context).primaryColor, fontSize: 24),
+                          textStyle: const TextStyle(color: Colors.grey, fontSize: 18),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Divider(),
+                      Text(
+                        appLocalizations.translate('repetitions'),
                         style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),

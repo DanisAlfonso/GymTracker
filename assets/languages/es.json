@@ -212,5 +212,7 @@
   "description": "Descripción",
   "please_enter_exercise_name": "Por favor, ingrese el nombre del ejercicio",
   "please_enter_exercise_description": "Por favor, ingrese la descripción del ejercicio",
-  "add": "Añadir"
+  "add": "Añadir",
+  "previous_performance": "Rendimiento anterior",
+  "set_number": "Número de serie"
 }
