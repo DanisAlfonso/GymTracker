@@ -1,10 +1,10 @@
-// start_routine_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
 import 'add_set_screen.dart';
 import 'edit_set_screen.dart';
-import 'exercise_library_screen.dart'; // Updated import
+import 'exercise_library_screen.dart';
+import '../app_localizations.dart'; // Import the AppLocalizations
 
 class StartRoutineScreen extends StatelessWidget {
   final Routine routine;
@@ -33,7 +33,7 @@ class StartRoutineScreen extends StatelessWidget {
     final newExercises = await Navigator.push<List<Exercise>>(
       context,
       MaterialPageRoute(
-        builder: (context) => ExerciseLibraryScreen(selectedExercises: []), // Use ExerciseLibraryScreen
+        builder: (context) => ExerciseLibraryScreen(selectedExercises: []),
       ),
     );
 
@@ -49,25 +49,27 @@ class StartRoutineScreen extends StatelessWidget {
   }
 
   void _confirmDeleteWorkout(BuildContext context, Workout workout) {
+    final appLocalizations = AppLocalizations.of(context);
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Delete Set'),
-          content: const Text('Are you sure you want to delete this set?'),
+          title: Text(appLocalizations?.translate('delete_set') ?? 'Delete Set'),
+          content: Text(appLocalizations?.translate('confirm_delete_set') ?? 'Are you sure you want to delete this set?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: Text(appLocalizations?.translate('cancel') ?? 'Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
                 Provider.of<WorkoutModel>(context, listen: false).deleteWorkout(workout);
                 Navigator.of(context).pop();
               },
-              child: const Text('Delete'),
+              child: Text(appLocalizations?.translate('delete') ?? 'Delete'),
             ),
           ],
         );
@@ -77,6 +79,8 @@ class StartRoutineScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(routine.name),
@@ -116,7 +120,7 @@ class StartRoutineScreen extends StatelessWidget {
                       ),
                     ),
                     subtitle: Text(
-                      'Sets: $totalSets, Total Weight: ${totalWeight.toStringAsFixed(1)} kg',
+                      '${appLocalizations?.translate('sets') ?? 'Sets'}: $totalSets, ${appLocalizations?.translate('total_weight') ?? 'Total Weight'}: ${totalWeight.toStringAsFixed(1)} kg',
                       style: TextStyle(color: Colors.grey[700]),
                     ),
                     trailing: PopupMenuButton<String>(
@@ -127,9 +131,9 @@ class StartRoutineScreen extends StatelessWidget {
                       },
                       itemBuilder: (BuildContext context) {
                         return [
-                          const PopupMenuItem<String>(
+                          PopupMenuItem<String>(
                             value: 'remove',
-                            child: Text('Remove Exercise'),
+                            child: Text(appLocalizations?.translate('remove_exercise') ?? 'Remove Exercise'),
                           ),
                         ];
                       },
@@ -139,7 +143,7 @@ class StartRoutineScreen extends StatelessWidget {
                         children: exerciseWorkouts.map((workout) {
                           return ListTile(
                             title: Text(
-                              'Reps: ${workout.repetitions}, Weight: ${workout.weight} kg',
+                              '${appLocalizations?.translate('reps') ?? 'Reps'}: ${workout.repetitions}, ${appLocalizations?.translate('weight') ?? 'Weight'}: ${workout.weight} kg',
                               style: const TextStyle(fontSize: 16.0),
                             ),
                             trailing: Row(
@@ -165,7 +169,7 @@ class StartRoutineScreen extends StatelessWidget {
                         child: ElevatedButton.icon(
                           onPressed: () => _startExercise(context, exercise),
                           icon: const Icon(Icons.add),
-                          label: const Text('Add New Set'),
+                          label: Text(appLocalizations?.translate('add_new_set') ?? 'Add New Set'),
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
                             shape: RoundedRectangleBorder(
@@ -189,8 +193,8 @@ class StartRoutineScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _addExercises(context),
         icon: const Icon(Icons.add),
-        label: const Text('Add Exercise'),
-        tooltip: 'Add Exercise',
+        label: Text(appLocalizations?.translate('add_exercise') ?? 'Add Exercise'),
+        tooltip: appLocalizations?.translate('add_exercise') ?? 'Add Exercise',
       ),
     );
   }

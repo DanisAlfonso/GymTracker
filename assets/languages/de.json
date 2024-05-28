@@ -235,5 +235,16 @@
   "workout_deleted": "Training gelöscht",
   "reps": "Wiederholungen",
   "no_recent_activities": "Keine letzten Aktivitäten",
-  "no_activities": "Keine Aktivitäten"
+  "no_activities": "Keine Aktivitäten",
+  "user_profile": "Benutzerprofil",
+  "workout_preferences": "Trainingspräferenzen",
+  "app_preferences": "App-Einstellungen",
+  "delete_set": "Satz löschen",
+  "confirm_delete_set": "Sind Sie sicher, dass Sie diesen Satz löschen möchten?",
+  "sets": "Sätze",
+  "total_weight": "Gesamtgewicht",
+  "remove_exercise": "Übung entfernen",
+  "weight": "Gewicht",
+  "add_new_set": "Neuen Satz hinzufügen"
+
 }

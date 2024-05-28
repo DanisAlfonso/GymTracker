@@ -4,6 +4,7 @@ import 'workout_preferences_screen.dart';
 import 'app_preferences_screen.dart';
 import 'backup_restore_screen.dart';
 import 'about_screen.dart';
+import '../app_localizations.dart'; // Import the AppLocalizations
 
 class SettingsScreen extends StatelessWidget {
   final Function(Locale) onLocaleChange;
@@ -12,15 +13,17 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: Text(appLocalizations!.translate('settings')),
       ),
       body: ListView(
         children: [
           ListTile(
             leading: Icon(Icons.person),
-            title: Text('User Profile'),
+            title: Text(appLocalizations.translate('user_profile')),
             onTap: () {
               Navigator.push(
                 context,
@@ -30,7 +33,7 @@ class SettingsScreen extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.fitness_center),
-            title: Text('Workout Preferences'),
+            title: Text(appLocalizations.translate('workout_preferences')),
             onTap: () {
               Navigator.push(
                 context,
@@ -40,7 +43,7 @@ class SettingsScreen extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.settings),
-            title: Text('App Preferences'),
+            title: Text(appLocalizations.translate('app_preferences')),
             onTap: () {
               Navigator.push(
                 context,
@@ -50,7 +53,7 @@ class SettingsScreen extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.backup),
-            title: Text('Backup and Restore'),
+            title: Text(appLocalizations.translate('backup_restore')),
             onTap: () {
               Navigator.push(
                 context,
@@ -60,7 +63,7 @@ class SettingsScreen extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.info),
-            title: Text('About'),
+            title: Text(appLocalizations.translate('about')),
             onTap: () {
               Navigator.push(
                 context,

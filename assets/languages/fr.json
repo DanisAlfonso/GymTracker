@@ -235,6 +235,15 @@
   "workout_deleted": "Entraînement supprimé",
   "reps": "répétitions",
   "no_recent_activities": "Aucune activité récente",
-  "no_activities": "Aucune activité"
-
+  "no_activities": "Aucune activité",
+  "user_profile": "Profil de l'utilisateur",
+  "workout_preferences": "Préférences d'entraînement",
+  "app_preferences": "Préférences de l'application",
+  "delete_set": "Supprimer le set",
+  "confirm_delete_set": "Êtes-vous sûr de vouloir supprimer ce set?",
+  "sets": "Séries",
+  "total_weight": "Poids total",
+  "remove_exercise": "Supprimer l'exercice",
+  "weight": "Poids",
+  "add_new_set": "Ajouter un nouveau set"
 }

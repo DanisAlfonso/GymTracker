@@ -236,7 +236,16 @@
   "workout_deleted": "Workout deleted",
   "reps": "reps",
   "no_recent_activities": "No recent activities",
-  "no_activities": "No activities"
-
+  "no_activities": "No activities",
+  "user_profile": "User Profile",
+  "workout_preferences": "Workout Preferences",
+  "app_preferences": "App Preferences",
+  "delete_set": "Delete Set",
+  "confirm_delete_set": "Are you sure you want to delete this set?",
+  "sets": "Sets",
+  "total_weight": "Total Weight",
+  "remove_exercise": "Remove Exercise",
+  "weight": "Weight",
+  "add_new_set": "Add New Set"
 }
 
