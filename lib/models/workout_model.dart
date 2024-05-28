@@ -146,12 +146,14 @@ class WorkoutModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateWorkout(Workout workout, double newWeight, int newRepetitions) {
+  void updateWorkout(Workout workout, double newWeight, int newRepetitions, String newNotes) {
     workout.weight = newWeight;
     workout.repetitions = newRepetitions;
+    workout.notes = newNotes;
     _saveData();
     notifyListeners();
   }
+
 
   List<Workout> getWorkoutsForRoutine(Routine routine) {
     return _workouts.where((workout) => routine.exercises.contains(workout.exercise)).toList();

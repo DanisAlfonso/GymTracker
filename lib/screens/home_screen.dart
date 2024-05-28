@@ -1,7 +1,8 @@
-// home_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import '../models/workout_model.dart';
+import 'edit_workout_screen.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -30,6 +31,8 @@ class HomeScreen extends StatelessWidget {
             _buildProgressOverview(context),
             const SizedBox(height: 20),
             _buildRecentActivities(context, recentWorkouts),
+            const SizedBox(height: 20),
+            _buildAllActivities(context, workoutModel.workouts),
           ],
         ),
       ),
@@ -128,6 +131,16 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildRecentActivities(BuildContext context, List<Workout> recentWorkouts) {
+    Map<String, List<Workout>> groupedWorkouts = {};
+
+    for (var workout in recentWorkouts) {
+      String category = workout.exercise.description;
+      if (groupedWorkouts[category] == null) {
+        groupedWorkouts[category] = [];
+      }
+      groupedWorkouts[category]!.add(workout);
+    }
+
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -141,13 +154,160 @@ class HomeScreen extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            ...recentWorkouts.map((workout) => ListTile(
-              title: Text('${workout.exercise.name} - ${workout.repetitions} reps'),
-              subtitle: Text('${workout.weight} kg, ${workout.date.toLocal()}'),
-            )).toList(),
+            ...groupedWorkouts.entries.map((entry) {
+              return ExpansionTile(
+                title: Text(
+                  entry.key,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                children: entry.value.map((workout) => Dismissible(
+                  key: Key(workout.date.toString()), // Unique key for each workout
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                    ),
+                  ),
+                  confirmDismiss: (direction) async {
+                    return await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Confirm'),
+                          content: Text('Are you sure you want to delete this workout?'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(true),
+                              child: Text('Delete'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  onDismissed: (direction) {
+                    Provider.of<WorkoutModel>(context, listen: false).deleteWorkout(workout);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Workout deleted')));
+                  },
+                  child: ListTile(
+                    title: Text('${workout.exercise.name} - ${workout.repetitions} reps'),
+                    subtitle: Text('${workout.weight} kg, ${DateFormat('yyyy-MM-dd – kk:mm').format(workout.date)}'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditWorkoutScreen(workout: workout),
+                        ),
+                      );
+                    },
+                  ),
+                )).toList(),
+              );
+            }).toList(),
             if (recentWorkouts.isEmpty)
               const Text(
                 'No recent activities',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAllActivities(BuildContext context, List<Workout> allWorkouts) {
+    Map<String, List<Workout>> groupedWorkouts = {};
+
+    for (var workout in allWorkouts) {
+      String category = workout.exercise.description;
+      if (groupedWorkouts[category] == null) {
+        groupedWorkouts[category] = [];
+      }
+      groupedWorkouts[category]!.add(workout);
+    }
+
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'All Activities',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            ...groupedWorkouts.entries.map((entry) {
+              return ExpansionTile(
+                title: Text(
+                  entry.key,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                children: entry.value.map((workout) => Dismissible(
+                  key: Key(workout.date.toString()), // Unique key for each workout
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                    ),
+                  ),
+                  confirmDismiss: (direction) async {
+                    return await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Confirm'),
+                          content: Text('Are you sure you want to delete this workout?'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(true),
+                              child: Text('Delete'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  onDismissed: (direction) {
+                    Provider.of<WorkoutModel>(context, listen: false).deleteWorkout(workout);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Workout deleted')));
+                  },
+                  child: ListTile(
+                    title: Text('${workout.exercise.name} - ${workout.repetitions} reps'),
+                    subtitle: Text('${workout.weight} kg, ${DateFormat('yyyy-MM-dd – kk:mm').format(workout.date)}'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditWorkoutScreen(workout: workout),
+                        ),
+                      );
+                    },
+                  ),
+                )).toList(),
+              );
+            }).toList(),
+            if (allWorkouts.isEmpty)
+              const Text(
+                'No activities',
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
           ],

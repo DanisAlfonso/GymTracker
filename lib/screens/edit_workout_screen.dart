@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
 
-class EditSetScreen extends StatefulWidget {
+class EditWorkoutScreen extends StatefulWidget {
   final Workout workout;
 
-  EditSetScreen({required this.workout});
+  EditWorkoutScreen({required this.workout});
 
   @override
-  _EditSetScreenState createState() => _EditSetScreenState();
+  _EditWorkoutScreenState createState() => _EditWorkoutScreenState();
 }
 
-class _EditSetScreenState extends State<EditSetScreen> {
+class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
   final _formKey = GlobalKey<FormState>();
   late int _repetitions;
   late double _weight;
@@ -31,7 +31,7 @@ class _EditSetScreenState extends State<EditSetScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Set'),
+        title: Text('Edit Workout'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
