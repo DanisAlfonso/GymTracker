@@ -1,10 +1,10 @@
-// statistics_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:fl_chart/fl_chart.dart';
 import '../models/workout_model.dart';
-import 'dart:collection';
-import 'package:intl/intl.dart';
+import 'statistics/exercise_performance.dart';
+import 'statistics/weekly_progress.dart';
+import 'statistics/exercise_frequency.dart';
+import 'statistics/monthly_progress.dart';
 
 class StatisticsScreen extends StatefulWidget {
   const StatisticsScreen({super.key});
@@ -15,88 +15,6 @@ class StatisticsScreen extends StatefulWidget {
 
 class _StatisticsScreenState extends State<StatisticsScreen> {
   Exercise? _selectedExercise;
-
-  List<FlSpot> _generatePerformanceSpots(WorkoutModel workoutModel, Exercise exercise) {
-    final workouts = workoutModel.workouts.where((workout) => workout.exercise == exercise).toList();
-    workouts.sort((a, b) => a.date.compareTo(b.date));
-    return workouts
-        .asMap()
-        .entries
-        .map<FlSpot>((entry) => FlSpot(entry.key.toDouble(), entry.value.repetitions * entry.value.weight))
-        .toList();
-  }
-
-  List<BarChartGroupData> _generateWeeklyProgress(WorkoutModel workoutModel) {
-    final Map<String, double> weeklyProgress = {};
-
-    for (var workout in workoutModel.workouts) {
-      String day = DateFormat.E().format(workout.date);
-      if (!weeklyProgress.containsKey(day)) {
-        weeklyProgress[day] = 0.0;
-      }
-      weeklyProgress[day] = weeklyProgress[day]! + workout.weight * workout.repetitions;
-    }
-
-    List<BarChartGroupData> barGroups = [];
-    int index = 0;
-    weeklyProgress.forEach((day, totalWeight) {
-      barGroups.add(BarChartGroupData(
-        x: index,
-        barRods: [
-          BarChartRodData(
-            toY: totalWeight,
-            color: Colors.blue,
-          ),
-        ],
-        showingTooltipIndicators: [0],
-      ));
-      index++;
-    });
-
-    return barGroups;
-  }
-
-  List<PieChartSectionData> _generateExerciseFrequency(WorkoutModel workoutModel) {
-    final Map<String, double> exerciseFrequency = {};
-
-    for (var workout in workoutModel.workouts) {
-      String exerciseName = workout.exercise.name;
-      if (!exerciseFrequency.containsKey(exerciseName)) {
-        exerciseFrequency[exerciseName] = 0.0;
-      }
-      exerciseFrequency[exerciseName] = exerciseFrequency[exerciseName]! + workout.weight * workout.repetitions;
-    }
-
-    return exerciseFrequency.entries.map((entry) {
-      return PieChartSectionData(
-        value: entry.value,
-        title: entry.key,
-        color: Colors.primaries[exerciseFrequency.keys.toList().indexOf(entry.key) % Colors.primaries.length],
-        titleStyle: const TextStyle(color: Colors.white, fontSize: 12),
-      );
-    }).toList();
-  }
-
-  List<FlSpot> _generateMonthlyProgress(WorkoutModel workoutModel) {
-    final Map<String, double> monthlyProgress = {};
-
-    for (var workout in workoutModel.workouts) {
-      String month = DateFormat.MMM().format(workout.date);
-      if (!monthlyProgress.containsKey(month)) {
-        monthlyProgress[month] = 0.0;
-      }
-      monthlyProgress[month] = monthlyProgress[month]! + workout.weight * workout.repetitions;
-    }
-
-    List<FlSpot> lineSpots = [];
-    int index = 0;
-    monthlyProgress.forEach((month, totalWeight) {
-      lineSpots.add(FlSpot(index.toDouble(), totalWeight));
-      index++;
-    });
-
-    return lineSpots;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,10 +27,6 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         child: Consumer<WorkoutModel>(
           builder: (context, workoutModel, child) {
             final exercises = workoutModel.exercises;
-            final performanceSpots = _selectedExercise != null ? _generatePerformanceSpots(workoutModel, _selectedExercise!) : <FlSpot>[];
-            final weeklyProgressBars = _generateWeeklyProgress(workoutModel);
-            final exerciseFrequency = _generateExerciseFrequency(workoutModel);
-            final monthlyProgressSpots = _generateMonthlyProgress(workoutModel);
 
             return SingleChildScrollView(
               child: Column(
@@ -149,262 +63,14 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  if (_selectedExercise != null) ...[
-                    Text(
-                      '${_selectedExercise!.name} Performance Progress',
-                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      height: 200,
-                      child: LineChart(
-                        LineChartData(
-                          gridData: FlGridData(
-                            show: true,
-                            drawVerticalLine: true,
-                            getDrawingHorizontalLine: (value) {
-                              return const FlLine(
-                                color: Color(0xffe7e8ec),
-                                strokeWidth: 1,
-                              );
-                            },
-                            getDrawingVerticalLine: (value) {
-                              return const FlLine(
-                                color: Color(0xffe7e8ec),
-                                strokeWidth: 1,
-                              );
-                            },
-                          ),
-                          titlesData: FlTitlesData(
-                            leftTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                showTitles: true,
-                                reservedSize: 40,
-                                getTitlesWidget: (value, meta) {
-                                  return Text(
-                                    value.toStringAsFixed(0),
-                                    style: const TextStyle(color: Colors.black54, fontSize: 12),
-                                    overflow: TextOverflow.visible,
-                                  );
-                                },
-                                interval: performanceSpots.isNotEmpty ? ((performanceSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b)) / 10) : 100,
-                              ),
-                            ),
-                            bottomTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                showTitles: true,
-                                reservedSize: 22,
-                                getTitlesWidget: (value, meta) {
-                                  return Text(
-                                    value.toStringAsFixed(0),
-                                    style: const TextStyle(color: Colors.black54, fontSize: 12),
-                                    overflow: TextOverflow.visible,
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          borderData: FlBorderData(
-                            show: true,
-                            border: Border.all(color: const Color(0xffe7e8ec)),
-                          ),
-                          minX: 0,
-                          maxX: performanceSpots.isNotEmpty ? performanceSpots.length - 1.toDouble() : 0,
-                          minY: performanceSpots.isNotEmpty ? performanceSpots.map((e) => e.y).reduce((a, b) => a < b ? a : b) : 0,
-                          maxY: performanceSpots.isNotEmpty ? performanceSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b) : 0,
-                          lineBarsData: [
-                            LineChartBarData(
-                              spots: performanceSpots,
-                              isCurved: true,
-                              color: Colors.blue,
-                              barWidth: 4,
-                              belowBarData: BarAreaData(show: true, color: Colors.blue.withOpacity(0.3)),
-                            ),
-                          ],
-                          lineTouchData: LineTouchData(
-                            touchTooltipData: LineTouchTooltipData(
-                              getTooltipItems: (List<LineBarSpot> touchedSpots) {
-                                return touchedSpots.map((spot) {
-                                  return LineTooltipItem(
-                                    '${spot.x.toStringAsFixed(0)}, ${spot.y.toStringAsFixed(0)}',
-                                    const TextStyle(color: Colors.white),
-                                  );
-                                }).toList();
-                              },
-                            ),
-                            touchCallback: (FlTouchEvent event, LineTouchResponse? touchResponse) {
-                              if (touchResponse != null && touchResponse.lineBarSpots != null) {
-                                final value = touchResponse.lineBarSpots!.first;
-                                setState(() {
-                                  // Update something based on the touch event if needed
-                                });
-                              }
-                            },
-                            handleBuiltInTouches: true,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  if (_selectedExercise != null)
+                    ExercisePerformanceSection(selectedExercise: _selectedExercise!),
                   const SizedBox(height: 32),
-                  Text(
-                    'Weekly Progress Overview',
-                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    height: 200,
-                    child: BarChart(
-                      BarChartData(
-                        barGroups: weeklyProgressBars,
-                        titlesData: FlTitlesData(
-                          bottomTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              getTitlesWidget: (double value, TitleMeta meta) {
-                                const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-                                return Text(days[value.toInt()]);
-                              },
-                            ),
-                          ),
-                          leftTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              reservedSize: 40,
-                              getTitlesWidget: (value, meta) {
-                                return Text(
-                                  value.toStringAsFixed(0),
-                                  style: const TextStyle(color: Colors.black54, fontSize: 12),
-                                  overflow: TextOverflow.visible,
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        gridData: FlGridData(show: true),
-                        borderData: FlBorderData(show: false),
-                      ),
-                    ),
-                  ),
+                  WeeklyProgressSection(),
                   const SizedBox(height: 32),
-                  Text(
-                    'Exercise Frequency Distribution',
-                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    height: 200,
-                    child: PieChart(
-                      PieChartData(
-                        sections: exerciseFrequency,
-                        sectionsSpace: 2,
-                        centerSpaceRadius: 40,
-                        pieTouchData: PieTouchData(
-                          touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                            if (event.isInterestedForInteractions && pieTouchResponse != null && pieTouchResponse.touchedSection != null) {
-                              final touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
-                              setState(() {
-                                // Handle touch events if needed
-                              });
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
+                  ExerciseFrequencySection(),
                   const SizedBox(height: 32),
-                  Text(
-                    'Monthly Progress Overview',
-                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    height: 200,
-                    child: LineChart(
-                      LineChartData(
-                        gridData: FlGridData(
-                          show: true,
-                          drawVerticalLine: true,
-                          getDrawingHorizontalLine: (value) {
-                            return const FlLine(
-                              color: Color(0xffe7e8ec),
-                              strokeWidth: 1,
-                            );
-                          },
-                          getDrawingVerticalLine: (value) {
-                            return const FlLine(
-                              color: Color(0xffe7e8ec),
-                              strokeWidth: 1,
-                            );
-                          },
-                        ),
-                        titlesData: FlTitlesData(
-                          leftTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              reservedSize: 40,
-                              getTitlesWidget: (value, meta) {
-                                return Text(
-                                  value.toStringAsFixed(0),
-                                  style: const TextStyle(color: Colors.black54, fontSize: 12),
-                                  overflow: TextOverflow.visible,
-                                );
-                              },
-                              interval: monthlyProgressSpots.isNotEmpty ? ((monthlyProgressSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b)) / 10) : 100,
-                            ),
-                          ),
-                          bottomTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              reservedSize: 22,
-                              getTitlesWidget: (value, meta) {
-                                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                                return Text(months[value.toInt() % 12]);
-                              },
-                            ),
-                          ),
-                        ),
-                        borderData: FlBorderData(
-                          show: true,
-                          border: Border.all(color: const Color(0xffe7e8ec)),
-                        ),
-                        minX: 0,
-                        maxX: monthlyProgressSpots.isNotEmpty ? monthlyProgressSpots.length - 1.toDouble() : 0,
-                        minY: monthlyProgressSpots.isNotEmpty ? monthlyProgressSpots.map((e) => e.y).reduce((a, b) => a < b ? a : b) : 0,
-                        maxY: monthlyProgressSpots.isNotEmpty ? monthlyProgressSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b) : 0,
-                        lineBarsData: [
-                          LineChartBarData(
-                            spots: monthlyProgressSpots,
-                            isCurved: true,
-                            color: Colors.green,
-                            barWidth: 4,
-                            belowBarData: BarAreaData(show: true, color: Colors.green.withOpacity(0.3)),
-                          ),
-                        ],
-                        lineTouchData: LineTouchData(
-                          touchTooltipData: LineTouchTooltipData(
-                            getTooltipItems: (List<LineBarSpot> touchedSpots) {
-                              return touchedSpots.map((spot) {
-                                return LineTooltipItem(
-                                  '${spot.x.toStringAsFixed(0)}, ${spot.y.toStringAsFixed(0)}',
-                                  const TextStyle(color: Colors.white),
-                                );
-                              }).toList();
-                            },
-                          ),
-                          touchCallback: (FlTouchEvent event, LineTouchResponse? touchResponse) {
-                            if (touchResponse != null && touchResponse.lineBarSpots != null) {
-                              final value = touchResponse.lineBarSpots!.first;
-                              setState(() {
-                                // Update something based on the touch event if needed
-                              });
-                            }
-                          },
-                          handleBuiltInTouches: true,
-                        ),
-                      ),
-                    ),
-                  ),
+                  MonthlyProgressSection(),
                 ],
               ),
             );
