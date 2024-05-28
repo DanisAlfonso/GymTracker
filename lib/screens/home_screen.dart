@@ -4,26 +4,28 @@ import 'package:intl/intl.dart';
 import '../models/workout_model.dart';
 import 'edit_workout_screen.dart';
 import 'package:fl_chart/fl_chart.dart';
+import '../app_localizations.dart'; // Import the AppLocalizations
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
     final workoutModel = Provider.of<WorkoutModel>(context);
     final recentWorkouts = workoutModel.workouts.take(5).toList();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: Text(appLocalizations!.translate('home')),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            const Text(
-              'Welcome to Gym Tracker!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            Text(
+              appLocalizations.translate('welcome_message'),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             _buildCurrentWorkoutPlan(context),
@@ -40,6 +42,8 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildCurrentWorkoutPlan(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
+
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -52,21 +56,21 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Icon(Icons.fitness_center, color: Theme.of(context).primaryColor),
                 const SizedBox(width: 8),
-                const Text(
-                  'Current Workout Plan',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                Text(
+                  appLocalizations!.translate('current_workout_plan'),
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             const SizedBox(height: 10),
             Text(
-              'Plan Name: Full Body Workout',
-              style: TextStyle(fontSize: 16),
+              appLocalizations.translate('plan_name'),
+              style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 5),
             Text(
-              'Next Workout: Bench Press, Squats',
-              style: TextStyle(fontSize: 16),
+              appLocalizations.translate('next_workout'),
+              style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 10),
             Center(
@@ -81,7 +85,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   backgroundColor: Theme.of(context).primaryColor,
                 ),
-                child: const Text('View Details'),
+                child: Text(appLocalizations.translate('view_details')),
               ),
             ),
           ],
@@ -91,6 +95,8 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildProgressOverview(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
+
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -103,9 +109,9 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Icon(Icons.show_chart, color: Theme.of(context).primaryColor),
                 const SizedBox(width: 8),
-                const Text(
-                  'Progress Overview',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                Text(
+                  appLocalizations!.translate('progress_overview'),
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -152,6 +158,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildRecentActivities(BuildContext context, List<Workout> recentWorkouts) {
+    final appLocalizations = AppLocalizations.of(context);
     Map<String, List<Workout>> groupedWorkouts = {};
 
     for (var workout in recentWorkouts) {
@@ -174,9 +181,9 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Icon(Icons.history, color: Theme.of(context).primaryColor),
                 const SizedBox(width: 8),
-                const Text(
-                  'Recent Activities',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                Text(
+                  appLocalizations!.translate('recent_activities'),
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -185,7 +192,7 @@ class HomeScreen extends StatelessWidget {
               return ExpansionTile(
                 title: Text(
                   entry.key,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 children: entry.value.asMap().entries.map((e) {
                   final workout = e.value;
@@ -195,8 +202,8 @@ class HomeScreen extends StatelessWidget {
                     background: Container(
                       color: Colors.red,
                       alignment: Alignment.centerRight,
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Icon(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: const Icon(
                         Icons.delete,
                         color: Colors.white,
                       ),
@@ -206,16 +213,16 @@ class HomeScreen extends StatelessWidget {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text('Confirm'),
-                            content: Text('Are you sure you want to delete this workout?'),
+                            title: Text(appLocalizations.translate('confirm')),
+                            content: Text(appLocalizations.translate('confirm_delete')),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.of(context).pop(false),
-                                child: Text('Cancel'),
+                                child: Text(appLocalizations.translate('cancel')),
                               ),
                               TextButton(
                                 onPressed: () => Navigator.of(context).pop(true),
-                                child: Text('Delete'),
+                                child: Text(appLocalizations.translate('delete')),
                               ),
                             ],
                           );
@@ -224,10 +231,10 @@ class HomeScreen extends StatelessWidget {
                     },
                     onDismissed: (direction) {
                       Provider.of<WorkoutModel>(context, listen: false).deleteWorkout(workout);
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Workout deleted')));
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(appLocalizations.translate('workout_deleted'))));
                     },
                     child: ListTile(
-                      title: Text('${workout.exercise.name} - ${workout.repetitions} reps'),
+                      title: Text('${workout.exercise.name} - ${workout.repetitions} ${appLocalizations.translate('reps')}'),
                       subtitle: Text('${workout.weight} kg, ${DateFormat('yyyy-MM-dd – kk:mm').format(workout.date)}'),
                       onTap: () {
                         Navigator.push(
@@ -243,9 +250,9 @@ class HomeScreen extends StatelessWidget {
               );
             }).toList(),
             if (recentWorkouts.isEmpty)
-              const Text(
-                'No recent activities',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+              Text(
+                appLocalizations.translate('no_recent_activities'),
+                style: const TextStyle(fontSize: 16, color: Colors.grey),
               ),
           ],
         ),
@@ -254,6 +261,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildAllActivities(BuildContext context, List<Workout> allWorkouts) {
+    final appLocalizations = AppLocalizations.of(context);
     Map<String, List<Workout>> groupedWorkouts = {};
 
     for (var workout in allWorkouts) {
@@ -276,9 +284,9 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Icon(Icons.list, color: Theme.of(context).primaryColor),
                 const SizedBox(width: 8),
-                const Text(
-                  'All Activities',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                Text(
+                  appLocalizations!.translate('all_activities'),
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -287,7 +295,7 @@ class HomeScreen extends StatelessWidget {
               return ExpansionTile(
                 title: Text(
                   entry.key,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 children: entry.value.asMap().entries.map((e) {
                   final workout = e.value;
@@ -297,8 +305,8 @@ class HomeScreen extends StatelessWidget {
                     background: Container(
                       color: Colors.red,
                       alignment: Alignment.centerRight,
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Icon(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: const Icon(
                         Icons.delete,
                         color: Colors.white,
                       ),
@@ -308,16 +316,16 @@ class HomeScreen extends StatelessWidget {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text('Confirm'),
-                            content: Text('Are you sure you want to delete this workout?'),
+                            title: Text(appLocalizations.translate('confirm')),
+                            content: Text(appLocalizations.translate('confirm_delete')),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () => Navigator.of(context).pop(false),
-                                child: Text('Cancel'),
+                                child: Text(appLocalizations.translate('cancel')),
                               ),
                               TextButton(
                                 onPressed: () => Navigator.of(context).pop(true),
-                                child: Text('Delete'),
+                                child: Text(appLocalizations.translate('delete')),
                               ),
                             ],
                           );
@@ -326,10 +334,10 @@ class HomeScreen extends StatelessWidget {
                     },
                     onDismissed: (direction) {
                       Provider.of<WorkoutModel>(context, listen: false).deleteWorkout(workout);
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Workout deleted')));
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(appLocalizations.translate('workout_deleted'))));
                     },
                     child: ListTile(
-                      title: Text('${workout.exercise.name} - ${workout.repetitions} reps'),
+                      title: Text('${workout.exercise.name} - ${workout.repetitions} ${appLocalizations.translate('reps')}'),
                       subtitle: Text('${workout.weight} kg, ${DateFormat('yyyy-MM-dd – kk:mm').format(workout.date)}'),
                       onTap: () {
                         Navigator.push(
@@ -345,9 +353,9 @@ class HomeScreen extends StatelessWidget {
               );
             }).toList(),
             if (allWorkouts.isEmpty)
-              const Text(
-                'No activities',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+              Text(
+                appLocalizations.translate('no_activities'),
+                style: const TextStyle(fontSize: 16, color: Colors.grey),
               ),
           ],
         ),

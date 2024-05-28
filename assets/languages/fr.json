@@ -219,6 +219,22 @@
   "performance_progress": "Progrès de performance",
   "monthly_progress_overview": "Vue d'ensemble des progrès mensuels",
   "weekly_progress_overview": "Vue d'ensemble des progrès hebdomadaires",
-  "volume": "Volume"
+  "volume": "Volume",
+  "home": "Accueil",
+  "welcome_message": "Bienvenue sur Gym Tracker!",
+  "current_workout_plan": "Plan d'entraînement actuel",
+  "plan_name": "Nom du plan: Entraînement complet du corps",
+  "next_workout": "Prochain entraînement: Développé couché, Squats",
+  "view_details": "Voir les détails",
+  "progress_overview": "Vue d'ensemble des progrès",
+  "recent_activities": "Activités récentes",
+  "all_activities": "Toutes les activités",
+  "confirm": "Confirmer",
+  "confirm_delete": "Êtes-vous sûr de vouloir supprimer cet entraînement?",
+  "delete": "Supprimer",
+  "workout_deleted": "Entraînement supprimé",
+  "reps": "répétitions",
+  "no_recent_activities": "Aucune activité récente",
+  "no_activities": "Aucune activité"
 
 }

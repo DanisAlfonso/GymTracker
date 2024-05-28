@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
+import '../app_localizations.dart'; // Import the AppLocalizations
 
 class EditSetScreen extends StatefulWidget {
   final Workout workout;
@@ -27,11 +28,12 @@ class _EditSetScreenState extends State<EditSetScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
     final workoutModel = Provider.of<WorkoutModel>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Set'),
+        title: Text(appLocalizations!.translate('edit_set')),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -41,31 +43,31 @@ class _EditSetScreenState extends State<EditSetScreen> {
             children: [
               TextFormField(
                 initialValue: _repetitions.toString(),
-                decoration: InputDecoration(labelText: 'Repetitions'),
+                decoration: InputDecoration(labelText: appLocalizations.translate('repetitions')),
                 keyboardType: TextInputType.number,
                 onSaved: (value) => _repetitions = int.parse(value!),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter repetitions';
+                    return appLocalizations.translate('please_enter_repetitions');
                   }
                   return null;
                 },
               ),
               TextFormField(
                 initialValue: _weight.toString(),
-                decoration: InputDecoration(labelText: 'Weight (kg)'),
+                decoration: InputDecoration(labelText: appLocalizations.translate('weight_kg')),
                 keyboardType: TextInputType.number,
                 onSaved: (value) => _weight = double.parse(value!),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter weight';
+                    return appLocalizations.translate('please_enter_weight');
                   }
                   return null;
                 },
               ),
               TextFormField(
                 initialValue: _notes,
-                decoration: InputDecoration(labelText: 'Notes'),
+                decoration: InputDecoration(labelText: appLocalizations.translate('notes')),
                 onSaved: (value) => _notes = value!,
               ),
               SizedBox(height: 15),
@@ -82,7 +84,7 @@ class _EditSetScreenState extends State<EditSetScreen> {
                     Navigator.pop(context);
                   }
                 },
-                child: Text('Save'),
+                child: Text(appLocalizations.translate('save')),
               ),
             ],
           ),

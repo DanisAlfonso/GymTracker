@@ -219,6 +219,21 @@
   "performance_progress": "Leistungsfortschritt",
   "monthly_progress_overview": "Monatliche Fortschrittsübersicht",
   "weekly_progress_overview": "Wöchentlicher Fortschrittsüberblick",
-  "volume": "Volumen"
-
+  "volume": "Volumen",
+  "home": "Startseite",
+  "welcome_message": "Willkommen bei Gym Tracker!",
+  "current_workout_plan": "Aktueller Trainingsplan",
+  "plan_name": "Plan Name: Ganzkörpertraining",
+  "next_workout": "Nächstes Training: Bankdrücken, Kniebeugen",
+  "view_details": "Details anzeigen",
+  "progress_overview": "Fortschrittsübersicht",
+  "recent_activities": "Letzte Aktivitäten",
+  "all_activities": "Alle Aktivitäten",
+  "confirm": "Bestätigen",
+  "confirm_delete": "Möchten Sie dieses Training wirklich löschen?",
+  "delete": "Löschen",
+  "workout_deleted": "Training gelöscht",
+  "reps": "Wiederholungen",
+  "no_recent_activities": "Keine letzten Aktivitäten",
+  "no_activities": "Keine Aktivitäten"
 }

@@ -219,6 +219,22 @@
   "performance_progress": "Progreso del rendimiento",
   "monthly_progress_overview": "Resumen del progreso mensual",
   "weekly_progress_overview": "Resumen del progreso semanal",
-  "volume": "Volumen"
+  "volume": "Volumen",
+  "home": "Inicio",
+  "welcome_message": "¡Bienvenido a Gym Tracker!",
+  "current_workout_plan": "Plan de entrenamiento actual",
+  "plan_name": "Nombre del plan: Entrenamiento de cuerpo completo",
+  "next_workout": "Próximo entrenamiento: Press de banca, Sentadillas",
+  "view_details": "Ver detalles",
+  "progress_overview": "Resumen del progreso",
+  "recent_activities": "Actividades recientes",
+  "all_activities": "Todas las actividades",
+  "confirm": "Confirmar",
+  "confirm_delete": "¿Está seguro de que desea eliminar este entrenamiento?",
+  "delete": "Eliminar",
+  "workout_deleted": "Entrenamiento eliminado",
+  "reps": "repeticiones",
+  "no_recent_activities": "No hay actividades recientes",
+  "no_activities": "No hay actividades"
 
 }
