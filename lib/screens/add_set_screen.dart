@@ -40,6 +40,18 @@ class _AddSetScreenState extends State<AddSetScreen> {
           .where((workout) => workout.exercise.name == widget.exercise.name)
           .toList();
     });
+    _updateInitialValues();
+  }
+
+  void _updateInitialValues() {
+    final previousSetData = _getPreviousSetData();
+    if (previousSetData != null) {
+      setState(() {
+        _repetitions = previousSetData.repetitions;
+        _weightInt = previousSetData.weight.toInt();
+        _weightDecimal = ((previousSetData.weight - _weightInt) * 10).round();
+      });
+    }
   }
 
   Workout? _getPreviousSetData() {
@@ -216,6 +228,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                           onChanged: (value) {
                             setState(() {
                               _setNumber = value;
+                              _updateInitialValues(); // Update the initial values when set number changes
                             });
                           },
                           selectedTextStyle: TextStyle(color: Theme.of(context).primaryColor, fontSize: 24),
