@@ -160,56 +160,59 @@ class HomeScreen extends StatelessWidget {
                   entry.key,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                children: entry.value.map((workout) => Dismissible(
-                  key: Key(workout.date.toString()), // Unique key for each workout
-                  direction: DismissDirection.endToStart,
-                  background: Container(
-                    color: Colors.red,
-                    alignment: Alignment.centerRight,
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Icon(
-                      Icons.delete,
-                      color: Colors.white,
+                children: entry.value.asMap().entries.map((e) {
+                  final workout = e.value;
+                  return Dismissible(
+                    key: Key('${workout.exercise.name}-${workout.date}-${e.key}'), // Unique key for each workout
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                      color: Colors.red,
+                      alignment: Alignment.centerRight,
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  confirmDismiss: (direction) async {
-                    return await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Confirm'),
-                          content: Text('Are you sure you want to delete this workout?'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(false),
-                              child: Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(true),
-                              child: Text('Delete'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  onDismissed: (direction) {
-                    Provider.of<WorkoutModel>(context, listen: false).deleteWorkout(workout);
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Workout deleted')));
-                  },
-                  child: ListTile(
-                    title: Text('${workout.exercise.name} - ${workout.repetitions} reps'),
-                    subtitle: Text('${workout.weight} kg, ${DateFormat('yyyy-MM-dd – kk:mm').format(workout.date)}'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditWorkoutScreen(workout: workout),
-                        ),
+                    confirmDismiss: (direction) async {
+                      return await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Confirm'),
+                            content: Text('Are you sure you want to delete this workout?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(false),
+                                child: Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(true),
+                                child: Text('Delete'),
+                              ),
+                            ],
+                          );
+                        },
                       );
                     },
-                  ),
-                )).toList(),
+                    onDismissed: (direction) {
+                      Provider.of<WorkoutModel>(context, listen: false).deleteWorkout(workout);
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Workout deleted')));
+                    },
+                    child: ListTile(
+                      title: Text('${workout.exercise.name} - ${workout.repetitions} reps'),
+                      subtitle: Text('${workout.weight} kg, ${DateFormat('yyyy-MM-dd – kk:mm').format(workout.date)}'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditWorkoutScreen(workout: workout),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }).toList(),
               );
             }).toList(),
             if (recentWorkouts.isEmpty)
@@ -253,56 +256,59 @@ class HomeScreen extends StatelessWidget {
                   entry.key,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                children: entry.value.map((workout) => Dismissible(
-                  key: Key(workout.date.toString()), // Unique key for each workout
-                  direction: DismissDirection.endToStart,
-                  background: Container(
-                    color: Colors.red,
-                    alignment: Alignment.centerRight,
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Icon(
-                      Icons.delete,
-                      color: Colors.white,
+                children: entry.value.asMap().entries.map((e) {
+                  final workout = e.value;
+                  return Dismissible(
+                    key: Key('${workout.exercise.name}-${workout.date}-${e.key}'), // Unique key for each workout
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                      color: Colors.red,
+                      alignment: Alignment.centerRight,
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  confirmDismiss: (direction) async {
-                    return await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Confirm'),
-                          content: Text('Are you sure you want to delete this workout?'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(false),
-                              child: Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(true),
-                              child: Text('Delete'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  onDismissed: (direction) {
-                    Provider.of<WorkoutModel>(context, listen: false).deleteWorkout(workout);
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Workout deleted')));
-                  },
-                  child: ListTile(
-                    title: Text('${workout.exercise.name} - ${workout.repetitions} reps'),
-                    subtitle: Text('${workout.weight} kg, ${DateFormat('yyyy-MM-dd – kk:mm').format(workout.date)}'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditWorkoutScreen(workout: workout),
-                        ),
+                    confirmDismiss: (direction) async {
+                      return await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Confirm'),
+                            content: Text('Are you sure you want to delete this workout?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(false),
+                                child: Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(true),
+                                child: Text('Delete'),
+                              ),
+                            ],
+                          );
+                        },
                       );
                     },
-                  ),
-                )).toList(),
+                    onDismissed: (direction) {
+                      Provider.of<WorkoutModel>(context, listen: false).deleteWorkout(workout);
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Workout deleted')));
+                    },
+                    child: ListTile(
+                      title: Text('${workout.exercise.name} - ${workout.repetitions} reps'),
+                      subtitle: Text('${workout.weight} kg, ${DateFormat('yyyy-MM-dd – kk:mm').format(workout.date)}'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditWorkoutScreen(workout: workout),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }).toList(),
               );
             }).toList(),
             if (allWorkouts.isEmpty)
