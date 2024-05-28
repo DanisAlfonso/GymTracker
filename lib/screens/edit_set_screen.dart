@@ -68,7 +68,7 @@ class _EditSetScreenState extends State<EditSetScreen> {
                 decoration: InputDecoration(labelText: 'Notes'),
                 onSaved: (value) => _notes = value!,
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 15),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {

@@ -153,10 +153,34 @@ class _AddSetScreenState extends State<AddSetScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          appLocalizations.translate('previous_performance') +
-                              ': ${previousSetData.date.toLocal().toString().split(' ')[0]} - '
-                                  '${previousSetData.repetitions} reps, ${previousSetData.weight} kg',
-                          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                          appLocalizations.translate('previous_performance'),
+                          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Icon(Icons.fitness_center, color: Theme.of(context).primaryColor),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                '${previousSetData.repetitions} reps, ${previousSetData.weight} kg',
+                                style: TextStyle(fontSize: 16.0),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Icon(Icons.calendar_today, color: Theme.of(context).primaryColor),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                DateFormat.yMMMd().add_Hm().format(previousSetData.date),
+                                style: TextStyle(fontSize: 16.0),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -177,7 +201,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                         appLocalizations.translate('set_number'),
                         style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 4), // Reduced spacing
                       Center(
                         child: NumberPicker(
                           minValue: 1,
@@ -192,13 +216,13 @@ class _AddSetScreenState extends State<AddSetScreen> {
                           textStyle: const TextStyle(color: Colors.grey, fontSize: 18),
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 12), // Reduced spacing
                       const Divider(),
                       Text(
                         appLocalizations.translate('repetitions'),
                         style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 4), // Reduced spacing
                       Center(
                         child: NumberPicker(
                           minValue: 1,
@@ -213,13 +237,13 @@ class _AddSetScreenState extends State<AddSetScreen> {
                           textStyle: const TextStyle(color: Colors.grey, fontSize: 18),
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 12), // Reduced spacing
                       const Divider(),
                       Text(
                         appLocalizations.translate('weight_kg'),
                         style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 4), // Reduced spacing
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -254,7 +278,37 @@ class _AddSetScreenState extends State<AddSetScreen> {
                         ],
                       ),
                       const SizedBox(height: 20),
-                      const Divider(),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: _submit,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            backgroundColor: Theme.of(context).primaryColor,
+                          ),
+                          child: Text(
+                            appLocalizations.translate('add_set'),
+                            style: const TextStyle(fontSize: 16.0, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                elevation: 5,
+                margin: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
                         appLocalizations.translate('rest_time'),
                         style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
@@ -319,23 +373,6 @@ class _AddSetScreenState extends State<AddSetScreen> {
                         ),
                         keyboardType: TextInputType.multiline,
                         maxLines: 3,
-                      ),
-                      const SizedBox(height: 20),
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: _submit,
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            backgroundColor: Theme.of(context).primaryColor,
-                          ),
-                          child: Text(
-                            appLocalizations.translate('add_set'),
-                            style: const TextStyle(fontSize: 16.0, color: Colors.white),
-                          ),
-                        ),
                       ),
                     ],
                   ),
