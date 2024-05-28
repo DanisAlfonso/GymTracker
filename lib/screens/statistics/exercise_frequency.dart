@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../models/workout_model.dart';
+import '../../app_localizations.dart'; // Import the AppLocalizations
 
 class ExerciseFrequencySection extends StatelessWidget {
   const ExerciseFrequencySection({Key? key}) : super(key: key);
@@ -33,6 +34,8 @@ class ExerciseFrequencySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
+
     return Consumer<WorkoutModel>(
       builder: (context, workoutModel, child) {
         final muscleGroupFrequency = _generateMuscleGroupFrequency(workoutModel);
@@ -46,9 +49,9 @@ class ExerciseFrequencySection extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Muscle Group Frequency Distribution',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            Text(
+              appLocalizations!.translate('muscle_group_frequency_distribution'),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             SizedBox(

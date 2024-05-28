@@ -215,6 +215,12 @@
   "add": "Add",
   "training_day": "Training Day",
   "previous_performance": "Previous Performance",
-  "set_number": "Set Number"
+  "set_number": "Set Number",
+  "muscle_group_frequency_distribution": "Muscle Group Frequency Distribution",
+  "performance_progress": "Performance Progress",
+  "monthly_progress_overview": "Monthly Progress Overview",
+  "weekly_progress_overview": "Weekly Progress Overview",
+  "volume": "Volume"
+
 }
 

@@ -214,5 +214,11 @@
   "please_enter_exercise_description": "Por favor, ingrese la descripción del ejercicio",
   "add": "Añadir",
   "previous_performance": "Rendimiento anterior",
-  "set_number": "Número de serie"
+  "set_number": "Número de serie",
+  "muscle_group_frequency_distribution": "Distribución de la frecuencia de los grupos musculares",
+  "performance_progress": "Progreso del rendimiento",
+  "monthly_progress_overview": "Resumen del progreso mensual",
+  "weekly_progress_overview": "Resumen del progreso semanal",
+  "volume": "Volumen"
+
 }

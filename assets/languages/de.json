@@ -214,5 +214,11 @@
   "please_enter_exercise_description": "Bitte geben Sie die Beschreibung der Übung ein",
   "add": "Hinzufügen",
   "previous_performance": "Bisherige Leistung",
-  "set_number": "Satznummer"
+  "set_number": "Satznummer",
+  "muscle_group_frequency_distribution": "Verteilung der Muskelgruppenfrequenz",
+  "performance_progress": "Leistungsfortschritt",
+  "monthly_progress_overview": "Monatliche Fortschrittsübersicht",
+  "weekly_progress_overview": "Wöchentlicher Fortschrittsüberblick",
+  "volume": "Volumen"
+
 }

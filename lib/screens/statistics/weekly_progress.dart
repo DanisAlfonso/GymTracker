@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../models/workout_model.dart';
 import 'package:intl/intl.dart';
+import '../../app_localizations.dart'; // Import the AppLocalizations
 
 class WeeklyProgressSection extends StatelessWidget {
   const WeeklyProgressSection({Key? key}) : super(key: key);
@@ -40,6 +41,8 @@ class WeeklyProgressSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
+
     return Consumer<WorkoutModel>(
       builder: (context, workoutModel, child) {
         final weeklyProgressBars = _generateWeeklyProgress(workoutModel);
@@ -47,9 +50,9 @@ class WeeklyProgressSection extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Weekly Progress Overview',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            Text(
+              appLocalizations!.translate('weekly_progress_overview'),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 24),  // Increased space between title and chart
             SizedBox(
@@ -85,9 +88,9 @@ class WeeklyProgressSection extends StatelessWidget {
                           );
                         },
                       ),
-                      axisNameWidget: const Text(
-                        'Volume',
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                      axisNameWidget: Text(
+                        appLocalizations.translate('volume'),
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                       ),
                       axisNameSize: 32,
                     ),
@@ -112,7 +115,6 @@ class WeeklyProgressSection extends StatelessWidget {
                   borderData: FlBorderData(show: false),
                   barTouchData: BarTouchData(
                     touchTooltipData: BarTouchTooltipData(
-                     // tooltipBgColor: Colors.blueGrey,
                       getTooltipItem: (group, groupIndex, rod, rodIndex) {
                         return BarTooltipItem(
                           rod.toY.toString(),

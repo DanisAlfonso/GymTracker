@@ -1,9 +1,9 @@
-// monthly_progress.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../models/workout_model.dart';
 import 'package:intl/intl.dart';
+import '../../app_localizations.dart'; // Import the AppLocalizations
 
 class MonthlyProgressSection extends StatelessWidget {
   const MonthlyProgressSection({Key? key}) : super(key: key);
@@ -31,6 +31,8 @@ class MonthlyProgressSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
+
     return Consumer<WorkoutModel>(
       builder: (context, workoutModel, child) {
         final monthlyProgressSpots = _generateMonthlyProgress(workoutModel);
@@ -38,9 +40,9 @@ class MonthlyProgressSection extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Monthly Progress Overview',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            Text(
+              appLocalizations!.translate('monthly_progress_overview'),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             SizedBox(

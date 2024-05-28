@@ -1,8 +1,8 @@
-// exercise_performance.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../models/workout_model.dart';
+import '../../app_localizations.dart'; // Import the AppLocalizations
 
 class ExercisePerformanceSection extends StatelessWidget {
   final Exercise selectedExercise;
@@ -21,6 +21,8 @@ class ExercisePerformanceSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
+
     return Consumer<WorkoutModel>(
       builder: (context, workoutModel, child) {
         final performanceSpots = _generatePerformanceSpots(workoutModel, selectedExercise);
@@ -29,7 +31,7 @@ class ExercisePerformanceSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${selectedExercise.name} Performance Progress',
+              '${selectedExercise.name} ${appLocalizations!.translate('performance_progress')}',
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
