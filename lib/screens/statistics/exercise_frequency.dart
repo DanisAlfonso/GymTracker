@@ -8,6 +8,7 @@ class ExerciseFrequencySection extends StatelessWidget {
 
   List<PieChartSectionData> _generateMuscleGroupFrequency(WorkoutModel workoutModel) {
     final Map<String, double> muscleGroupFrequency = {};
+    double totalWeight = 0;
 
     for (var workout in workoutModel.workouts) {
       String muscleGroup = workout.exercise.description;
@@ -15,12 +16,14 @@ class ExerciseFrequencySection extends StatelessWidget {
         muscleGroupFrequency[muscleGroup] = 0.0;
       }
       muscleGroupFrequency[muscleGroup] = muscleGroupFrequency[muscleGroup]! + workout.weight * workout.repetitions;
+      totalWeight += workout.weight * workout.repetitions;
     }
 
     return muscleGroupFrequency.entries.map((entry) {
+      final percentage = (entry.value / totalWeight * 100).toStringAsFixed(1);
       return PieChartSectionData(
         value: entry.value,
-        title: '',
+        title: '$percentage%',
         color: Colors.primaries[muscleGroupFrequency.keys.toList().indexOf(entry.key) % Colors.primaries.length],
         radius: 50,
         titleStyle: const TextStyle(color: Colors.white, fontSize: 12),
