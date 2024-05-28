@@ -1,6 +1,6 @@
-// workout_preferences_screen.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../app_localizations.dart'; // Import the AppLocalizations
 
 class WorkoutPreferencesScreen extends StatefulWidget {
   @override
@@ -31,21 +31,24 @@ class _WorkoutPreferencesScreenState extends State<WorkoutPreferencesScreen> {
   }
 
   Future<void> _savePreferences() async {
+    final appLocalizations = AppLocalizations.of(context);
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('useKg', _useKg);
     await prefs.setInt('defaultRestMinutes', _defaultRestMinutes);
     await prefs.setInt('defaultRestSeconds', _defaultRestSeconds);
     await prefs.setBool('workoutReminders', _workoutReminders);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Preferences Saved')),
+      SnackBar(content: Text(appLocalizations!.translate('preferences_saved'))),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Workout Preferences'),
+        title: Text(appLocalizations!.translate('workout_preferences')),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -54,7 +57,7 @@ class _WorkoutPreferencesScreenState extends State<WorkoutPreferencesScreen> {
           child: ListView(
             children: [
               SwitchListTile(
-                title: Text('Use Kilograms (kg)'),
+                title: Text(appLocalizations!.translate('use_kg')),
                 value: _useKg,
                 onChanged: (bool value) {
                   setState(() {
@@ -63,13 +66,16 @@ class _WorkoutPreferencesScreenState extends State<WorkoutPreferencesScreen> {
                 },
               ),
               const SizedBox(height: 20),
-              Text('Default Rest Time', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(
+                appLocalizations.translate('default_rest_time'),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: TextFormField(
-                      decoration: InputDecoration(labelText: 'Minutes'),
+                      decoration: InputDecoration(labelText: appLocalizations.translate('minutes')),
                       keyboardType: TextInputType.number,
                       initialValue: _defaultRestMinutes.toString(),
                       onChanged: (value) {
@@ -79,7 +85,7 @@ class _WorkoutPreferencesScreenState extends State<WorkoutPreferencesScreen> {
                       },
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'Please enter minutes';
+                          return appLocalizations.translate('please_enter_minutes');
                         }
                         return null;
                       },
@@ -88,7 +94,7 @@ class _WorkoutPreferencesScreenState extends State<WorkoutPreferencesScreen> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: TextFormField(
-                      decoration: InputDecoration(labelText: 'Seconds'),
+                      decoration: InputDecoration(labelText: appLocalizations.translate('seconds')),
                       keyboardType: TextInputType.number,
                       initialValue: _defaultRestSeconds.toString(),
                       onChanged: (value) {
@@ -98,7 +104,7 @@ class _WorkoutPreferencesScreenState extends State<WorkoutPreferencesScreen> {
                       },
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'Please enter seconds';
+                          return appLocalizations.translate('please_enter_seconds');
                         }
                         return null;
                       },
@@ -108,7 +114,7 @@ class _WorkoutPreferencesScreenState extends State<WorkoutPreferencesScreen> {
               ),
               const SizedBox(height: 20),
               SwitchListTile(
-                title: Text('Enable Workout Reminders'),
+                title: Text(appLocalizations.translate('enable_workout_reminders')),
                 value: _workoutReminders,
                 onChanged: (bool value) {
                   setState(() {
@@ -119,7 +125,7 @@ class _WorkoutPreferencesScreenState extends State<WorkoutPreferencesScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _savePreferences,
-                child: Text('Save Preferences'),
+                child: Text(appLocalizations.translate('save_preferences')),
               ),
             ],
           ),

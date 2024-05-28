@@ -256,5 +256,21 @@
   "training": "Entraînement",
   "exercises": "exercices",
   "no_routines_created": "Aucune routine créée pour le moment.",
-  "create_new_routine": "Créer une nouvelle routine"
+  "create_new_routine": "Créer une nouvelle routine",
+  "profile_saved": "Profil enregistré",
+  "please_enter_name": "Veuillez entrer votre nom",
+  "age": "Âge",
+  "please_enter_age": "Veuillez entrer votre âge",
+  "height_cm": "Taille (cm)",
+  "please_enter_height": "Veuillez entrer votre taille",
+  "save_profile": "Enregistrer le profil",
+  "preferences_saved": "Préférences enregistrées",
+  "use_kg": "Utiliser les kilogrammes (kg)",
+  "default_rest_time": "Temps de repos par défaut",
+  "minutes": "Minutes",
+  "please_enter_minutes": "Veuillez entrer les minutes",
+  "seconds": "Secondes",
+  "please_enter_seconds": "Veuillez entrer les secondes",
+  "enable_workout_reminders": "Activer les rappels d'entraînement",
+  "save_preferences": "Enregistrer les préférences"
 }

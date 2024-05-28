@@ -1,6 +1,6 @@
-// user_profile_screen.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../app_localizations.dart'; // Import the AppLocalizations
 
 class UserProfileScreen extends StatefulWidget {
   @override
@@ -31,6 +31,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Future<void> _saveUserProfile() async {
+    final appLocalizations = AppLocalizations.of(context);
     if (_formKey.currentState!.validate()) {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('name', _nameController.text);
@@ -38,16 +39,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       await prefs.setDouble('weight', double.parse(_weightController.text));
       await prefs.setDouble('height', double.parse(_heightController.text));
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Profile Saved')),
+        SnackBar(content: Text(appLocalizations!.translate('profile_saved'))),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('User Profile'),
+        title: Text(appLocalizations!.translate('user_profile')),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -70,10 +73,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: _nameController,
-                decoration: InputDecoration(labelText: 'Name'),
+                decoration: InputDecoration(labelText: appLocalizations.translate('name')),
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return 'Please enter your name';
+                    return appLocalizations.translate('please_enter_name');
                   }
                   return null;
                 },
@@ -81,11 +84,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: _ageController,
-                decoration: InputDecoration(labelText: 'Age'),
+                decoration: InputDecoration(labelText: appLocalizations.translate('age')),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return 'Please enter your age';
+                    return appLocalizations.translate('please_enter_age');
                   }
                   return null;
                 },
@@ -93,11 +96,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: _weightController,
-                decoration: InputDecoration(labelText: 'Weight (kg)'),
+                decoration: InputDecoration(labelText: appLocalizations.translate('weight_kg')),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return 'Please enter your weight';
+                    return appLocalizations.translate('please_enter_weight');
                   }
                   return null;
                 },
@@ -105,11 +108,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: _heightController,
-                decoration: InputDecoration(labelText: 'Height (cm)'),
+                decoration: InputDecoration(labelText: appLocalizations.translate('height_cm')),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return 'Please enter your height';
+                    return appLocalizations.translate('please_enter_height');
                   }
                   return null;
                 },
@@ -117,7 +120,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _saveUserProfile,
-                child: Text('Save Profile'),
+                child: Text(appLocalizations.translate('save_profile')),
               ),
             ],
           ),
