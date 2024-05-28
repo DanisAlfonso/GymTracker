@@ -197,9 +197,15 @@ class _AddSetScreenState extends State<AddSetScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        appLocalizations.translate('set_number'),
-                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                      Row(
+                        children: [
+                          Icon(Icons.format_list_numbered, color: Theme.of(context).primaryColor),
+                          const SizedBox(width: 8),
+                          Text(
+                            appLocalizations.translate('set_number'),
+                            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 4), // Reduced spacing
                       Center(
@@ -218,9 +224,15 @@ class _AddSetScreenState extends State<AddSetScreen> {
                       ),
                       const SizedBox(height: 12), // Reduced spacing
                       const Divider(),
-                      Text(
-                        appLocalizations.translate('repetitions'),
-                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                      Row(
+                        children: [
+                          Icon(Icons.repeat, color: Theme.of(context).primaryColor),
+                          const SizedBox(width: 8),
+                          Text(
+                            appLocalizations.translate('repetitions'),
+                            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 4), // Reduced spacing
                       Center(
@@ -239,9 +251,15 @@ class _AddSetScreenState extends State<AddSetScreen> {
                       ),
                       const SizedBox(height: 12), // Reduced spacing
                       const Divider(),
-                      Text(
-                        appLocalizations.translate('weight_kg'),
-                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                      Row(
+                        children: [
+                          Icon(Icons.fitness_center, color: Theme.of(context).primaryColor),
+                          const SizedBox(width: 8),
+                          Text(
+                            appLocalizations.translate('weight_kg'),
+                            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 4), // Reduced spacing
                       Row(
