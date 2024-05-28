@@ -245,5 +245,16 @@
   "total_weight": "Poids total",
   "remove_exercise": "Supprimer l'exercice",
   "weight": "Poids",
-  "add_new_set": "Ajouter un nouveau set"
+  "add_new_set": "Ajouter un nouveau set",
+  "statistics": "Statistiques",
+  "select_exercise": "Sélectionner un exercice",
+  "rename_routine": "Renommer la routine",
+  "enter_new_routine_name": "Entrez un nouveau nom de routine",
+  "rename": "Renommer",
+  "delete_routine": "Supprimer la routine",
+  "confirm_delete_routine": "Êtes-vous sûr de vouloir supprimer cette routine?",
+  "training": "Entraînement",
+  "exercises": "exercices",
+  "no_routines_created": "Aucune routine créée pour le moment.",
+  "create_new_routine": "Créer une nouvelle routine"
 }

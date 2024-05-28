@@ -5,6 +5,7 @@ import 'statistics/exercise_performance.dart';
 import 'statistics/weekly_progress.dart';
 import 'statistics/exercise_frequency.dart';
 import 'statistics/monthly_progress.dart';
+import '../app_localizations.dart'; // Import the AppLocalizations
 
 class StatisticsScreen extends StatefulWidget {
   const StatisticsScreen({super.key});
@@ -18,9 +19,11 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Statistics'),
+        title: Text(appLocalizations!.translate('statistics')),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -33,9 +36,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
 
             return ListView(
               children: [
-                const Text(
-                  'Select Exercise',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                Text(
+                  appLocalizations.translate('select_exercise'),
+                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
                 Container(
@@ -48,7 +51,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<Exercise>(
                       isDense: true,
-                      hint: const Text('Select Exercise'),
+                      hint: Text(appLocalizations.translate('select_exercise')),
                       value: _selectedExercise,
                       onChanged: (Exercise? newValue) {
                         setState(() {
@@ -85,8 +88,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                  child: const Padding(
+                    padding: EdgeInsets.all(16.0),
                     child: WeeklyProgressSection(),
                   ),
                 ),
@@ -96,8 +99,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                  child: const Padding(
+                    padding: EdgeInsets.all(16.0),
                     child: ExerciseFrequencySection(),
                   ),
                 ),
@@ -107,8 +110,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                  child: const Padding(
+                    padding: EdgeInsets.all(16.0),
                     child: MonthlyProgressSection(),
                   ),
                 ),

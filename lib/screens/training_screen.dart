@@ -1,24 +1,26 @@
-// training_screen.dart
 import 'package:flutter/material.dart';
 import 'create_routine_screen.dart';
 import 'start_routine_screen.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
+import '../app_localizations.dart'; // Import the AppLocalizations
 
 class TrainingScreen extends StatelessWidget {
   const TrainingScreen({super.key});
 
   void _renameRoutine(BuildContext context, Routine routine) {
     final nameController = TextEditingController(text: routine.name);
+    final appLocalizations = AppLocalizations.of(context);
+
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Rename Routine'),
+          title: Text(appLocalizations!.translate('rename_routine')),
           content: TextField(
             controller: nameController,
-            decoration: const InputDecoration(
-              hintText: 'Enter new routine name',
+            decoration: InputDecoration(
+              hintText: appLocalizations.translate('enter_new_routine_name'),
             ),
           ),
           actions: [
@@ -26,7 +28,7 @@ class TrainingScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('Cancel'),
+              child: Text(appLocalizations.translate('cancel')),
             ),
             ElevatedButton(
               onPressed: () {
@@ -35,7 +37,7 @@ class TrainingScreen extends StatelessWidget {
                   Navigator.pop(context);
                 }
               },
-              child: const Text('Rename'),
+              child: Text(appLocalizations.translate('rename')),
             ),
           ],
         );
@@ -44,25 +46,27 @@ class TrainingScreen extends StatelessWidget {
   }
 
   void _deleteRoutine(BuildContext context, Routine routine) {
+    final appLocalizations = AppLocalizations.of(context);
+
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Delete Routine'),
-          content: const Text('Are you sure you want to delete this routine?'),
+          title: Text(appLocalizations!.translate('delete_routine')),
+          content: Text(appLocalizations.translate('confirm_delete_routine')),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('Cancel'),
+              child: Text(appLocalizations.translate('cancel')),
             ),
             ElevatedButton(
               onPressed: () {
                 Provider.of<WorkoutModel>(context, listen: false).deleteRoutine(routine);
                 Navigator.pop(context);
               },
-              child: const Text('Delete'),
+              child: Text(appLocalizations.translate('delete')),
             ),
           ],
         );
@@ -72,9 +76,11 @@ class TrainingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Training'),
+        title: Text(appLocalizations!.translate('training')),
         centerTitle: true,
       ),
       body: Consumer<WorkoutModel>(
@@ -98,7 +104,7 @@ class TrainingScreen extends StatelessWidget {
                     style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text(
-                    '${routine.exercises.length} exercises',
+                    '${routine.exercises.length} ${appLocalizations.translate('exercises')}',
                     style: TextStyle(color: Colors.grey[700]),
                   ),
                   trailing: PopupMenuButton<String>(
@@ -111,13 +117,13 @@ class TrainingScreen extends StatelessWidget {
                     },
                     itemBuilder: (BuildContext context) {
                       return [
-                        const PopupMenuItem<String>(
+                        PopupMenuItem<String>(
                           value: 'rename',
-                          child: Text('Rename Routine'),
+                          child: Text(appLocalizations.translate('rename_routine')),
                         ),
-                        const PopupMenuItem<String>(
+                        PopupMenuItem<String>(
                           value: 'delete',
-                          child: Text('Delete Routine'),
+                          child: Text(appLocalizations.translate('delete_routine')),
                         ),
                       ];
                     },
@@ -136,7 +142,7 @@ class TrainingScreen extends StatelessWidget {
           )
               : Center(
             child: Text(
-              'No routines created yet.',
+              appLocalizations.translate('no_routines_created'),
               style: TextStyle(fontSize: 18.0, color: Colors.grey[600]),
             ),
           );
@@ -150,7 +156,7 @@ class TrainingScreen extends StatelessWidget {
           );
         },
         icon: const Icon(Icons.add),
-        label: const Text('Create New Routine'),
+        label: Text(appLocalizations!.translate('create_new_routine')),
       ),
     );
   }

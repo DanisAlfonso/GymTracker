@@ -246,6 +246,17 @@
   "total_weight": "Total Weight",
   "remove_exercise": "Remove Exercise",
   "weight": "Weight",
-  "add_new_set": "Add New Set"
+  "add_new_set": "Add New Set",
+  "statistics": "Statistics",
+  "select_exercise": "Select Exercise",
+  "rename_routine": "Rename Routine",
+  "enter_new_routine_name": "Enter new routine name",
+  "rename": "Rename",
+  "delete_routine": "Delete Routine",
+  "confirm_delete_routine": "Are you sure you want to delete this routine?",
+  "training": "Training",
+  "exercises": "exercises",
+  "no_routines_created": "No routines created yet.",
+  "create_new_routine": "Create New Routine"
 }
 
