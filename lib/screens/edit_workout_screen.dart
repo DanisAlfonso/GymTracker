@@ -37,11 +37,15 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: ListView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFormField(
                 initialValue: _repetitions.toString(),
-                decoration: InputDecoration(labelText: 'Repetitions'),
+                decoration: InputDecoration(
+                  labelText: 'Repetitions',
+                  border: OutlineInputBorder(),
+                ),
                 keyboardType: TextInputType.number,
                 onSaved: (value) => _repetitions = int.parse(value!),
                 validator: (value) {
@@ -51,9 +55,13 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                   return null;
                 },
               ),
+              SizedBox(height: 20),
               TextFormField(
                 initialValue: _weight.toString(),
-                decoration: InputDecoration(labelText: 'Weight (kg)'),
+                decoration: InputDecoration(
+                  labelText: 'Weight (kg)',
+                  border: OutlineInputBorder(),
+                ),
                 keyboardType: TextInputType.number,
                 onSaved: (value) => _weight = double.parse(value!),
                 validator: (value) {
@@ -63,26 +71,40 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                   return null;
                 },
               ),
+              SizedBox(height: 20),
               TextFormField(
                 initialValue: _notes,
-                decoration: InputDecoration(labelText: 'Notes'),
+                decoration: InputDecoration(
+                  labelText: 'Notes',
+                  border: OutlineInputBorder(),
+                ),
                 onSaved: (value) => _notes = value!,
+                maxLines: 3,
               ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    workoutModel.updateWorkout(
-                      widget.workout,
-                      _weight,
-                      _repetitions,
-                      _notes,
-                    );
-                    Navigator.pop(context);
-                  }
-                },
-                child: Text('Save'),
+              SizedBox(height: 30),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      workoutModel.updateWorkout(
+                        widget.workout,
+                        _weight,
+                        _repetitions,
+                        _notes,
+                      );
+                      Navigator.pop(context);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    textStyle: TextStyle(fontSize: 18),
+                  ),
+                  child: Text('Save'),
+                ),
               ),
             ],
           ),
