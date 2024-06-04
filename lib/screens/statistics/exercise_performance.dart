@@ -29,6 +29,8 @@ class ExercisePerformanceSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final textColor = theme.brightness == Brightness.dark ? Colors.white : Colors.black54;
 
     return Consumer<WorkoutModel>(
       builder: (context, workoutModel, child) {
@@ -66,20 +68,13 @@ class ExercisePerformanceSection extends StatelessWidget {
                   ),
                   titlesData: FlTitlesData(
                     leftTitles: AxisTitles(
-                      axisNameWidget: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          appLocalizations.translate('weight_volume'),
-                          style: const TextStyle(color: Colors.black54, fontSize: 12),
-                        ),
-                      ),
                       sideTitles: SideTitles(
                         showTitles: true,
                         reservedSize: 40,
                         getTitlesWidget: (value, meta) {
                           return Text(
                             value.toStringAsFixed(0),
-                            style: const TextStyle(color: Colors.black54, fontSize: 12),
+                            style: TextStyle(color: textColor, fontSize: 12),
                             overflow: TextOverflow.visible,
                           );
                         },
@@ -87,22 +82,22 @@ class ExercisePerformanceSection extends StatelessWidget {
                             ? (performanceSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b) / 10)
                             : 100,
                       ),
-                    ),
-                    bottomTitles: AxisTitles(
                       axisNameWidget: Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
+                        padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
-                          appLocalizations.translate('date'),
-                          style: const TextStyle(color: Colors.black54, fontSize: 12),
+                          appLocalizations.translate('weight_volume'),
+                          style: TextStyle(color: textColor),
                         ),
                       ),
+                    ),
+                    bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
                         reservedSize: 22,
                         getTitlesWidget: (value, meta) {
                           return Text(
                             _formatDate(value, workouts),
-                            style: const TextStyle(color: Colors.black54, fontSize: 12),
+                            style: TextStyle(color: textColor, fontSize: 12),
                             overflow: TextOverflow.visible,
                           );
                         },
