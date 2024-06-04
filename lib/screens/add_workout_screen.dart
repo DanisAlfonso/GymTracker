@@ -1,4 +1,3 @@
-// add_workout_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
@@ -19,7 +18,7 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
   final _notesController = TextEditingController();
 
   int _repetitions = 1;
-  Duration _restTime = Duration.zero;
+  Duration _restTime = Duration(minutes: 3); // Set default rest time to 3 minutes
   Exercise? _selectedExercise;
 
   void _submit() {

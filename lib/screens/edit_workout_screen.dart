@@ -95,7 +95,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                         _repetitions,
                         _notes,
                       );
-                      Navigator.pop(context);
+                     Navigator.pop(context);
                     }
                   },
                   style: ElevatedButton.styleFrom(

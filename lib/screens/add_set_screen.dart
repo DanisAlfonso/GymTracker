@@ -23,7 +23,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
   int _repetitions = 1;
   int _weightInt = 0;
   int _weightDecimal = 0;
-  Duration _restTime = Duration.zero;
+  Duration _restTime = Duration(minutes: 3); // Set default rest time to 3 minutes
   DateTime _selectedDate = DateTime.now();
   List<Workout> _previousWorkouts = [];
 
