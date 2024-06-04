@@ -66,6 +66,13 @@ class ExercisePerformanceSection extends StatelessWidget {
                   ),
                   titlesData: FlTitlesData(
                     leftTitles: AxisTitles(
+                      axisNameWidget: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Text(
+                          appLocalizations.translate('weight_volume'),
+                          style: const TextStyle(color: Colors.black54, fontSize: 12),
+                        ),
+                      ),
                       sideTitles: SideTitles(
                         showTitles: true,
                         reservedSize: 40,
@@ -82,6 +89,13 @@ class ExercisePerformanceSection extends StatelessWidget {
                       ),
                     ),
                     bottomTitles: AxisTitles(
+                      axisNameWidget: Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          appLocalizations.translate('date'),
+                          style: const TextStyle(color: Colors.black54, fontSize: 12),
+                        ),
+                      ),
                       sideTitles: SideTitles(
                         showTitles: true,
                         reservedSize: 22,

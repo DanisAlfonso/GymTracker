@@ -273,5 +273,6 @@
   "seconds": "Secondes",
   "please_enter_seconds": "Veuillez entrer les secondes",
   "enable_workout_reminders": "Activer les rappels d'entraînement",
-  "save_preferences": "Enregistrer les préférences"
+  "save_preferences": "Enregistrer les préférences",
+  "weight_volume": "Volume de poids"
 }
