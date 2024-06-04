@@ -1,3 +1,4 @@
+// exercise_frequency.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -84,6 +85,7 @@ class ExerciseFrequencySection extends StatelessWidget {
                         Row(
                           children: [
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: leftColumnLabels.map((label) {
                                 final colorIndex = muscleGroupLabels.indexOf(label) % Colors.primaries.length;
                                 return Padding(
@@ -104,6 +106,7 @@ class ExerciseFrequencySection extends StatelessWidget {
                             ),
                             const SizedBox(width: 16),
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: rightColumnLabels.map((label) {
                                 final colorIndex = muscleGroupLabels.indexOf(label) % Colors.primaries.length;
                                 return Padding(
