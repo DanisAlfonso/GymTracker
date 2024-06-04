@@ -70,7 +70,7 @@ class ExercisePerformanceSection extends StatelessWidget {
                     leftTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
-                        reservedSize: 40,
+                        reservedSize: 20,
                         getTitlesWidget: (value, meta) {
                           return Text(
                             value.toStringAsFixed(0),
@@ -83,12 +83,18 @@ class ExercisePerformanceSection extends StatelessWidget {
                             : 100,
                       ),
                       axisNameWidget: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
+                        padding: const EdgeInsets.only(left: 18.0),
                         child: Text(
                           appLocalizations.translate('weight_volume'),
-                          style: TextStyle(color: textColor),
+                          style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
                         ),
                       ),
+                    ),
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
                     ),
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
