@@ -85,6 +85,9 @@ class WeeklyProgressSection extends StatelessWidget {
                             },
                           ),
                         ),
+                        topTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false), // Hide top titles
+                        ),
                         leftTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
@@ -108,7 +111,7 @@ class WeeklyProgressSection extends StatelessWidget {
                             ),
                           ),
                         ),
-                        rightTitles: AxisTitles(
+                        rightTitles: const AxisTitles(
                           sideTitles: SideTitles(showTitles: false),
                         ),
                       ),
