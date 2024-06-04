@@ -31,10 +31,9 @@ class ExerciseFrequencySection extends StatelessWidget {
     return muscleGroupFrequency.entries.map((entry) {
       return PieChartSectionData(
         value: entry.value,
-        title: '${entry.value.toStringAsFixed(1)}%',
+        title: '',
         color: Colors.primaries[muscleGroupFrequency.keys.toList().indexOf(entry.key) % Colors.primaries.length],
-        radius: 50,
-        titleStyle: const TextStyle(color: Colors.white, fontSize: 12),
+        radius: 60,
       );
     }).toList();
   }
