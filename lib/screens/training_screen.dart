@@ -1,3 +1,4 @@
+// lib/screens/training_screen.dart
 import 'package:flutter/material.dart';
 import 'create_routine_screen.dart';
 import 'start_routine_screen.dart';

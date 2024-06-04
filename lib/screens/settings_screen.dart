@@ -1,3 +1,4 @@
+// lib/screens/settings_screen.dart
 import 'package:flutter/material.dart';
 import 'user_profile_screen.dart';
 import 'workout_preferences_screen.dart';

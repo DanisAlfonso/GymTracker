@@ -1,3 +1,4 @@
+// lib/screens/user_profile_screen.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../app_localizations.dart'; // Import the AppLocalizations
