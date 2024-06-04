@@ -1,3 +1,4 @@
+// exercise_performance.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -10,7 +11,7 @@ class ExercisePerformanceSection extends StatelessWidget {
   const ExercisePerformanceSection({required this.selectedExercise, super.key});
 
   List<FlSpot> _generatePerformanceSpots(WorkoutModel workoutModel, Exercise exercise) {
-    final workouts = workoutModel.workouts.where((workout) => workout.exercise == exercise).toList();
+    final workouts = workoutModel.workouts.where((workout) => workout.exercise.name == exercise.name).toList();
     workouts.sort((a, b) => a.date.compareTo(b.date));
     return workouts
         .asMap()
@@ -37,7 +38,8 @@ class ExercisePerformanceSection extends StatelessWidget {
             const SizedBox(height: 16),
             SizedBox(
               height: 200,
-              child: LineChart(
+              child: performanceSpots.isNotEmpty
+                  ? LineChart(
                 LineChartData(
                   gridData: FlGridData(
                     show: true,
@@ -67,7 +69,9 @@ class ExercisePerformanceSection extends StatelessWidget {
                             overflow: TextOverflow.visible,
                           );
                         },
-                        interval: performanceSpots.isNotEmpty ? ((performanceSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b)) / 10) : 100,
+                        interval: performanceSpots.isNotEmpty
+                            ? (performanceSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b) / 10)
+                            : 100,
                       ),
                     ),
                     bottomTitles: AxisTitles(
@@ -121,7 +125,8 @@ class ExercisePerformanceSection extends StatelessWidget {
                     handleBuiltInTouches: true,
                   ),
                 ),
-              ),
+              )
+                  : Center(child: Text(appLocalizations.translate('no_data'))),
             ),
           ],
         );
