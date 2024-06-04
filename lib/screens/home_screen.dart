@@ -123,11 +123,11 @@ class HomeScreen extends StatelessWidget {
                   lineBarsData: [
                     LineChartBarData(
                       spots: [
-                        FlSpot(0, 3),
-                        FlSpot(1, 2.5),
-                        FlSpot(2, 4),
-                        FlSpot(3, 3.5),
-                        FlSpot(4, 4.5),
+                        const FlSpot(0, 3),
+                        const FlSpot(1, 2.5),
+                        const FlSpot(2, 4),
+                        const FlSpot(3, 3.5),
+                        const FlSpot(4, 4.5),
                       ],
                       isCurved: true,
                       barWidth: 4,
@@ -139,8 +139,8 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ],
                   borderData: FlBorderData(show: true),
-                  gridData: FlGridData(show: true),
-                  titlesData: FlTitlesData(
+                  gridData: const FlGridData(show: true),
+                  titlesData: const FlTitlesData(
                     leftTitles: AxisTitles(
                       sideTitles: SideTitles(showTitles: true),
                     ),
@@ -248,7 +248,7 @@ class HomeScreen extends StatelessWidget {
                   );
                 }).toList(),
               );
-            }).toList(),
+            }),
             if (recentWorkouts.isEmpty)
               Text(
                 appLocalizations.translate('no_recent_activities'),
@@ -351,7 +351,7 @@ class HomeScreen extends StatelessWidget {
                   );
                 }).toList(),
               );
-            }).toList(),
+            }),
             if (allWorkouts.isEmpty)
               Text(
                 appLocalizations.translate('no_activities'),

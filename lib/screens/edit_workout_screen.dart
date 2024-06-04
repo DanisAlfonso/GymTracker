@@ -6,7 +6,7 @@ import '../app_localizations.dart'; // Import the AppLocalizations
 class EditWorkoutScreen extends StatefulWidget {
   final Workout workout;
 
-  EditWorkoutScreen({required this.workout});
+  const EditWorkoutScreen({super.key, required this.workout});
 
   @override
   _EditWorkoutScreenState createState() => _EditWorkoutScreenState();
@@ -46,7 +46,7 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                 initialValue: _repetitions.toString(),
                 decoration: InputDecoration(
                   labelText: appLocalizations.translate('repetitions'),
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.number,
                 onSaved: (value) => _repetitions = int.parse(value!),
@@ -57,12 +57,12 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
                 initialValue: _weight.toString(),
                 decoration: InputDecoration(
                   labelText: appLocalizations.translate('weight_kg'),
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.number,
                 onSaved: (value) => _weight = double.parse(value!),
@@ -73,17 +73,17 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
                 initialValue: _notes,
                 decoration: InputDecoration(
                   labelText: appLocalizations.translate('notes'),
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
                 onSaved: (value) => _notes = value!,
                 maxLines: 3,
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Center(
                 child: ElevatedButton(
                   onPressed: () {
@@ -99,11 +99,11 @@ class _EditWorkoutScreenState extends State<EditWorkoutScreen> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    textStyle: TextStyle(fontSize: 18),
+                    textStyle: const TextStyle(fontSize: 18),
                   ),
                   child: Text(appLocalizations.translate('save')),
                 ),

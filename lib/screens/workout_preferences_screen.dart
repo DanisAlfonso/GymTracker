@@ -3,6 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../app_localizations.dart'; // Import the AppLocalizations
 
 class WorkoutPreferencesScreen extends StatefulWidget {
+  const WorkoutPreferencesScreen({super.key});
+
   @override
   _WorkoutPreferencesScreenState createState() => _WorkoutPreferencesScreenState();
 }
@@ -57,7 +59,7 @@ class _WorkoutPreferencesScreenState extends State<WorkoutPreferencesScreen> {
           child: ListView(
             children: [
               SwitchListTile(
-                title: Text(appLocalizations!.translate('use_kg')),
+                title: Text(appLocalizations.translate('use_kg')),
                 value: _useKg,
                 onChanged: (bool value) {
                   setState(() {
@@ -68,7 +70,7 @@ class _WorkoutPreferencesScreenState extends State<WorkoutPreferencesScreen> {
               const SizedBox(height: 20),
               Text(
                 appLocalizations.translate('default_rest_time'),
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

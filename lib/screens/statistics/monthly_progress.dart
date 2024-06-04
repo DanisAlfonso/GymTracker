@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import '../../app_localizations.dart'; // Import the AppLocalizations
 
 class MonthlyProgressSection extends StatelessWidget {
-  const MonthlyProgressSection({Key? key}) : super(key: key);
+  const MonthlyProgressSection({super.key});
 
   List<FlSpot> _generateMonthlyProgress(WorkoutModel workoutModel) {
     final Map<String, double> monthlyProgress = {};

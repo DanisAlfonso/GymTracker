@@ -3,6 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../app_localizations.dart'; // Import the AppLocalizations
 
 class UserProfileScreen extends StatefulWidget {
+  const UserProfileScreen({super.key});
+
   @override
   _UserProfileScreenState createState() => _UserProfileScreenState();
 }
@@ -66,7 +68,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   child: CircleAvatar(
                     radius: 50,
                     backgroundColor: Colors.grey[300],
-                    child: Icon(Icons.person, size: 50),
+                    child: const Icon(Icons.person, size: 50),
                   ),
                 ),
               ),

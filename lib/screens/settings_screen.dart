@@ -22,27 +22,27 @@ class SettingsScreen extends StatelessWidget {
       body: ListView(
         children: [
           ListTile(
-            leading: Icon(Icons.person),
+            leading: const Icon(Icons.person),
             title: Text(appLocalizations.translate('user_profile')),
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => UserProfileScreen()),
+                MaterialPageRoute(builder: (context) => const UserProfileScreen()),
               );
             },
           ),
           ListTile(
-            leading: Icon(Icons.fitness_center),
+            leading: const Icon(Icons.fitness_center),
             title: Text(appLocalizations.translate('workout_preferences')),
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => WorkoutPreferencesScreen()),
+                MaterialPageRoute(builder: (context) => const WorkoutPreferencesScreen()),
               );
             },
           ),
           ListTile(
-            leading: Icon(Icons.settings),
+            leading: const Icon(Icons.settings),
             title: Text(appLocalizations.translate('app_preferences')),
             onTap: () {
               Navigator.push(
@@ -52,22 +52,22 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.backup),
+            leading: const Icon(Icons.backup),
             title: Text(appLocalizations.translate('backup_restore')),
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => BackupRestoreScreen()),
+                MaterialPageRoute(builder: (context) => const BackupRestoreScreen()),
               );
             },
           ),
           ListTile(
-            leading: Icon(Icons.info),
+            leading: const Icon(Icons.info),
             title: Text(appLocalizations.translate('about')),
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AboutScreen()),
+                MaterialPageRoute(builder: (context) => const AboutScreen()),
               );
             },
           ),

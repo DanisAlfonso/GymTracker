@@ -76,8 +76,8 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  appLocalizations!.translate('select_exercise'),
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  appLocalizations.translate('select_exercise'),
+                  style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<Exercise>(
@@ -113,7 +113,7 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                 const SizedBox(height: 20),
                 Text(
                   appLocalizations.translate('repetitions'),
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 Center(
@@ -131,7 +131,7 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                 const SizedBox(height: 20),
                 Text(
                   appLocalizations.translate('weight_kg'),
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
@@ -155,7 +155,7 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                 const SizedBox(height: 20),
                 Text(
                   appLocalizations.translate('rest_time'),
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 TextButton(
@@ -167,7 +167,7 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                 const SizedBox(height: 20),
                 Text(
                   appLocalizations.translate('notes'),
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
@@ -196,7 +196,7 @@ class _AddWorkoutScreenState extends State<AddWorkoutScreen> {
                     ),
                     child: Text(
                       appLocalizations.translate('add_workout'),
-                      style: TextStyle(fontSize: 16.0),
+                      style: const TextStyle(fontSize: 16.0),
                     ),
                   ),
                 ),

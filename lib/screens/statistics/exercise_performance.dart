@@ -7,7 +7,7 @@ import '../../app_localizations.dart'; // Import the AppLocalizations
 class ExercisePerformanceSection extends StatelessWidget {
   final Exercise selectedExercise;
 
-  const ExercisePerformanceSection({required this.selectedExercise, Key? key}) : super(key: key);
+  const ExercisePerformanceSection({required this.selectedExercise, super.key});
 
   List<FlSpot> _generatePerformanceSpots(WorkoutModel workoutModel, Exercise exercise) {
     final workouts = workoutModel.workouts.where((workout) => workout.exercise == exercise).toList();

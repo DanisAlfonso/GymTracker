@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import '../../app_localizations.dart'; // Import the AppLocalizations
 
 class WeeklyProgressSection extends StatelessWidget {
-  const WeeklyProgressSection({Key? key}) : super(key: key);
+  const WeeklyProgressSection({super.key});
 
   List<BarChartGroupData> _generateWeeklyProgress(WorkoutModel workoutModel) {
     final Map<String, double> weeklyProgress = {};
@@ -111,7 +111,7 @@ class WeeklyProgressSection extends StatelessWidget {
                       ),
                     ),
                   ),
-                  gridData: FlGridData(show: true),
+                  gridData: const FlGridData(show: true),
                   borderData: FlBorderData(show: false),
                   barTouchData: BarTouchData(
                     touchTooltipData: BarTouchTooltipData(

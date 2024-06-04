@@ -7,7 +7,7 @@ import '../app_localizations.dart';
 class AppPreferencesScreen extends StatefulWidget {
   final Function(Locale) onLocaleChange;
 
-  AppPreferencesScreen({required this.onLocaleChange});
+  const AppPreferencesScreen({super.key, required this.onLocaleChange});
 
   @override
   _AppPreferencesScreenState createState() => _AppPreferencesScreenState();
@@ -40,7 +40,7 @@ class _AppPreferencesScreenState extends State<AppPreferencesScreen> {
     await prefs.setString('selectedLanguage', _selectedLanguage);
     widget.onLocaleChange(Locale(_selectedLanguage));
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Preferences Saved')),
+      const SnackBar(content: Text('Preferences Saved')),
     );
   }
 
@@ -74,7 +74,7 @@ class _AppPreferencesScreenState extends State<AppPreferencesScreen> {
               },
             ),
             const SizedBox(height: 20),
-            Text(appLocalizations.translate('language'), style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text(appLocalizations.translate('language'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             DropdownButton<String>(
               value: _selectedLanguage,
               onChanged: (String? newValue) {

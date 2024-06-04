@@ -7,10 +7,10 @@ class DurationPickerDialog extends StatefulWidget {
   final int initialSeconds;
 
   const DurationPickerDialog({
-    Key? key,
+    super.key,
     required this.initialMinutes,
     required this.initialSeconds,
-  }) : super(key: key);
+  });
 
   @override
   _DurationPickerDialogState createState() => _DurationPickerDialogState();

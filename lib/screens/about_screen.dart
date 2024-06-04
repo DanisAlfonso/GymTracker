@@ -19,9 +19,9 @@ class AboutScreen extends StatelessWidget {
           children: [
             ListTile(
               title: Text(appLocalizations.translate('app_version')),
-              subtitle: Text('1.0.0'), // Replace with your app version
+              subtitle: const Text('1.0.0'), // Replace with your app version
             ),
-            Divider(),
+            const Divider(),
             ListTile(
               title: Text(appLocalizations.translate('privacy_policy')),
               onTap: () {
@@ -34,13 +34,13 @@ class AboutScreen extends StatelessWidget {
                 _launchURL('https://yourtermsofserviceurl.com'); // Replace with your terms of service URL
               },
             ),
-            Divider(),
+            const Divider(),
             ListTile(
               title: Text(appLocalizations.translate('acknowledgments')),
               subtitle: Text(
                   appLocalizations.translate('acknowledgments_text')),
             ),
-            Divider(),
+            const Divider(),
             ListTile(
               title: Text(appLocalizations.translate('open_source')),
               subtitle: Text(appLocalizations.translate('open_source_text')),
@@ -55,10 +55,10 @@ class AboutScreen extends StatelessWidget {
                 _launchURL('https://opensource.org/licenses/MIT'); // Replace with your license URL if different
               },
             ),
-            Divider(),
+            const Divider(),
             ListTile(
               title: Text(appLocalizations.translate('contact_me')),
-              subtitle: Text('danis.ramirez.hn@gmail.com'), // Replace with your contact email
+              subtitle: const Text('danis.ramirez.hn@gmail.com'), // Replace with your contact email
               onTap: () {
                 _launchURL('mailto:danis.ramirez.hn@gmail.com'); // Replace with your contact email
               },

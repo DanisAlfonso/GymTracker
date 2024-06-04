@@ -5,7 +5,7 @@ import '../../models/workout_model.dart';
 import '../../app_localizations.dart'; // Import the AppLocalizations
 
 class ExerciseFrequencySection extends StatelessWidget {
-  const ExerciseFrequencySection({Key? key}) : super(key: key);
+  const ExerciseFrequencySection({super.key});
 
   List<PieChartSectionData> _generateMuscleGroupFrequency(WorkoutModel workoutModel) {
     final Map<String, double> muscleGroupFrequency = {};
@@ -60,7 +60,7 @@ class ExerciseFrequencySection extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    Container(
+                    SizedBox(
                       width: 200, // Adjust width as needed
                       height: 300,
                       child: PieChart(

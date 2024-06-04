@@ -6,7 +6,7 @@ import '../app_localizations.dart'; // Import the AppLocalizations
 class EditSetScreen extends StatefulWidget {
   final Workout workout;
 
-  EditSetScreen({required this.workout});
+  const EditSetScreen({super.key, required this.workout});
 
   @override
   _EditSetScreenState createState() => _EditSetScreenState();
@@ -70,7 +70,7 @@ class _EditSetScreenState extends State<EditSetScreen> {
                 decoration: InputDecoration(labelText: appLocalizations.translate('notes')),
                 onSaved: (value) => _notes = value!,
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {

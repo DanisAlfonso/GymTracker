@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../app_localizations.dart'; // Import AppLocalizations
 
 class BackupRestoreScreen extends StatefulWidget {
+  const BackupRestoreScreen({super.key});
+
   @override
   _BackupRestoreScreenState createState() => _BackupRestoreScreenState();
 }

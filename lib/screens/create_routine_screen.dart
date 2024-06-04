@@ -80,8 +80,8 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                appLocalizations!.translate('routine_name'),
-                style: TextStyle(
+                appLocalizations.translate('routine_name'),
+                style: const TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 ),

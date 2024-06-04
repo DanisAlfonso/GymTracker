@@ -33,7 +33,7 @@ class StartRoutineScreen extends StatelessWidget {
     final newExercises = await Navigator.push<List<Exercise>>(
       context,
       MaterialPageRoute(
-        builder: (context) => ExerciseLibraryScreen(selectedExercises: []),
+        builder: (context) => const ExerciseLibraryScreen(selectedExercises: []),
       ),
     );
 

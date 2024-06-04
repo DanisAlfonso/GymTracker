@@ -166,7 +166,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                       children: [
                         Text(
                           appLocalizations.translate('previous_performance'),
-                          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
                         Row(
@@ -176,7 +176,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                             Expanded(
                               child: Text(
                                 '${previousSetData.repetitions} reps, ${previousSetData.weight} kg',
-                                style: TextStyle(fontSize: 16.0),
+                                style: const TextStyle(fontSize: 16.0),
                               ),
                             ),
                           ],
@@ -189,7 +189,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                             Expanded(
                               child: Text(
                                 DateFormat.yMMMd().add_Hm().format(previousSetData.date),
-                                style: TextStyle(fontSize: 16.0),
+                                style: const TextStyle(fontSize: 16.0),
                               ),
                             ),
                           ],
@@ -215,7 +215,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                           const SizedBox(width: 8),
                           Text(
                             appLocalizations.translate('set_number'),
-                            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -243,7 +243,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                           const SizedBox(width: 8),
                           Text(
                             appLocalizations.translate('repetitions'),
-                            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -270,7 +270,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                           const SizedBox(width: 8),
                           Text(
                             appLocalizations.translate('weight_kg'),
-                            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -342,7 +342,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                     children: [
                       Text(
                         appLocalizations.translate('rest_time'),
-                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                       Center(
@@ -365,7 +365,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                       const Divider(),
                       Text(
                         appLocalizations.translate('training_day'),
-                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                       Center(
@@ -379,7 +379,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                             backgroundColor: Theme.of(context).primaryColor,
                           ),
                           child: Text(
-                            '${DateFormat.yMd().format(_selectedDate)}',
+                            DateFormat.yMd().format(_selectedDate),
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
@@ -388,7 +388,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                       const Divider(),
                       Text(
                         appLocalizations.translate('notes'),
-                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                       TextFormField(

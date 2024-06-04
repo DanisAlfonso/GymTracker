@@ -156,7 +156,7 @@ class TrainingScreen extends StatelessWidget {
           );
         },
         icon: const Icon(Icons.add),
-        label: Text(appLocalizations!.translate('create_new_routine')),
+        label: Text(appLocalizations.translate('create_new_routine')),
       ),
     );
   }
