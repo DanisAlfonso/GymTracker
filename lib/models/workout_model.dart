@@ -221,6 +221,7 @@ class WorkoutModel extends ChangeNotifier {
         Exercise(name: 'Chest Dip', description: 'Chest', localizationKey: 'exercise_chest_dip'),
         Exercise(name: 'Chest Fly (Dumbbell)', description: 'Chest', localizationKey: 'exercise_chest_fly_dumbbell'),
         Exercise(name: 'Incline Bench Press (Barbell)', description: 'Chest', localizationKey: 'exercise_incline_bench_press_barbell'),
+        Exercise(name: 'Incline Bench Press (Dumbbell)', description: 'Chest', localizationKey: 'exercise_incline_bench_press_dumbbell'),
         Exercise(name: 'Incline Bench Press (Smith Machine)', description: 'Chest', localizationKey: 'exercise_incline_bench_press_smith_machine'),
         Exercise(name: 'Incline Chest Fly (Dumbbell)', description: 'Chest', localizationKey: 'exercise_incline_chest_fly_dumbbell'),
         Exercise(name: 'Iso-Lateral Chest (Machine)', description: 'Chest', localizationKey: 'exercise_iso_lateral_chest_machine'),
