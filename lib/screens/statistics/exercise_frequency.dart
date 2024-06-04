@@ -8,7 +8,7 @@ import '../../app_localizations.dart'; // Import the AppLocalizations
 class ExerciseFrequencySection extends StatelessWidget {
   const ExerciseFrequencySection({super.key});
 
-  List<PieChartSectionData> _generateMuscleGroupFrequency(WorkoutModel workoutModel) {
+  Map<String, double> _calculateMuscleGroupFrequency(WorkoutModel workoutModel) {
     final Map<String, double> muscleGroupFrequency = {};
     double totalWeight = 0;
 
@@ -21,11 +21,17 @@ class ExerciseFrequencySection extends StatelessWidget {
       totalWeight += workout.weight * workout.repetitions;
     }
 
+    // Calculate percentages
+    muscleGroupFrequency.updateAll((key, value) => (value / totalWeight) * 100);
+
+    return muscleGroupFrequency;
+  }
+
+  List<PieChartSectionData> _generatePieChartData(Map<String, double> muscleGroupFrequency) {
     return muscleGroupFrequency.entries.map((entry) {
-      final percentage = (entry.value / totalWeight * 100).toStringAsFixed(1);
       return PieChartSectionData(
         value: entry.value,
-        title: '$percentage%',
+        title: '${entry.value.toStringAsFixed(1)}%',
         color: Colors.primaries[muscleGroupFrequency.keys.toList().indexOf(entry.key) % Colors.primaries.length],
         radius: 50,
         titleStyle: const TextStyle(color: Colors.white, fontSize: 12),
@@ -39,13 +45,22 @@ class ExerciseFrequencySection extends StatelessWidget {
 
     return Consumer<WorkoutModel>(
       builder: (context, workoutModel, child) {
-        final muscleGroupFrequency = _generateMuscleGroupFrequency(workoutModel);
-        final muscleGroupLabels = workoutModel.exercises.map((exercise) => exercise.description).toSet().toList();
+        final muscleGroupFrequency = _calculateMuscleGroupFrequency(workoutModel);
+        final muscleGroupFrequencyList = muscleGroupFrequency.entries.toList();
+
+        if (muscleGroupFrequency.isEmpty) {
+          return Center(
+            child: Text(appLocalizations!.translate('no_data')),
+          );
+        }
+
+        // Generate pie chart data
+        final pieChartData = _generatePieChartData(muscleGroupFrequency);
 
         // Split labels into two columns
-        final int half = (muscleGroupLabels.length / 2).ceil();
-        final leftColumnLabels = muscleGroupLabels.sublist(0, half);
-        final rightColumnLabels = muscleGroupLabels.sublist(half);
+        final int half = (muscleGroupFrequencyList.length / 2).ceil();
+        final leftColumnLabels = muscleGroupFrequencyList.sublist(0, half);
+        final rightColumnLabels = muscleGroupFrequencyList.sublist(half);
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,7 +81,7 @@ class ExerciseFrequencySection extends StatelessWidget {
                       height: 300,
                       child: PieChart(
                         PieChartData(
-                          sections: muscleGroupFrequency,
+                          sections: pieChartData,
                           sectionsSpace: 2,
                           centerSpaceRadius: 40,
                           pieTouchData: PieTouchData(
@@ -80,14 +95,15 @@ class ExerciseFrequencySection extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const SizedBox(width: 20),
                     Column(
                       children: [
                         Row(
                           children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: leftColumnLabels.map((label) {
-                                final colorIndex = muscleGroupLabels.indexOf(label) % Colors.primaries.length;
+                              children: leftColumnLabels.map((entry) {
+                                final colorIndex = muscleGroupFrequencyList.indexOf(entry) % Colors.primaries.length;
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                                   child: Row(
@@ -98,7 +114,7 @@ class ExerciseFrequencySection extends StatelessWidget {
                                         color: Colors.primaries[colorIndex],
                                       ),
                                       const SizedBox(width: 8),
-                                      Text(label),
+                                      Text('${entry.key} (${entry.value.toStringAsFixed(1)}%)'),
                                     ],
                                   ),
                                 );
@@ -107,8 +123,8 @@ class ExerciseFrequencySection extends StatelessWidget {
                             const SizedBox(width: 16),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: rightColumnLabels.map((label) {
-                                final colorIndex = muscleGroupLabels.indexOf(label) % Colors.primaries.length;
+                              children: rightColumnLabels.map((entry) {
+                                final colorIndex = muscleGroupFrequencyList.indexOf(entry) % Colors.primaries.length;
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                                   child: Row(
@@ -119,7 +135,7 @@ class ExerciseFrequencySection extends StatelessWidget {
                                         color: Colors.primaries[colorIndex],
                                       ),
                                       const SizedBox(width: 8),
-                                      Text(label),
+                                      Text('${entry.key} (${entry.value.toStringAsFixed(1)}%)'),
                                     ],
                                   ),
                                 );
