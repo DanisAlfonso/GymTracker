@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../models/workout_model.dart';
 import '../../app_localizations.dart'; // Import the AppLocalizations
+import 'package:intl/intl.dart';
 
 class ExercisePerformanceSection extends StatelessWidget {
   final Exercise selectedExercise;
@@ -20,12 +21,18 @@ class ExercisePerformanceSection extends StatelessWidget {
         .toList();
   }
 
+  String _formatDate(double value, List<Workout> workouts) {
+    final DateTime date = workouts[value.toInt()].date;
+    return DateFormat('MM/dd').format(date);
+  }
+
   @override
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context);
 
     return Consumer<WorkoutModel>(
       builder: (context, workoutModel, child) {
+        final workouts = workoutModel.workouts.where((workout) => workout.exercise.name == selectedExercise.name).toList();
         final performanceSpots = _generatePerformanceSpots(workoutModel, selectedExercise);
 
         return Column(
@@ -80,11 +87,12 @@ class ExercisePerformanceSection extends StatelessWidget {
                         reservedSize: 22,
                         getTitlesWidget: (value, meta) {
                           return Text(
-                            value.toStringAsFixed(0),
+                            _formatDate(value, workouts),
                             style: const TextStyle(color: Colors.black54, fontSize: 12),
                             overflow: TextOverflow.visible,
                           );
                         },
+                        interval: 1,
                       ),
                     ),
                   ),
@@ -109,8 +117,9 @@ class ExercisePerformanceSection extends StatelessWidget {
                     touchTooltipData: LineTouchTooltipData(
                       getTooltipItems: (List<LineBarSpot> touchedSpots) {
                         return touchedSpots.map((spot) {
+                          final DateTime date = workouts[spot.x.toInt()].date;
                           return LineTooltipItem(
-                            '${spot.x.toStringAsFixed(0)}, ${spot.y.toStringAsFixed(0)}',
+                            '${DateFormat('MM/dd/yyyy').format(date)}, ${spot.y.toStringAsFixed(0)}',
                             const TextStyle(color: Colors.white),
                           );
                         }).toList();
