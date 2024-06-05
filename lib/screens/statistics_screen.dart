@@ -213,13 +213,21 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(height: 16),
-                                ..._percentages!.entries.map((entry) {
-                                  final reps = _reps![entry.key] ?? 0;
-                                  return Text(
-                                    '${entry.key}: ${entry.value.toStringAsFixed(2)} (${reps} reps)',
-                                    style: const TextStyle(fontSize: 16),
-                                  );
-                                }).toList(),
+                                DataTable(
+                                  columns: const [
+                                    DataColumn(label: Text('Percentage')),
+                                    DataColumn(label: Text('Weight')),
+                                    DataColumn(label: Text('Reps')),
+                                  ],
+                                  rows: _percentages!.entries.map((entry) {
+                                    final reps = _reps![entry.key] ?? 0;
+                                    return DataRow(cells: [
+                                      DataCell(Text(entry.key)),
+                                      DataCell(Text(entry.value.toStringAsFixed(2))),
+                                      DataCell(Text(reps.toString())),
+                                    ]);
+                                  }).toList(),
+                                ),
                               ],
                             ),
                           ),
