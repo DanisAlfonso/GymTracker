@@ -1,4 +1,3 @@
-// lib/screens/statistics/weekly_progress.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -6,8 +5,15 @@ import '../../models/workout_model.dart';
 import 'package:intl/intl.dart';
 import '../../app_localizations.dart'; // Import the AppLocalizations
 
-class WeeklyProgressSection extends StatelessWidget {
+class WeeklyProgressSection extends StatefulWidget {
   const WeeklyProgressSection({super.key});
+
+  @override
+  _WeeklyProgressSectionState createState() => _WeeklyProgressSectionState();
+}
+
+class _WeeklyProgressSectionState extends State<WeeklyProgressSection> {
+  int touchedIndex = -1;
 
   List<BarChartGroupData> _generateWeeklyProgress(WorkoutModel workoutModel) {
     final Map<String, double> weeklyProgress = {
@@ -34,11 +40,11 @@ class WeeklyProgressSection extends StatelessWidget {
           BarChartRodData(
             toY: totalWeight,
             color: Colors.primaries[index % Colors.primaries.length], // Different color for each day
-            borderRadius: BorderRadius.circular(6),
-            width: 35, // Width of each bar
+            borderRadius: BorderRadius.circular(5),
+            width: 25, // Width of each bar
           ),
         ],
-        showingTooltipIndicators: [0],
+        showingTooltipIndicators: touchedIndex == index ? [0] : [],
       ));
       index++;
     });
@@ -130,6 +136,16 @@ class WeeklyProgressSection extends StatelessWidget {
                           fitInsideHorizontally: true,
                           fitInsideVertically: true,
                         ),
+                        touchCallback: (FlTouchEvent event, barTouchResponse) {
+                          setState(() {
+                            if (barTouchResponse != null && barTouchResponse.spot != null) {
+                              touchedIndex = barTouchResponse.spot!.touchedBarGroupIndex;
+                            } else {
+                              touchedIndex = -1;
+                            }
+                          });
+                        },
+                        handleBuiltInTouches: true,
                       ),
                       alignment: BarChartAlignment.spaceEvenly, // Ensure even spacing
                       maxY: (weeklyProgressBars.map((group) => group.barRods.map((rod) => rod.toY).reduce((a, b) => a > b ? a : b)).reduce((a, b) => a > b ? a : b)) * 1.1, // 10% space above the highest bar
