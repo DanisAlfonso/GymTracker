@@ -278,5 +278,9 @@
   "calculate": "Calcular",
   "one_rep_max": "Máxima Repetición",
   "weight_volume": "Volumen de Peso",
-  "no_data": "Sin Datos"
+  "no_data": "Sin Datos",
+  "exercise": "Ejercicio",
+  "date": "Fecha",
+  "actions": "Acciones"
+
 }

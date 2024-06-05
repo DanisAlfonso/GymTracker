@@ -278,6 +278,8 @@
   "calculate": "Calculer",
   "one_rep_max": "Maximum de Répétitions",
   "weight_volume": "Volume de Poids",
-  "no_data": "Pas de Données"
-
+  "no_data": "Pas de Données",
+  "exercise": "Exercice",
+  "date": "Date",
+  "actions": "Actions"
 }

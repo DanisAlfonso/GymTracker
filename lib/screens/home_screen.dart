@@ -18,14 +18,14 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(appLocalizations!.translate('home')),
+        title: Text(appLocalizations?.translate('home') ?? 'Home'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
             Text(
-              appLocalizations.translate('welcome_message'),
+              appLocalizations?.translate('welcome_message') ?? 'Welcome!',
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
@@ -58,19 +58,19 @@ class HomeScreen extends StatelessWidget {
                 Icon(Icons.fitness_center, color: Theme.of(context).primaryColor),
                 const SizedBox(width: 8),
                 Text(
-                  appLocalizations!.translate('current_workout_plan'),
+                  appLocalizations?.translate('current_workout_plan') ?? 'Current Workout Plan',
                   style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             const SizedBox(height: 10),
             Text(
-              appLocalizations.translate('plan_name'),
+              appLocalizations?.translate('plan_name') ?? 'Plan Name',
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 5),
             Text(
-              appLocalizations.translate('next_workout'),
+              appLocalizations?.translate('next_workout') ?? 'Next Workout',
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 10),
@@ -86,7 +86,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   backgroundColor: Theme.of(context).primaryColor,
                 ),
-                child: Text(appLocalizations.translate('view_details')),
+                child: Text(appLocalizations?.translate('view_details') ?? 'View Details'),
               ),
             ),
           ],
@@ -111,7 +111,7 @@ class HomeScreen extends StatelessWidget {
                 Icon(Icons.show_chart, color: Theme.of(context).primaryColor),
                 const SizedBox(width: 8),
                 Text(
-                  appLocalizations!.translate('progress_overview'),
+                  appLocalizations?.translate('progress_overview') ?? 'Progress Overview',
                   style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ],
@@ -183,7 +183,7 @@ class HomeScreen extends StatelessWidget {
                 Icon(Icons.history, color: Theme.of(context).primaryColor),
                 const SizedBox(width: 8),
                 Text(
-                  appLocalizations!.translate('recent_activities'),
+                  appLocalizations?.translate('recent_activities') ?? 'Recent Activities',
                   style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ],
@@ -195,64 +195,12 @@ class HomeScreen extends StatelessWidget {
                   entry.key,
                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                children: entry.value.asMap().entries.map((e) {
-                  final workout = e.value;
-                  return Dismissible(
-                    key: Key('${workout.exercise.name}-${workout.date}-${e.key}'), // Unique key for each workout
-                    direction: DismissDirection.endToStart,
-                    background: Container(
-                      color: Colors.red,
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: const Icon(
-                        Icons.delete,
-                        color: Colors.white,
-                      ),
-                    ),
-                    confirmDismiss: (direction) async {
-                      return await showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text(appLocalizations.translate('confirm')),
-                            content: Text(appLocalizations.translate('confirm_delete')),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(false),
-                                child: Text(appLocalizations.translate('cancel')),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(true),
-                                child: Text(appLocalizations.translate('delete')),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    onDismissed: (direction) {
-                      Provider.of<WorkoutModel>(context, listen: false).deleteWorkout(workout);
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(appLocalizations.translate('workout_deleted'))));
-                    },
-                    child: ListTile(
-                      title: Text('${workout.exercise.name} - ${workout.repetitions} ${appLocalizations.translate('reps')}'),
-                      subtitle: Text('${workout.weight} kg, ${DateFormat('yyyy-MM-dd – kk:mm').format(workout.date)}'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditWorkoutScreen(workout: workout),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                }).toList(),
+                children: [_buildWorkoutDataTable(context, entry.value)],
               );
             }),
             if (recentWorkouts.isEmpty)
               Text(
-                appLocalizations.translate('no_recent_activities'),
+                appLocalizations?.translate('no_recent_activities') ?? 'No recent activities',
                 style: const TextStyle(fontSize: 16, color: Colors.grey),
               ),
           ],
@@ -286,7 +234,7 @@ class HomeScreen extends StatelessWidget {
                 Icon(Icons.list, color: Theme.of(context).primaryColor),
                 const SizedBox(width: 8),
                 Text(
-                  appLocalizations!.translate('all_activities'),
+                  appLocalizations?.translate('all_activities') ?? 'All Activities',
                   style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ],
@@ -298,68 +246,84 @@ class HomeScreen extends StatelessWidget {
                   entry.key,
                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                children: entry.value.asMap().entries.map((e) {
-                  final workout = e.value;
-                  return Dismissible(
-                    key: Key('${workout.exercise.name}-${workout.date}-${e.key}'), // Unique key for each workout
-                    direction: DismissDirection.endToStart,
-                    background: Container(
-                      color: Colors.red,
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: const Icon(
-                        Icons.delete,
-                        color: Colors.white,
-                      ),
-                    ),
-                    confirmDismiss: (direction) async {
-                      return await showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text(appLocalizations.translate('confirm')),
-                            content: Text(appLocalizations.translate('confirm_delete')),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(false),
-                                child: Text(appLocalizations.translate('cancel')),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(true),
-                                child: Text(appLocalizations.translate('delete')),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    onDismissed: (direction) {
-                      Provider.of<WorkoutModel>(context, listen: false).deleteWorkout(workout);
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(appLocalizations.translate('workout_deleted'))));
-                    },
-                    child: ListTile(
-                      title: Text('${workout.exercise.name} - ${workout.repetitions} ${appLocalizations.translate('reps')}'),
-                      subtitle: Text('${workout.weight} kg, ${DateFormat('yyyy-MM-dd – kk:mm').format(workout.date)}'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditWorkoutScreen(workout: workout),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                }).toList(),
+                children: [_buildWorkoutDataTable(context, entry.value)],
               );
             }),
             if (allWorkouts.isEmpty)
               Text(
-                appLocalizations.translate('no_activities'),
+                appLocalizations?.translate('no_activities') ?? 'No activities',
                 style: const TextStyle(fontSize: 16, color: Colors.grey),
               ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildWorkoutDataTable(BuildContext context, List<Workout> workouts) {
+    final appLocalizations = AppLocalizations.of(context);
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: DataTable(
+        columns: [
+          DataColumn(label: Text(appLocalizations?.translate('exercise') ?? 'Exercise')),
+          DataColumn(label: Text(appLocalizations?.translate('reps') ?? 'Reps')),
+          DataColumn(label: Text(appLocalizations?.translate('weight') ?? 'Weight')),
+          DataColumn(label: Text(appLocalizations?.translate('date') ?? 'Date')),
+          DataColumn(label: Text(appLocalizations?.translate('actions') ?? 'Actions')),
+        ],
+        rows: workouts.map((workout) {
+          return DataRow(cells: [
+            DataCell(Text(workout.exercise.name)),
+            DataCell(Text('${workout.repetitions} ${appLocalizations?.translate('reps') ?? 'reps'}')),
+            DataCell(Text('${workout.weight} kg')),
+            DataCell(Text(DateFormat('yyyy-MM-dd – kk:mm').format(workout.date))),
+            DataCell(Row(
+              children: [
+                IconButton(
+                  icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditWorkoutScreen(workout: workout),
+                      ),
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete, color: Colors.red),
+                  onPressed: () async {
+                    final confirm = await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text(appLocalizations?.translate('confirm') ?? 'Confirm'),
+                          content: Text(appLocalizations?.translate('confirm_delete') ?? 'Are you sure you want to delete this workout?'),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: Text(appLocalizations?.translate('cancel') ?? 'Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(true),
+                              child: Text(appLocalizations?.translate('delete') ?? 'Delete'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    if (confirm) {
+                      Provider.of<WorkoutModel>(context, listen: false).deleteWorkout(workout);
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(appLocalizations?.translate('workout_deleted') ?? 'Workout deleted')));
+                    }
+                  },
+                ),
+              ],
+            )),
+          ]);
+        }).toList(),
       ),
     );
   }

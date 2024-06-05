@@ -277,5 +277,9 @@
   "calculate_one_rep_max": "Berechnen Sie den Ein-Wiederholungs-Maximalwert",
   "calculate": "Berechnen",
   "one_rep_max": "Ein-Wiederholungs-Maximalwert",
-  "no_data": "Keine Daten"
+  "no_data": "Keine Daten",
+  "exercise": "Übung",
+  "date": "Datum",
+  "actions": "Aktionen"
+
 }

@@ -279,6 +279,10 @@
   "calculate_one_rep_max": "Calculate One-Rep Max",
   "calculate": "Calculate",
   "one_rep_max": "One-Rep Max",
-  "no_data": "No Data"
+  "no_data": "No Data",
+  "exercise": "Exercise",
+  "date": "Date",
+  "actions": "Actions"
+
 }
 
