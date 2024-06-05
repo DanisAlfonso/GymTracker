@@ -36,6 +36,8 @@ class ExercisePerformanceSection extends StatelessWidget {
       builder: (context, workoutModel, child) {
         final workouts = workoutModel.workouts.where((workout) => workout.exercise.name == selectedExercise.name).toList();
         final performanceSpots = _generatePerformanceSpots(workoutModel, selectedExercise);
+        final maxY = performanceSpots.isNotEmpty ? performanceSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b) : 0;
+        final interval = maxY / 10;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,24 +72,21 @@ class ExercisePerformanceSection extends StatelessWidget {
                     leftTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
-                        reservedSize: 20,
+                        reservedSize: 40, // Increased reserved size for left titles
                         getTitlesWidget: (value, meta) {
-                          return Text(
-                            value.toStringAsFixed(0),
-                            style: TextStyle(color: textColor, fontSize: 12),
-                            overflow: TextOverflow.visible,
-                          );
+                          if (value % interval == 0) {
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Text(
+                                value.toStringAsFixed(0),
+                                style: TextStyle(color: textColor, fontSize: 12),
+                                overflow: TextOverflow.visible,
+                              ),
+                            );
+                          }
+                          return Container();
                         },
-                        interval: performanceSpots.isNotEmpty
-                            ? (performanceSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b) / 10)
-                            : 100,
-                      ),
-                      axisNameWidget: Padding(
-                        padding: const EdgeInsets.only(left: 18.0),
-                        child: Text(
-                          appLocalizations.translate('weight_volume'),
-                          style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
-                        ),
+                        interval: interval,
                       ),
                     ),
                     rightTitles: const AxisTitles(
@@ -99,15 +98,21 @@ class ExercisePerformanceSection extends StatelessWidget {
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
-                        reservedSize: 22,
+                        reservedSize: 32,
                         getTitlesWidget: (value, meta) {
-                          return Text(
-                            _formatDate(value, workouts),
-                            style: TextStyle(color: textColor, fontSize: 12),
-                            overflow: TextOverflow.visible,
-                          );
+                          if (value % 2 == 0) { // Show only every second date to reduce crowding
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                _formatDate(value, workouts),
+                                style: TextStyle(color: textColor, fontSize: 12),
+                                overflow: TextOverflow.visible,
+                              ),
+                            );
+                          }
+                          return Container();
                         },
-                        interval: 1,
+                        interval: 2, // Adjust the interval for dates
                       ),
                     ),
                   ),
@@ -118,7 +123,7 @@ class ExercisePerformanceSection extends StatelessWidget {
                   minX: 0,
                   maxX: performanceSpots.isNotEmpty ? performanceSpots.length - 1.toDouble() : 0,
                   minY: performanceSpots.isNotEmpty ? performanceSpots.map((e) => e.y).reduce((a, b) => a < b ? a : b) : 0,
-                  maxY: performanceSpots.isNotEmpty ? performanceSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b) : 0,
+                  maxY: maxY * 1.1, // 10% space above the highest point
                   lineBarsData: [
                     LineChartBarData(
                       spots: performanceSpots,

@@ -275,6 +275,10 @@
   "please_enter_seconds": "Please enter seconds",
   "enable_workout_reminders": "Enable Workout Reminders",
   "save_preferences": "Save Preferences",
-  "weight_volume": "Weight Volume"
+  "weight_volume": "Weight Volume",
+  "calculate_one_rep_max": "Calculate One-Rep Max",
+  "calculate": "Calculate",
+  "one_rep_max": "One-Rep Max",
+  "no_data": "No Data"
 }
 

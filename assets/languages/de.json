@@ -274,5 +274,8 @@
   "please_enter_seconds": "Bitte Sekunden eingeben",
   "enable_workout_reminders": "Trainingserinnerungen aktivieren",
   "save_preferences": "Einstellungen speichern",
-  "weight_volume": "Gewichtsvolumen"
+  "calculate_one_rep_max": "Berechnen Sie den Ein-Wiederholungs-Maximalwert",
+  "calculate": "Berechnen",
+  "one_rep_max": "Ein-Wiederholungs-Maximalwert",
+  "no_data": "Keine Daten"
 }

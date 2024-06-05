@@ -274,5 +274,9 @@
   "please_enter_seconds": "Por favor, ingrese los segundos",
   "enable_workout_reminders": "Habilitar recordatorios de entrenamiento",
   "save_preferences": "Guardar preferencias",
-  "weight_volume": "Volumen de peso"
+  "calculate_one_rep_max": "Calcular la Máxima Repetición",
+  "calculate": "Calcular",
+  "one_rep_max": "Máxima Repetición",
+  "weight_volume": "Volumen de Peso",
+  "no_data": "Sin Datos"
 }
