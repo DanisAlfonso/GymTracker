@@ -37,7 +37,7 @@ class MonthlyProgressSection extends StatelessWidget {
       builder: (context, workoutModel, child) {
         final monthlyProgressSpots = _generateMonthlyProgress(workoutModel);
         final maxY = monthlyProgressSpots.isNotEmpty ? monthlyProgressSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b) : 0;
-        final interval = maxY / 10;
+        final interval = (maxY / 10).clamp(1, double.infinity).toDouble(); // Ensure interval is never zero and cast to double
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
