@@ -71,7 +71,7 @@ class MonthlyProgressSection extends StatelessWidget {
                     leftTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
-                        reservedSize: 40,
+                        reservedSize: 60, // Increased reserved size for left titles
                         getTitlesWidget: (value, meta) {
                           if (value % interval == 0) {
                             return Padding(
