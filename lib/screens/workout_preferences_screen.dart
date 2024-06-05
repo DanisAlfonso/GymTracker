@@ -15,7 +15,6 @@ class _WorkoutPreferencesScreenState extends State<WorkoutPreferencesScreen> {
   bool _useKg = true;
   int _defaultRestMinutes = 1;
   int _defaultRestSeconds = 30;
-  bool _workoutReminders = false;
 
   @override
   void initState() {
@@ -29,7 +28,6 @@ class _WorkoutPreferencesScreenState extends State<WorkoutPreferencesScreen> {
       _useKg = prefs.getBool('useKg') ?? true;
       _defaultRestMinutes = prefs.getInt('defaultRestMinutes') ?? 1;
       _defaultRestSeconds = prefs.getInt('defaultRestSeconds') ?? 30;
-      _workoutReminders = prefs.getBool('workoutReminders') ?? false;
     });
   }
 
@@ -39,7 +37,6 @@ class _WorkoutPreferencesScreenState extends State<WorkoutPreferencesScreen> {
     await prefs.setBool('useKg', _useKg);
     await prefs.setInt('defaultRestMinutes', _defaultRestMinutes);
     await prefs.setInt('defaultRestSeconds', _defaultRestSeconds);
-    await prefs.setBool('workoutReminders', _workoutReminders);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(appLocalizations?.translate('preferences_saved') ?? 'Preferences saved')),
     );
@@ -73,16 +70,6 @@ class _WorkoutPreferencesScreenState extends State<WorkoutPreferencesScreen> {
               const SizedBox(height: 10),
               _buildTimePickerRow(context),
               const SizedBox(height: 20),
-              _buildSwitchListTile(
-                title: appLocalizations?.translate('enable_workout_reminders') ?? 'Enable workout reminders',
-                value: _workoutReminders,
-                onChanged: (value) {
-                  setState(() {
-                    _workoutReminders = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 20),
               Center(
                 child: ElevatedButton(
                   onPressed: _savePreferences,
@@ -92,13 +79,12 @@ class _WorkoutPreferencesScreenState extends State<WorkoutPreferencesScreen> {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
-                    textStyle: TextStyle(
-                      color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
-                    ),
                   ),
                   child: Text(
                     appLocalizations?.translate('save_preferences') ?? 'Save Preferences',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+                    ),
                   ),
                 ),
               ),
