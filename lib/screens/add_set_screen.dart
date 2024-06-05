@@ -6,6 +6,7 @@ import '../models/workout_model.dart';
 import 'duration_picker_dialog.dart';
 import '../app_localizations.dart'; // Import AppLocalizations
 import 'package:intl/intl.dart'; // For formatting the date
+import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
 
 class AddSetScreen extends StatefulWidget {
   final Exercise exercise;
@@ -24,14 +25,24 @@ class _AddSetScreenState extends State<AddSetScreen> {
   int _repetitions = 1;
   int _weightInt = 0;
   int _weightDecimal = 0;
-  Duration _restTime = const Duration(minutes: 3); // Set default rest time to 3 minutes
+  Duration _restTime = const Duration(minutes: 3); // Default rest time
   DateTime _selectedDate = DateTime.now();
   List<Workout> _previousWorkouts = [];
 
   @override
   void initState() {
     super.initState();
+    _fetchPreferences();
     _fetchPreviousWorkouts();
+  }
+
+  Future<void> _fetchPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      final minutes = prefs.getInt('defaultRestMinutes') ?? 3;
+      final seconds = prefs.getInt('defaultRestSeconds') ?? 0;
+      _restTime = Duration(minutes: minutes, seconds: seconds);
+    });
   }
 
   void _fetchPreviousWorkouts() {
@@ -143,7 +154,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(appLocalizations!.translate('add_set')),
+        title: Text(appLocalizations?.translate('add_set') ?? 'Add Set'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -166,7 +177,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          appLocalizations.translate('previous_performance'),
+                          appLocalizations?.translate('previous_performance') ?? 'Previous Performance',
                           style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
@@ -215,7 +226,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                           Icon(Icons.format_list_numbered, color: Theme.of(context).primaryColor),
                           const SizedBox(width: 8),
                           Text(
-                            appLocalizations.translate('set_number'),
+                            appLocalizations?.translate('set_number') ?? 'Set Number',
                             style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                           ),
                         ],
@@ -243,7 +254,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                           Icon(Icons.repeat, color: Theme.of(context).primaryColor),
                           const SizedBox(width: 8),
                           Text(
-                            appLocalizations.translate('repetitions'),
+                            appLocalizations?.translate('repetitions') ?? 'Repetitions',
                             style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                           ),
                         ],
@@ -270,7 +281,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                           Icon(Icons.fitness_center, color: Theme.of(context).primaryColor),
                           const SizedBox(width: 8),
                           Text(
-                            appLocalizations.translate('weight_kg'),
+                            appLocalizations?.translate('weight_kg') ?? 'Weight (kg)',
                             style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                           ),
                         ],
@@ -281,7 +292,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                         children: [
                           NumberPicker(
                             minValue: 0,
-                            maxValue: 200,
+                            maxValue: 300,
                             value: _weightInt,
                             onChanged: (value) {
                               setState(() {
@@ -321,7 +332,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                             backgroundColor: Theme.of(context).primaryColor,
                           ),
                           child: Text(
-                            appLocalizations.translate('add_set'),
+                            appLocalizations?.translate('add_set') ?? 'Add Set',
                             style: const TextStyle(fontSize: 16.0, color: Colors.white),
                           ),
                         ),
@@ -342,7 +353,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        appLocalizations.translate('rest_time'),
+                        appLocalizations?.translate('rest_time') ?? 'Rest Time',
                         style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
@@ -357,7 +368,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                             backgroundColor: Theme.of(context).primaryColor,
                           ),
                           child: Text(
-                            '${appLocalizations.translate('pick_rest_time')} (${_restTime.inMinutes} min ${_restTime.inSeconds % 60} sec)',
+                            '${appLocalizations?.translate('pick_rest_time') ?? 'Pick Rest Time'} (${_restTime.inMinutes} min ${_restTime.inSeconds % 60} sec)',
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
@@ -365,7 +376,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                       const SizedBox(height: 20),
                       const Divider(),
                       Text(
-                        appLocalizations.translate('training_day'),
+                        appLocalizations?.translate('training_day') ?? 'Training Day',
                         style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
@@ -388,14 +399,14 @@ class _AddSetScreenState extends State<AddSetScreen> {
                       const SizedBox(height: 20),
                       const Divider(),
                       Text(
-                        appLocalizations.translate('notes'),
+                        appLocalizations?.translate('notes') ?? 'Notes',
                         style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _notesController,
                         decoration: InputDecoration(
-                          hintText: appLocalizations.translate('enter_notes'),
+                          hintText: appLocalizations?.translate('enter_notes') ?? 'Enter notes',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
