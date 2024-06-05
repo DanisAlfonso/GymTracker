@@ -40,8 +40,8 @@ class _WeeklyProgressSectionState extends State<WeeklyProgressSection> {
           BarChartRodData(
             toY: totalWeight,
             color: Colors.primaries[index % Colors.primaries.length], // Different color for each day
-            borderRadius: BorderRadius.circular(5),
-            width: 25, // Width of each bar
+            borderRadius: BorderRadius.circular(4),
+            width: 20, // Reduced width of each bar
           ),
         ],
         showingTooltipIndicators: touchedIndex == index ? [0] : [],
@@ -75,7 +75,7 @@ class _WeeklyProgressSectionState extends State<WeeklyProgressSection> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: SizedBox(
-                  width: weeklyProgressBars.length * 100.0, // Dynamic width based on the number of bars
+                  width: weeklyProgressBars.length * 50.0, // Adjusted width based on the number of bars
                   child: BarChart(
                     BarChartData(
                       barGroups: weeklyProgressBars,
@@ -83,10 +83,11 @@ class _WeeklyProgressSectionState extends State<WeeklyProgressSection> {
                         bottomTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
+                            reservedSize: 32, // Increased reserved size for bottom titles
                             getTitlesWidget: (double value, TitleMeta meta) {
                               const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
                               return Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
+                                padding: const EdgeInsets.only(top: 16.0), // Increased top padding
                                 child: Text(days[value.toInt()], style: TextStyle(color: textColor)),
                               );
                             },
@@ -98,16 +99,19 @@ class _WeeklyProgressSectionState extends State<WeeklyProgressSection> {
                         leftTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
-                            reservedSize: 40,
+                            reservedSize: 48, // Increased reserved size for left titles
                             getTitlesWidget: (value, meta) {
-                              return Padding(
-                                padding: const EdgeInsets.only(right: 8.0),
-                                child: Text(
-                                  value.toStringAsFixed(0),
-                                  style: TextStyle(color: textColor, fontSize: 12),
-                                  overflow: TextOverflow.visible,
-                                ),
-                              );
+                              if (value % 5000 == 0) { // Show titles only for grid lines
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 4.0), // Adjusted right padding
+                                  child: Text(
+                                    value.toStringAsFixed(0),
+                                    style: TextStyle(color: textColor, fontSize: 12),
+                                    overflow: TextOverflow.visible,
+                                  ),
+                                );
+                              }
+                              return Container();
                             },
                           ),
                           axisNameWidget: Padding(
