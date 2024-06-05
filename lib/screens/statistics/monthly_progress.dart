@@ -1,4 +1,3 @@
-// lib/screens/statistics/monthly_progress.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -10,21 +9,19 @@ class MonthlyProgressSection extends StatelessWidget {
   const MonthlyProgressSection({super.key});
 
   List<FlSpot> _generateMonthlyProgress(WorkoutModel workoutModel) {
-    final Map<String, double> monthlyProgress = {};
+    final Map<int, double> monthlyProgress = {}; // Change key to int for month index
 
     for (var workout in workoutModel.workouts) {
-      String month = DateFormat.MMM().format(workout.date);
-      if (!monthlyProgress.containsKey(month)) {
-        monthlyProgress[month] = 0.0;
+      int monthIndex = workout.date.month;
+      if (!monthlyProgress.containsKey(monthIndex)) {
+        monthlyProgress[monthIndex] = 0.0;
       }
-      monthlyProgress[month] = monthlyProgress[month]! + workout.weight * workout.repetitions;
+      monthlyProgress[monthIndex] = monthlyProgress[monthIndex]! + workout.weight * workout.repetitions;
     }
 
     List<FlSpot> lineSpots = [];
-    int index = 0;
-    monthlyProgress.forEach((month, totalWeight) {
-      lineSpots.add(FlSpot(index.toDouble(), totalWeight));
-      index++;
+    monthlyProgress.forEach((monthIndex, totalWeight) {
+      lineSpots.add(FlSpot(monthIndex.toDouble(), totalWeight));
     });
 
     return lineSpots;
@@ -33,10 +30,14 @@ class MonthlyProgressSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final textColor = theme.brightness == Brightness.dark ? Colors.white : Colors.black54;
 
     return Consumer<WorkoutModel>(
       builder: (context, workoutModel, child) {
         final monthlyProgressSpots = _generateMonthlyProgress(workoutModel);
+        final maxY = monthlyProgressSpots.isNotEmpty ? monthlyProgressSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b) : 0;
+        final interval = maxY / 10;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,34 +73,56 @@ class MonthlyProgressSection extends StatelessWidget {
                         showTitles: true,
                         reservedSize: 40,
                         getTitlesWidget: (value, meta) {
-                          return Text(
-                            value.toStringAsFixed(0),
-                            style: const TextStyle(color: Colors.black54, fontSize: 12),
-                            overflow: TextOverflow.visible,
-                          );
+                          if (value % interval == 0) {
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Text(
+                                value.toStringAsFixed(0),
+                                style: TextStyle(color: textColor, fontSize: 12),
+                                overflow: TextOverflow.visible,
+                              ),
+                            );
+                          }
+                          return Container();
                         },
-                        interval: monthlyProgressSpots.isNotEmpty ? ((monthlyProgressSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b)) / 10) : 100,
+                        interval: interval,
                       ),
                     ),
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
-                        reservedSize: 22,
+                        reservedSize: 32,
                         getTitlesWidget: (value, meta) {
-                          const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                          return Text(months[value.toInt() % 12]);
+                          final monthIndex = value.toInt();
+                          if (monthIndex >= 1 && monthIndex <= 12) {
+                            final monthLabel = DateFormat.MMM().format(DateTime(0, monthIndex));
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                monthLabel,
+                                style: TextStyle(color: textColor, fontSize: 12),
+                              ),
+                            );
+                          }
+                          return Container();
                         },
                       ),
+                    ),
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
                     ),
                   ),
                   borderData: FlBorderData(
                     show: true,
                     border: Border.all(color: const Color(0xffe7e8ec)),
                   ),
-                  minX: 0,
-                  maxX: monthlyProgressSpots.isNotEmpty ? monthlyProgressSpots.length - 1.toDouble() : 0,
-                  minY: monthlyProgressSpots.isNotEmpty ? monthlyProgressSpots.map((e) => e.y).reduce((a, b) => a < b ? a : b) : 0,
-                  maxY: monthlyProgressSpots.isNotEmpty ? monthlyProgressSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b) : 0,
+                  minX: monthlyProgressSpots.isNotEmpty ? monthlyProgressSpots.map((e) => e.x).reduce((a, b) => a < b ? a : b) - 0.5 : 0,
+                  maxX: monthlyProgressSpots.isNotEmpty ? monthlyProgressSpots.map((e) => e.x).reduce((a, b) => a > b ? a : b) + 0.5 : 0,
+                  minY: 0,
+                  maxY: maxY * 1.1, // 10% space above the highest point
                   lineBarsData: [
                     LineChartBarData(
                       spots: monthlyProgressSpots,
@@ -114,7 +137,7 @@ class MonthlyProgressSection extends StatelessWidget {
                       getTooltipItems: (List<LineBarSpot> touchedSpots) {
                         return touchedSpots.map((spot) {
                           return LineTooltipItem(
-                            '${spot.x.toStringAsFixed(0)}, ${spot.y.toStringAsFixed(0)}',
+                            '${DateFormat.MMM().format(DateTime(0, spot.x.toInt()))}: ${spot.y.toStringAsFixed(0)}',
                             const TextStyle(color: Colors.white),
                           );
                         }).toList();
