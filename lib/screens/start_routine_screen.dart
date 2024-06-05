@@ -1,4 +1,3 @@
-// lib/screens/start_routine_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
@@ -90,8 +89,17 @@ class StartRoutineScreen extends StatelessWidget {
       body: Consumer<WorkoutModel>(
         builder: (context, workoutModel, child) {
           final workouts = workoutModel.getWorkoutsForRoutine(routine);
-          return ListView(
+          return ReorderableListView(
             padding: const EdgeInsets.all(16.0),
+            onReorder: (int oldIndex, int newIndex) {
+              if (newIndex > oldIndex) {
+                newIndex -= 1;
+              }
+              final Exercise movedExercise = routine.exercises.removeAt(oldIndex);
+              routine.exercises.insert(newIndex, movedExercise);
+              workoutModel.saveData();
+              workoutModel.notifyListeners();
+            },
             children: routine.exercises.map((exercise) {
               final exerciseWorkouts = workouts.where((workout) => workout.exercise == exercise).toList();
 
@@ -100,6 +108,7 @@ class StartRoutineScreen extends StatelessWidget {
               final totalWeight = exerciseWorkouts.fold(0.0, (sum, workout) => sum + workout.weight);
 
               return Card(
+                key: ValueKey(exercise),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ),
