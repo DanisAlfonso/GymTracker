@@ -1,4 +1,3 @@
-// lib/screens/training_screen.dart
 import 'package:flutter/material.dart';
 import 'create_routine_screen.dart';
 import 'start_routine_screen.dart';
@@ -87,12 +86,13 @@ class TrainingScreen extends StatelessWidget {
       body: Consumer<WorkoutModel>(
         builder: (context, workoutModel, child) {
           return workoutModel.routines.isNotEmpty
-              ? ListView.builder(
+              ? ReorderableListView.builder(
             padding: const EdgeInsets.all(16.0),
             itemCount: workoutModel.routines.length,
             itemBuilder: (context, index) {
               final routine = workoutModel.routines[index];
               return Card(
+                key: ValueKey(routine),
                 margin: const EdgeInsets.symmetric(vertical: 8.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
@@ -139,6 +139,9 @@ class TrainingScreen extends StatelessWidget {
                   },
                 ),
               );
+            },
+            onReorder: (int oldIndex, int newIndex) {
+              Provider.of<WorkoutModel>(context, listen: false).reorderRoutines(oldIndex, newIndex);
             },
           )
               : Center(

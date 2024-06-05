@@ -1,4 +1,3 @@
-// lib/models/workout_model.dart
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -6,7 +5,7 @@ import 'dart:convert';
 class Exercise {
   final String name;
   final String description;
-  final String localizationKey; // Added localization key
+  final String localizationKey;
 
   Exercise({required this.name, required this.description, required this.localizationKey});
 
@@ -155,9 +154,22 @@ class WorkoutModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void reorderRoutines(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    final Routine movedRoutine = _routines.removeAt(oldIndex);
+    _routines.insert(newIndex, movedRoutine);
+    _saveData();
+    notifyListeners();
+  }
 
   List<Workout> getWorkoutsForRoutine(Routine routine) {
     return _workouts.where((workout) => routine.exercises.contains(workout.exercise)).toList();
+  }
+
+  void saveData() {
+    _saveData();
   }
 
   Future<void> _saveData() async {
