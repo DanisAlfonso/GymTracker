@@ -292,7 +292,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                         children: [
                           NumberPicker(
                             minValue: 0,
-                            maxValue: 300,
+                            maxValue: 1000,
                             value: _weightInt,
                             onChanged: (value) {
                               setState(() {
