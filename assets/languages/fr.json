@@ -281,5 +281,6 @@
   "no_data": "Pas de Données",
   "exercise": "Exercice",
   "date": "Date",
-  "actions": "Actions"
+  "actions": "Actions",
+  "recovery_status": "Statut de récupération"
 }

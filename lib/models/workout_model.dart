@@ -7,13 +7,20 @@ class Exercise {
   final String name;
   final String description;
   final String localizationKey;
+  final int recoveryTimeInHours;
 
-  Exercise({required this.name, required this.description, required this.localizationKey});
+  Exercise({
+    required this.name,
+    required this.description,
+    required this.localizationKey,
+    required this.recoveryTimeInHours,
+  });
 
   Map<String, dynamic> toJson() => {
     'name': name,
     'description': description,
     'localizationKey': localizationKey,
+    'recoveryTimeInHours': recoveryTimeInHours,
   };
 
   factory Exercise.fromJson(Map<String, dynamic> json) {
@@ -21,6 +28,7 @@ class Exercise {
       name: json['name'],
       description: json['description'],
       localizationKey: json['localizationKey'],
+      recoveryTimeInHours: json['recoveryTimeInHours'] ?? 48, // Provide a default value if null
     );
   }
 }
@@ -206,5 +214,55 @@ class WorkoutModel extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  Duration timeSinceLastWorkout() {
+    if (_workouts.isEmpty) {
+      return Duration(days: 0); // No workouts, no rest needed
+    }
+    final lastWorkoutDate = _workouts.last.date;
+    return DateTime.now().difference(lastWorkoutDate);
+  }
+
+  // Calculate total volume per muscle group
+  Map<String, double> calculateTotalVolumePerMuscleGroup() {
+    Map<String, double> muscleGroupVolume = {};
+
+    for (var workout in _workouts) {
+      if (!muscleGroupVolume.containsKey(workout.exercise.description)) {
+        muscleGroupVolume[workout.exercise.description] = 0.0;
+      }
+      muscleGroupVolume[workout.exercise.description] =
+          muscleGroupVolume[workout.exercise.description]! +
+              (workout.weight * workout.repetitions);
+    }
+    return muscleGroupVolume;
+  }
+
+  // Calculate the last training date per muscle group
+  Map<String, DateTime> calculateLastTrainingDatePerMuscleGroup() {
+    Map<String, DateTime> lastTrainingDate = {};
+
+    for (var workout in _workouts) {
+      lastTrainingDate[workout.exercise.description] = workout.date;
+    }
+    return lastTrainingDate;
+  }
+
+  // Calculate recovery percentage per muscle group
+  Map<String, double> calculateRecoveryPercentagePerMuscleGroup() {
+    Map<String, double> recoveryPercentage = {};
+    final lastTrainingDate = calculateLastTrainingDatePerMuscleGroup();
+
+    final currentTime = DateTime.now();
+    lastTrainingDate.forEach((muscleGroup, lastDate) {
+      final exercise = _exercises.firstWhere((e) => e.description == muscleGroup);
+      final hoursSinceLastWorkout = currentTime.difference(lastDate).inHours;
+      final recoveryTime = exercise.recoveryTimeInHours;
+      final recovery = (hoursSinceLastWorkout / recoveryTime) * 100;
+      recoveryPercentage[muscleGroup] = recovery.clamp(0, 100);
+    });
+
+    return recoveryPercentage;
   }
 }

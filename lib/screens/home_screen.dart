@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../models/workout_model.dart';
 import 'edit_workout_screen.dart';
 import '../app_localizations.dart'; // Import the AppLocalizations
+import 'recovery_status.dart'; // Import the RecoveryStatus
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -27,6 +28,8 @@ class HomeScreen extends StatelessWidget {
               appLocalizations?.translate('welcome_message') ?? 'Welcome!',
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
+            const SizedBox(height: 20),
+            RecoveryStatus(), // Add the RecoveryStatus widget
             const SizedBox(height: 20),
             _buildRecentActivities(context, recentWorkouts),
             const SizedBox(height: 20),

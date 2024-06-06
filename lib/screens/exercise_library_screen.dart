@@ -1,4 +1,3 @@
-// lib/screens/exercise_library_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
@@ -106,6 +105,7 @@ class _AddExerciseDialogState extends State<AddExerciseDialog> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _recoveryTimeController = TextEditingController();
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
@@ -113,6 +113,7 @@ class _AddExerciseDialogState extends State<AddExerciseDialog> {
         name: _nameController.text,
         description: _descriptionController.text,
         localizationKey: '', // Provide an empty localization key for custom exercises
+        recoveryTimeInHours: int.parse(_recoveryTimeController.text),
       );
 
       Provider.of<WorkoutModel>(context, listen: false).addCustomExercise(exercise);
@@ -147,6 +148,17 @@ class _AddExerciseDialogState extends State<AddExerciseDialog> {
               validator: (value) {
                 if (value!.isEmpty) {
                   return appLocalizations.translate('please_enter_exercise_description');
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: _recoveryTimeController,
+              decoration: InputDecoration(labelText: appLocalizations.translate('recovery_time')),
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return appLocalizations.translate('please_enter_recovery_time');
                 }
                 return null;
               },
