@@ -1,4 +1,4 @@
-import 'workout_model.dart'; // Ensure Exercise class is imported
+import 'workout_model.dart';
 
 final List<Exercise> defaultExercises = [
   // Abdominals
