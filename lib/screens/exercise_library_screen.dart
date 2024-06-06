@@ -14,11 +14,24 @@ class ExerciseLibraryScreen extends StatefulWidget {
 
 class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
   List<Exercise> _selectedExercises = [];
+  TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
     _selectedExercises = widget.selectedExercises;
+    _searchController.addListener(() {
+      setState(() {
+        _searchQuery = _searchController.text;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   void _toggleSelection(Exercise exercise) {
@@ -31,6 +44,17 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
     });
   }
 
+  List<Exercise> _filterExercises(List<Exercise> exercises) {
+    if (_searchQuery.isEmpty) {
+      return exercises;
+    } else {
+      return exercises.where((exercise) {
+        return exercise.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+            exercise.description.toLowerCase().contains(_searchQuery.toLowerCase());
+      }).toList();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final exercises = Provider.of<WorkoutModel>(context).exercises;
@@ -38,7 +62,7 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
 
     // Group exercises by category
     final Map<String, List<Exercise>> groupedExercises = {};
-    for (var exercise in exercises) {
+    for (var exercise in _filterExercises(exercises)) {
       if (groupedExercises[exercise.description] == null) {
         groupedExercises[exercise.description] = [];
       }
@@ -54,36 +78,49 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: sortedKeys.map((key) {
-            return Card(
-              elevation: 4,
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+        child: Column(
+          children: [
+            TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                labelText: appLocalizations.translate('search'),
+                prefixIcon: Icon(Icons.search),
               ),
-              child: ExpansionTile(
-                title: Text(
-                  appLocalizations.translate(key),
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                children: groupedExercises[key]!.map((exercise) {
-                  final isSelected = _selectedExercises.contains(exercise);
-                  return ListTile(
-                    title: Text(appLocalizations.translate(exercise.localizationKey)),
-                    trailing: Icon(
-                      isSelected ? Icons.check_circle : Icons.check_circle_outline,
-                      color: isSelected ? Colors.green : Colors.grey,
+            ),
+            Expanded(
+              child: ListView(
+                children: sortedKeys.map((key) {
+                  return Card(
+                    elevation: 4,
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    onTap: () => _toggleSelection(exercise),
+                    child: ExpansionTile(
+                      title: Text(
+                        appLocalizations.translate(key),
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      children: groupedExercises[key]!.map((exercise) {
+                        final isSelected = _selectedExercises.contains(exercise);
+                        return ListTile(
+                          title: Text(appLocalizations.translate(exercise.localizationKey)),
+                          trailing: Icon(
+                            isSelected ? Icons.check_circle : Icons.check_circle_outline,
+                            color: isSelected ? Colors.green : Colors.grey,
+                          ),
+                          onTap: () => _toggleSelection(exercise),
+                        );
+                      }).toList(),
+                    ),
                   );
                 }).toList(),
               ),
-            );
-          }).toList(),
+            ),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
