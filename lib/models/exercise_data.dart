@@ -94,4 +94,6 @@ final List<Exercise> defaultExercises = [
   Exercise(name: 'Rear Delt Reverse Fly (Dumbbell)', description: 'Upper Back', localizationKey: 'exercise_rear_delt_reverse_fly_dumbbell', recoveryTimeInHours: 48),
   Exercise(name: 'Rear Delt Reverse Fly (Machine)', description: 'Upper Back', localizationKey: 'exercise_rear_delt_reverse_fly_machine', recoveryTimeInHours: 48),
   Exercise(name: 'Reverse Grip Lat Pulldown (Cable)', description: 'Upper Back', localizationKey: 'exercise_reverse_grip_lat_pulldown_cable', recoveryTimeInHours: 72),
+  // Cardio
+  Exercise(name: 'Jump Rope', description: 'Cardio', localizationKey: 'exercise_jump_rope', recoveryTimeInHours: 24),
 ];

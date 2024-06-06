@@ -45,6 +45,9 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
       groupedExercises[exercise.description]!.add(exercise);
     }
 
+    // Sort muscle groups alphabetically
+    final sortedKeys = groupedExercises.keys.toList()..sort();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(appLocalizations!.translate('exercise_library')),
@@ -52,7 +55,7 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
-          children: groupedExercises.entries.map((entry) {
+          children: sortedKeys.map((key) {
             return Card(
               elevation: 4,
               margin: const EdgeInsets.symmetric(vertical: 8),
@@ -61,13 +64,13 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
               ),
               child: ExpansionTile(
                 title: Text(
-                  appLocalizations.translate(entry.key),
+                  appLocalizations.translate(key),
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                children: entry.value.map((exercise) {
+                children: groupedExercises[key]!.map((exercise) {
                   final isSelected = _selectedExercises.contains(exercise);
                   return ListTile(
                     title: Text(appLocalizations.translate(exercise.localizationKey)),
