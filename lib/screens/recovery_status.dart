@@ -10,6 +10,10 @@ class RecoveryStatus extends StatelessWidget {
     final appLocalizations = AppLocalizations.of(context);
     final recoveryPercentages = workoutModel.calculateRecoveryPercentagePerMuscleGroup();
 
+    // Sort recoveryPercentages by value
+    final sortedRecoveryPercentages = recoveryPercentages.entries.toList()
+      ..sort((a, b) => a.value.compareTo(b.value));
+
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -29,7 +33,7 @@ class RecoveryStatus extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 10),
-            ...recoveryPercentages.entries.map((entry) {
+            ...sortedRecoveryPercentages.map((entry) {
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4.0),
                 child: Row(
