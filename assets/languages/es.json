@@ -282,5 +282,6 @@
   "exercise": "Ejercicio",
   "date": "Fecha",
   "actions": "Acciones",
-  "recovery_status": "Estado de recuperación"
+  "recovery_status": "Estado de recuperación",
+  "exercise_jump_rope": "Saltar la cuerda"
 }

@@ -281,5 +281,6 @@
   "exercise": "Übung",
   "date": "Datum",
   "actions": "Aktionen",
-  "recovery_status": "Erholungsstatus"
+  "recovery_status": "Erholungsstatus",
+  "exercise_jump_rope": "Seilspringen"
 }
