@@ -13,14 +13,14 @@ class ExerciseLibraryScreen extends StatefulWidget {
 }
 
 class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
-  List<Exercise> _selectedExercises = [];
+  late List<Exercise> _selectedExercises;
   TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
-    _selectedExercises = widget.selectedExercises;
+    _selectedExercises = List.from(widget.selectedExercises); // Make a mutable copy
     _searchController.addListener(() {
       setState(() {
         _searchQuery = _searchController.text;
