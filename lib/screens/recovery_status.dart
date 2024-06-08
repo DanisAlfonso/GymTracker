@@ -4,6 +4,8 @@ import '../models/workout_model.dart';
 import '../app_localizations.dart';
 
 class RecoveryStatus extends StatelessWidget {
+  const RecoveryStatus({super.key});
+
   @override
   Widget build(BuildContext context) {
     final workoutModel = Provider.of<WorkoutModel>(context);
@@ -53,7 +55,7 @@ class RecoveryStatus extends StatelessWidget {
                   ],
                 ),
               );
-            }).toList(),
+            }),
             if (recoveryPercentages.isEmpty)
               Text(
                 appLocalizations?.translate('no_recent_workouts') ?? 'No recent workouts to show recovery status.',

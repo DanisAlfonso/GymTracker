@@ -14,7 +14,7 @@ class ExerciseLibraryScreen extends StatefulWidget {
 
 class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
   late List<Exercise> _selectedExercises;
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
   @override
@@ -84,7 +84,7 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
               controller: _searchController,
               decoration: InputDecoration(
                 labelText: appLocalizations.translate('search'),
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search),
               ),
             ),
             Expanded(

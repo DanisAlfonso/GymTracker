@@ -103,7 +103,7 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
           ),
-          home: _user == null ? AuthScreen() : MainScreen(onLocaleChange: _setLocale),
+          home: _user == null ? const AuthScreen() : MainScreen(onLocaleChange: _setLocale),
           routes: {
             '/settings': (context) => SettingsScreen(onLocaleChange: _setLocale),
           },

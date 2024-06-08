@@ -272,7 +272,7 @@ class WorkoutModel extends ChangeNotifier {
 
   Duration timeSinceLastWorkout() {
     if (_workouts.isEmpty) {
-      return Duration(days: 0); // No workouts, no rest needed
+      return const Duration(days: 0); // No workouts, no rest needed
     }
     final lastWorkoutDate = _workouts.last.date;
     return DateTime.now().difference(lastWorkoutDate);

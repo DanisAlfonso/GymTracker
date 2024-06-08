@@ -29,7 +29,7 @@ class HomeScreen extends StatelessWidget {
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            RecoveryStatus(), // Add the RecoveryStatus widget
+            const RecoveryStatus(), // Add the RecoveryStatus widget
             const SizedBox(height: 20),
             _buildRecentActivities(context, recentWorkouts),
             const SizedBox(height: 20),
@@ -175,7 +175,7 @@ class HomeScreen extends StatelessWidget {
                   },
                 ),
                 IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red),
+                  icon: const Icon(Icons.delete, color: Colors.red),
                   onPressed: () async {
                     final confirm = await showDialog(
                       context: context,

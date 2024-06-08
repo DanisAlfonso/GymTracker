@@ -30,10 +30,6 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Consumer<WorkoutModel>(
           builder: (context, workoutModel, child) {
-            if (workoutModel == null) {
-              return Center(child: CircularProgressIndicator());
-            }
-
             final exercises = workoutModel.exercises;
 
             // Sort exercises alphabetically
