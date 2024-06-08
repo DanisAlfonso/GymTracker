@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "1020225147222",
+    "project_id": "musclemetrics-f9995",
+    "storage_bucket": "musclemetrics-f9995.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1020225147222:android:12a4ee387ba01203db06f7",
+        "android_client_info": {
+          "package_name": "com.example.gym_tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1020225147222-p729cvaur098e8fn9jmpme1uv9h9qsm6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gym_tracker",
+            "certificate_hash": "f07230409dfa8f4c662a52fa08d7b1c9b27e36bf"
+          }
+        },
+        {
+          "client_id": "1020225147222-uk7sdvea7enk9gpqpsaspj3qk9983lrp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuZ6TVIP5PaInms4uUhJM5YrtS9hVvzVY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1020225147222-uk7sdvea7enk9gpqpsaspj3qk9983lrp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1020225147222-pq5vctopmfjjutqosbh3v9vam19075nu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.gymTracker"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

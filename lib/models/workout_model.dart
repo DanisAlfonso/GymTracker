@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'exercise_data.dart'; // Import the exercise data
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Exercise {
   final String name;
@@ -183,6 +185,18 @@ class WorkoutModel extends ChangeNotifier {
 
   Future<void> _saveData() async {
     final prefs = await SharedPreferences.getInstance();
+    final firestore = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      final userDoc = firestore.collection('users').doc(user.uid);
+
+      await userDoc.set({
+        'workouts': jsonEncode(_workouts.map((w) => w.toJson()).toList()),
+        'routines': jsonEncode(_routines.map((r) => r.toJson()).toList()),
+        'exercises': jsonEncode(_exercises.map((e) => e.toJson()).toList()),
+      });
+    }
 
     prefs.setString('workouts', jsonEncode(_workouts.map((w) => w.toJson()).toList()));
     prefs.setString('routines', jsonEncode(_routines.map((r) => r.toJson()).toList()));
@@ -191,29 +205,69 @@ class WorkoutModel extends ChangeNotifier {
 
   Future<void> _loadData() async {
     final prefs = await SharedPreferences.getInstance();
+    final firestore = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser;
 
-    final workoutsString = prefs.getString('workouts');
-    final routinesString = prefs.getString('routines');
-    final exercisesString = prefs.getString('exercises');
+    try {
+      if (user != null) {
+        final userDoc = firestore.collection('users').doc(user.uid);
+        final docSnapshot = await userDoc.get();
 
-    if (workoutsString != null) {
-      final workoutsJson = jsonDecode(workoutsString) as List;
-      _workouts.addAll(workoutsJson.map((w) => Workout.fromJson(w)).toList());
+        if (docSnapshot.exists) {
+          final data = docSnapshot.data();
+          if (data != null) {
+            final workoutsString = data['workouts'];
+            final routinesString = data['routines'];
+            final exercisesString = data['exercises'];
+
+            if (workoutsString != null) {
+              final workoutsJson = jsonDecode(workoutsString) as List;
+              _workouts.addAll(workoutsJson.map((w) => Workout.fromJson(w)).toList());
+            }
+
+            if (routinesString != null) {
+              final routinesJson = jsonDecode(routinesString) as List;
+              _routines.addAll(routinesJson.map((r) => Routine.fromJson(r)).toList());
+            }
+
+            if (exercisesString != null) {
+              final exercisesJson = jsonDecode(exercisesString) as List;
+              _exercises = exercisesJson.map((e) => Exercise.fromJson(e)).toList();
+            }
+          }
+        }
+      } else {
+        final workoutsString = prefs.getString('workouts');
+        final routinesString = prefs.getString('routines');
+        final exercisesString = prefs.getString('exercises');
+
+        if (workoutsString != null) {
+          final workoutsJson = jsonDecode(workoutsString) as List;
+          _workouts.addAll(workoutsJson.map((w) => Workout.fromJson(w)).toList());
+        }
+
+        if (routinesString != null) {
+          final routinesJson = jsonDecode(routinesString) as List;
+          _routines.addAll(routinesJson.map((r) => Routine.fromJson(r)).toList());
+        }
+
+        if (exercisesString != null) {
+          final exercisesJson = jsonDecode(exercisesString) as List;
+          _exercises = exercisesJson.map((e) => Exercise.fromJson(e)).toList();
+        } else {
+          _exercises = defaultExercises; // Use the default exercises from exercise_data.dart
+        }
+      }
+
+      if (_exercises.isEmpty) {
+        _exercises = defaultExercises; // Load default exercises if none exist
+      }
+
+      notifyListeners();
+    } catch (e) {
+      _exercises = defaultExercises;
+      notifyListeners();
     }
-
-    if (routinesString != null) {
-      final routinesJson = jsonDecode(routinesString) as List;
-      _routines.addAll(routinesJson.map((r) => Routine.fromJson(r)).toList());
-    }
-
-    if (exercisesString != null) {
-      final exercisesJson = jsonDecode(exercisesString) as List;
-      _exercises = exercisesJson.map((e) => Exercise.fromJson(e)).toList();
-    } else {
-      _exercises = defaultExercises; // Use the default exercises from exercise_data.dart
-    }
-
-    notifyListeners();
   }
 
   Duration timeSinceLastWorkout() {
@@ -233,7 +287,7 @@ class WorkoutModel extends ChangeNotifier {
         muscleGroupVolume[workout.exercise.description] = 0.0;
       }
       muscleGroupVolume[workout.exercise.description] =
-          muscleGroupVolume[workout.exercise.description]! +
+          (muscleGroupVolume[workout.exercise.description] ?? 0.0) +
               (workout.weight * workout.repetitions);
     }
     return muscleGroupVolume;

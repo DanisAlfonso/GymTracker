@@ -1,19 +1,24 @@
-// lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'firebase_options.dart';
 import 'models/workout_model.dart';
 import 'models/theme_model.dart';
 import 'screens/home_screen.dart';
 import 'screens/training_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/statistics_screen.dart';
+import 'screens/auth_screen.dart';
 import 'app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await clearSharedPreferences(); // Temporarily clear shared preferences for testing - Remove or comment out this line
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     MultiProvider(
       providers: [
@@ -25,11 +30,6 @@ void main() async {
   );
 }
 
-/* Future<void> clearSharedPreferences() async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.clear();
-} */
-
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -39,11 +39,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Locale _locale = const Locale('en');
+  User? _user;
 
   @override
   void initState() {
     super.initState();
     _loadLocale();
+    _checkAuthState();
   }
 
   Future<void> _loadLocale() async {
@@ -57,6 +59,14 @@ class _MyAppState extends State<MyApp> {
   void _setLocale(Locale locale) {
     setState(() {
       _locale = locale;
+    });
+  }
+
+  void _checkAuthState() {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      setState(() {
+        _user = user;
+      });
     });
   }
 
@@ -93,7 +103,7 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
           ),
-          home: MainScreen(onLocaleChange: _setLocale),
+          home: _user == null ? AuthScreen() : MainScreen(onLocaleChange: _setLocale),
           routes: {
             '/settings': (context) => SettingsScreen(onLocaleChange: _setLocale),
           },
