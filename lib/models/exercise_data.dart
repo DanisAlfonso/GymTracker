@@ -62,6 +62,7 @@ final List<Exercise> defaultExercises = [
   Exercise(name: 'Lunge (Barbell)', description: 'Quadriceps', localizationKey: 'exercise_lunge_barbell', recoveryTimeInHours: 72),
   Exercise(name: 'Lunge (Dumbbell)', description: 'Quadriceps', localizationKey: 'exercise_lunge_dumbbell', recoveryTimeInHours: 72),
   Exercise(name: 'Pause Squat (Barbell)', description: 'Quadriceps', localizationKey: 'exercise_pause_squat_barbell', recoveryTimeInHours: 72),
+  Exercise(name: 'Front Squat (Barbell)', description: 'Quadriceps', localizationKey: 'exercise_front_squat_barbell', recoveryTimeInHours: 72),
   Exercise(name: 'Pendulum Squat (Machine)', description: 'Quadriceps', localizationKey: 'exercise_pendulum_squat_machine', recoveryTimeInHours: 72),
   Exercise(name: 'Squat (Smith Machine)', description: 'Quadriceps', localizationKey: 'exercise_squat_smith_machine', recoveryTimeInHours: 72),
   Exercise(name: 'Squat (Dumbbell)', description: 'Quadriceps', localizationKey: 'exercise_squat_dumbbell', recoveryTimeInHours: 72),

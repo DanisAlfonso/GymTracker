@@ -40,13 +40,9 @@
   "enter_routine_name": "Geben Sie den Namen der Routine ein",
   "please_enter_routine_name": "Bitte geben Sie einen Namen für die Routine ein",
   "exercise_cable_crunch": "Kabel Crunch",
-  "exercise_cable_crunch_description": "Bauchmuskeln",
   "exercise_decline_crunch": "Abnehmender Crunch",
-  "exercise_decline_crunch_description": "Bauchmuskeln",
   "exercise_hanging_knee_raise": "Hängendes Knieheben",
-  "exercise_hanging_knee_raise_description": "Bauchmuskeln",
   "exercise_hanging_leg_raise": "Hängendes Beinheben",
-  "exercise_hanging_leg_raise_description": "Bauchmuskeln",
   "exercise_hip_adduction_machine": "Hüftadduktion (Maschine)",
   "exercise_hip_adduction_machine_description": "Adduktoren",
   "exercise_concentration_curl": "Konzentrationscurl",
@@ -282,5 +278,6 @@
   "date": "Datum",
   "actions": "Aktionen",
   "recovery_status": "Erholungsstatus",
-  "exercise_jump_rope": "Seilspringen"
+  "exercise_jump_rope": "Seilspringen",
+  "exercise_front_squat_barbell": "Frontkniebeuge (Langhantel)"
 }

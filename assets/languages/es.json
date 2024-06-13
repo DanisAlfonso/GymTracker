@@ -40,13 +40,9 @@
   "enter_routine_name": "Ingrese el nombre de la rutina",
   "please_enter_routine_name": "Por favor, ingrese un nombre para la rutina",
   "exercise_cable_crunch": "Crunch en Cable",
-  "exercise_cable_crunch_description": "Abdominales",
   "exercise_decline_crunch": "Crunch Declinado",
-  "exercise_decline_crunch_description": "Abdominales",
   "exercise_hanging_knee_raise": "Elevación de Rodillas Colgando",
-  "exercise_hanging_knee_raise_description": "Abdominales",
   "exercise_hanging_leg_raise": "Elevación de Piernas Colgando",
-  "exercise_hanging_leg_raise_description": "Abdominales",
   "exercise_hip_adduction_machine": "Aducción de Cadera (Máquina)",
   "exercise_hip_adduction_machine_description": "Aductores",
   "exercise_concentration_curl": "Curl de Concentración",
@@ -283,5 +279,6 @@
   "date": "Fecha",
   "actions": "Acciones",
   "recovery_status": "Estado de recuperación",
-  "exercise_jump_rope": "Saltar la cuerda"
+  "exercise_jump_rope": "Saltar la cuerda",
+  "exercise_front_squat_barbell": "Sentadilla Frontal (Barra)"
 }

@@ -104,7 +104,7 @@ class WorkoutModel extends ChangeNotifier {
   List<Exercise> get exercises => _exercises;
 
   WorkoutModel() {
-    _loadData();
+    _loadDataWithRetry();
   }
 
   void addWorkout(Workout workout) {
@@ -188,19 +188,24 @@ class WorkoutModel extends ChangeNotifier {
     final firestore = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
 
+    final exercisesJson = jsonEncode(_exercises.map((e) => e.toJson()).toList());
+    print("Saving exercises: $exercisesJson");
+
     if (user != null) {
       final userDoc = firestore.collection('users').doc(user.uid);
 
       await userDoc.set({
         'workouts': jsonEncode(_workouts.map((w) => w.toJson()).toList()),
         'routines': jsonEncode(_routines.map((r) => r.toJson()).toList()),
-        'exercises': jsonEncode(_exercises.map((e) => e.toJson()).toList()),
+        'exercises': exercisesJson,
       });
+      print("Data saved to Firebase");
     }
 
     prefs.setString('workouts', jsonEncode(_workouts.map((w) => w.toJson()).toList()));
     prefs.setString('routines', jsonEncode(_routines.map((r) => r.toJson()).toList()));
-    prefs.setString('exercises', jsonEncode(_exercises.map((e) => e.toJson()).toList()));
+    prefs.setString('exercises', exercisesJson);
+    print("Data saved to SharedPreferences");
   }
 
   Future<void> _loadData() async {
@@ -233,8 +238,15 @@ class WorkoutModel extends ChangeNotifier {
             if (exercisesString != null) {
               final exercisesJson = jsonDecode(exercisesString) as List;
               _exercises = exercisesJson.map((e) => Exercise.fromJson(e)).toList();
+            } else {
+              _exercises = defaultExercises;
+              await _saveData(); // Save default exercises to Firebase
             }
+
+            _ensureDefaultExercises();
+            print("Loaded exercises from Firebase: $exercisesString");
           }
+          print("Data loaded from Firebase");
         }
       } else {
         final workoutsString = prefs.getString('workouts');
@@ -255,18 +267,57 @@ class WorkoutModel extends ChangeNotifier {
           final exercisesJson = jsonDecode(exercisesString) as List;
           _exercises = exercisesJson.map((e) => Exercise.fromJson(e)).toList();
         } else {
-          _exercises = defaultExercises; // Use the default exercises from exercise_data.dart
+          _exercises = defaultExercises;
+          await _saveData(); // Save default exercises to SharedPreferences
         }
+
+        _ensureDefaultExercises();
+        print("Loaded exercises from SharedPreferences: $exercisesString");
       }
 
       if (_exercises.isEmpty) {
-        _exercises = defaultExercises; // Load default exercises if none exist
+        _exercises = defaultExercises;
+        await _saveData(); // Save default exercises if no exercises are loaded
       }
 
       notifyListeners();
+      print("Data loaded from SharedPreferences");
     } catch (e) {
       _exercises = defaultExercises;
       notifyListeners();
+      print("Error loading data, using default exercises: $e");
+    }
+  }
+
+  Future<void> _loadDataWithRetry({int retries = 3, Duration retryDelay = const Duration(seconds: 2)}) async {
+    int attempt = 0;
+    while (attempt < retries) {
+      try {
+        await _loadData();
+        return;
+      } catch (e) {
+        attempt++;
+        if (attempt >= retries) {
+          throw e;
+        }
+        await Future.delayed(retryDelay);
+      }
+    }
+  }
+
+  void _ensureDefaultExercises() {
+    bool needsUpdate = false;
+    final defaultExerciseNames = defaultExercises.map((e) => e.name).toSet();
+
+    for (final defaultExercise in defaultExercises) {
+      if (!_exercises.any((e) => e.name == defaultExercise.name)) {
+        _exercises.add(defaultExercise);
+        needsUpdate = true;
+      }
+    }
+
+    if (needsUpdate) {
+      _saveData();
     }
   }
 
