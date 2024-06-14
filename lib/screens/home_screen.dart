@@ -45,7 +45,8 @@ class HomeScreen extends StatelessWidget {
     Map<String, List<Workout>> groupedWorkouts = {};
 
     for (var workout in recentWorkouts) {
-      String category = workout.exercise.description;
+      String categoryKey = workout.exercise.localizationKey + "_description";
+      String category = appLocalizations?.translate(categoryKey) ?? workout.exercise.description;
       if (groupedWorkouts[category] == null) {
         groupedWorkouts[category] = [];
       }
@@ -96,7 +97,8 @@ class HomeScreen extends StatelessWidget {
     Map<String, List<Workout>> groupedWorkouts = {};
 
     for (var workout in allWorkouts) {
-      String category = workout.exercise.description;
+      String categoryKey = workout.exercise.localizationKey + "_description";
+      String category = appLocalizations?.translate(categoryKey) ?? workout.exercise.description;
       if (groupedWorkouts[category] == null) {
         groupedWorkouts[category] = [];
       }
@@ -157,7 +159,7 @@ class HomeScreen extends StatelessWidget {
         ],
         rows: workouts.map((workout) {
           return DataRow(cells: [
-            DataCell(Text(workout.exercise.name)),
+            DataCell(Text(appLocalizations?.translate(workout.exercise.localizationKey + "_name") ?? workout.exercise.name)),
             DataCell(Text('${workout.repetitions} ${appLocalizations?.translate('reps') ?? 'reps'}')),
             DataCell(Text('${workout.weight} kg')),
             DataCell(Text(DateFormat('yyyy-MM-dd – kk:mm').format(workout.date))),

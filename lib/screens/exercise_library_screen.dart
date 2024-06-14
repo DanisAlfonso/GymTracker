@@ -49,8 +49,11 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
       return exercises;
     } else {
       return exercises.where((exercise) {
-        return exercise.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-            exercise.description.toLowerCase().contains(_searchQuery.toLowerCase());
+        final appLocalizations = AppLocalizations.of(context);
+        final exerciseName = appLocalizations!.translate('${exercise.localizationKey}_name');
+        final exerciseDescription = appLocalizations.translate('${exercise.localizationKey}_description');
+        return exerciseName.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+            exerciseDescription.toLowerCase().contains(_searchQuery.toLowerCase());
       }).toList();
     }
   }
@@ -63,10 +66,11 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
     // Group exercises by category
     final Map<String, List<Exercise>> groupedExercises = {};
     for (var exercise in _filterExercises(exercises)) {
-      if (groupedExercises[exercise.description] == null) {
-        groupedExercises[exercise.description] = [];
+      final category = appLocalizations!.translate('${exercise.localizationKey}_description');
+      if (groupedExercises[category] == null) {
+        groupedExercises[category] = [];
       }
-      groupedExercises[exercise.description]!.add(exercise);
+      groupedExercises[category]!.add(exercise);
     }
 
     // Sort muscle groups alphabetically
@@ -98,7 +102,7 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
                     ),
                     child: ExpansionTile(
                       title: Text(
-                        appLocalizations.translate(key),
+                        key,
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -107,7 +111,7 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
                       children: groupedExercises[key]!.map((exercise) {
                         final isSelected = _selectedExercises.contains(exercise);
                         return ListTile(
-                          title: Text(appLocalizations.translate(exercise.localizationKey)),
+                          title: Text(appLocalizations.translate('${exercise.localizationKey}_name')),
                           trailing: Icon(
                             isSelected ? Icons.check_circle : Icons.check_circle_outline,
                             color: isSelected ? Colors.green : Colors.grey,

@@ -1,4 +1,3 @@
-// lib/screens/statistics/exercise_frequency.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -8,12 +7,13 @@ import '../../app_localizations.dart'; // Import the AppLocalizations
 class ExerciseFrequencySection extends StatelessWidget {
   const ExerciseFrequencySection({super.key});
 
-  Map<String, double> _calculateMuscleGroupFrequency(WorkoutModel workoutModel) {
+  Map<String, double> _calculateMuscleGroupFrequency(WorkoutModel workoutModel, AppLocalizations? appLocalizations) {
     final Map<String, double> muscleGroupFrequency = {};
     double totalWeight = 0;
 
     for (var workout in workoutModel.workouts) {
-      String muscleGroup = workout.exercise.description;
+      String muscleGroupKey = workout.exercise.localizationKey + '_description';
+      String muscleGroup = appLocalizations?.translate(muscleGroupKey) ?? workout.exercise.description;
       if (!muscleGroupFrequency.containsKey(muscleGroup)) {
         muscleGroupFrequency[muscleGroup] = 0.0;
       }
@@ -44,28 +44,23 @@ class ExerciseFrequencySection extends StatelessWidget {
 
     return Consumer<WorkoutModel>(
       builder: (context, workoutModel, child) {
-        final muscleGroupFrequency = _calculateMuscleGroupFrequency(workoutModel);
+        final muscleGroupFrequency = _calculateMuscleGroupFrequency(workoutModel, appLocalizations);
         final muscleGroupFrequencyList = muscleGroupFrequency.entries.toList();
 
         if (muscleGroupFrequency.isEmpty) {
           return Center(
-            child: Text(appLocalizations!.translate('no_data')),
+            child: Text(appLocalizations?.translate('no_data') ?? 'No data'),
           );
         }
 
         // Generate pie chart data
         final pieChartData = _generatePieChartData(muscleGroupFrequency);
 
-        // Split labels into two columns
-        final int half = (muscleGroupFrequencyList.length / 2).ceil();
-        final leftColumnLabels = muscleGroupFrequencyList.sublist(0, half);
-        final rightColumnLabels = muscleGroupFrequencyList.sublist(half);
-
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              appLocalizations!.translate('muscle_group_frequency_distribution'),
+              appLocalizations?.translate('muscle_group_frequency_distribution') ?? 'Muscle Group Frequency Distribution',
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
@@ -95,54 +90,27 @@ class ExerciseFrequencySection extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 20),
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: leftColumnLabels.map((entry) {
-                                final colorIndex = muscleGroupFrequencyList.indexOf(entry) % Colors.primaries.length;
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: 16,
-                                        height: 16,
-                                        color: Colors.primaries[colorIndex],
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text('${entry.key} (${entry.value.toStringAsFixed(1)}%)'),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                            const SizedBox(width: 16),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: rightColumnLabels.map((entry) {
-                                final colorIndex = muscleGroupFrequencyList.indexOf(entry) % Colors.primaries.length;
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: 16,
-                                        height: 16,
-                                        color: Colors.primaries[colorIndex],
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text('${entry.key} (${entry.value.toStringAsFixed(1)}%)'),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ],
-                        ),
-                      ],
+                    Wrap(
+                      direction: Axis.vertical,
+                      spacing: 8.0,
+                      children: muscleGroupFrequencyList.map((entry) {
+                        final colorIndex = muscleGroupFrequencyList.indexOf(entry) % Colors.primaries.length;
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 16,
+                                height: 16,
+                                color: Colors.primaries[colorIndex],
+                              ),
+                              const SizedBox(width: 8),
+                              Text('${entry.key} (${entry.value.toStringAsFixed(1)}%)'),
+                            ],
+                          ),
+                        );
+                      }).toList(),
                     ),
                   ],
                 ),

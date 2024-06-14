@@ -334,11 +334,11 @@ class WorkoutModel extends ChangeNotifier {
     Map<String, double> muscleGroupVolume = {};
 
     for (var workout in _workouts) {
-      if (!muscleGroupVolume.containsKey(workout.exercise.description)) {
-        muscleGroupVolume[workout.exercise.description] = 0.0;
+      if (!muscleGroupVolume.containsKey(workout.exercise.localizationKey)) {
+        muscleGroupVolume[workout.exercise.localizationKey] = 0.0;
       }
-      muscleGroupVolume[workout.exercise.description] =
-          (muscleGroupVolume[workout.exercise.description] ?? 0.0) +
+      muscleGroupVolume[workout.exercise.localizationKey] =
+          (muscleGroupVolume[workout.exercise.localizationKey] ?? 0.0) +
               (workout.weight * workout.repetitions);
     }
     return muscleGroupVolume;
@@ -349,7 +349,7 @@ class WorkoutModel extends ChangeNotifier {
     Map<String, DateTime> lastTrainingDate = {};
 
     for (var workout in _workouts) {
-      lastTrainingDate[workout.exercise.description] = workout.date;
+      lastTrainingDate[workout.exercise.localizationKey] = workout.date;
     }
     return lastTrainingDate;
   }
@@ -361,7 +361,7 @@ class WorkoutModel extends ChangeNotifier {
 
     final currentTime = DateTime.now();
     lastTrainingDate.forEach((muscleGroup, lastDate) {
-      final exercise = _exercises.firstWhere((e) => e.description == muscleGroup);
+      final exercise = _exercises.firstWhere((e) => e.localizationKey == muscleGroup);
       final hoursSinceLastWorkout = currentTime.difference(lastDate).inHours;
       final recoveryTime = exercise.recoveryTimeInHours;
       final recovery = (hoursSinceLastWorkout / recoveryTime) * 100;

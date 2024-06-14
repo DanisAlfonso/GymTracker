@@ -24,7 +24,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(appLocalizations!.translate('statistics')),
+        title: Text(appLocalizations!.translate('statistics')!),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -32,13 +32,17 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           builder: (context, workoutModel, child) {
             final exercises = workoutModel.exercises;
 
-            // Sort exercises alphabetically
-            exercises.sort((a, b) => a.name.compareTo(b.name));
+            // Sort exercises alphabetically by translated name
+            exercises.sort((a, b) {
+              final nameA = appLocalizations!.translate('${a.localizationKey}_name');
+              final nameB = appLocalizations.translate('${b.localizationKey}_name');
+              return nameA.compareTo(nameB);
+            });
 
             return ListView(
               children: [
                 Text(
-                  appLocalizations.translate('select_exercise'),
+                  appLocalizations.translate('select_exercise')!,
                   style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
@@ -51,8 +55,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<Exercise>(
-                      isDense: true,
-                      hint: Text(appLocalizations.translate('select_exercise')),
+                      isExpanded: true,
+                      hint: Text(appLocalizations.translate('select_exercise')!),
                       value: _selectedExercise,
                       onChanged: (Exercise? newValue) {
                         setState(() {
@@ -60,10 +64,11 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                         });
                       },
                       items: exercises.map((Exercise exercise) {
+                        final translatedName = appLocalizations.translate('${exercise.localizationKey}_name');
                         return DropdownMenuItem<Exercise>(
                           value: exercise,
                           child: Text(
-                            exercise.name,
+                            translatedName,
                             overflow: TextOverflow.ellipsis,
                           ),
                         );

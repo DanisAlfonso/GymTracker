@@ -1,3 +1,4 @@
+// lib/screens/recovery_status.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
@@ -42,7 +43,7 @@ class RecoveryStatus extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      appLocalizations?.translate(entry.key) ?? entry.key,
+                      appLocalizations?.translate(entry.key + '_name') ?? entry.key,
                       style: const TextStyle(fontSize: 16),
                     ),
                     Text(
