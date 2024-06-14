@@ -350,11 +350,18 @@ class WorkoutModel extends ChangeNotifier {
   // Calculate recovery percentage per muscle group
   Map<String, double> calculateRecoveryPercentagePerMuscleGroup() {
     Map<String, double> recoveryPercentage = {};
-    final lastTrainingDate = calculateLastTrainingDatePerMuscleGroup();
+    Map<String, DateTime> lastTrainingDate = {};
+
+    for (var workout in _workouts) {
+      final muscleGroup = workout.exercise.description; // Assuming description is the muscle group
+      if (!lastTrainingDate.containsKey(muscleGroup) || workout.date.isAfter(lastTrainingDate[muscleGroup]!)) {
+        lastTrainingDate[muscleGroup] = workout.date;
+      }
+    }
 
     final currentTime = DateTime.now();
     lastTrainingDate.forEach((muscleGroup, lastDate) {
-      final exercise = _exercises.firstWhere((e) => e.localizationKey == muscleGroup);
+      final exercise = _exercises.firstWhere((e) => e.description == muscleGroup);
       final hoursSinceLastWorkout = currentTime.difference(lastDate).inHours;
       final recoveryTime = exercise.recoveryTimeInHours;
       final recovery = (hoursSinceLastWorkout / recoveryTime) * 100;

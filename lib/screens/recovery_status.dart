@@ -42,9 +42,12 @@ class RecoveryStatus extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      appLocalizations?.translate(entry.key + '_name') ?? entry.key,
-                      style: const TextStyle(fontSize: 16),
+                    Expanded(
+                      child: Text(
+                        appLocalizations?.translate(entry.key) ?? entry.key,
+                        style: const TextStyle(fontSize: 16),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     Text(
                       '${entry.value.toStringAsFixed(1)}%',
