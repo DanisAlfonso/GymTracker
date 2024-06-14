@@ -287,5 +287,7 @@
   "exercise_jump_rope_name": "Jump Rope",
   "exercise_jump_rope_description": "Cardio",
   "exercise_front_squat_barbell_name": "Front Squat (Barbell)",
-  "exercise_front_squat_barbell_description": "Quadriceps"
+  "exercise_front_squat_barbell_description": "Quadriceps",
+  "training_day": "Training Day",
+  "no_recent_workouts": "No recent workouts"
 }

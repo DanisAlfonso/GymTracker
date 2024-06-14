@@ -287,6 +287,8 @@
   "exercise_jump_rope_name": "Saltar la cuerda",
   "exercise_jump_rope_description": "Cardio",
   "exercise_front_squat_barbell_name": "Sentadilla Frontal (Barra)",
-  "exercise_front_squat_barbell_description": "Cuádriceps"
+  "exercise_front_squat_barbell_description": "Cuádriceps",
+  "training_day": "Día de Entrenamiento",
+  "no_recent_workouts": "No hay entrenamientos recientes"
 }
 

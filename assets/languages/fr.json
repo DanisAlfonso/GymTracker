@@ -287,5 +287,7 @@
   "exercise_jump_rope_name": "Saut à la Corde",
   "exercise_jump_rope_description": "Cardio",
   "exercise_front_squat_barbell_name": "Squat Avant (Barre)",
-  "exercise_front_squat_barbell_description": "Quadriceps"
+  "exercise_front_squat_barbell_description": "Quadriceps",
+  "training_day": "Jour d'Entraînement",
+  "no_recent_workouts": "Pas d'entraînements récents"
 }

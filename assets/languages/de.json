@@ -287,5 +287,7 @@
   "exercise_jump_rope_name": "Seilspringen",
   "exercise_jump_rope_description": "Cardio",
   "exercise_front_squat_barbell_name": "Frontkniebeuge (Langhantel)",
-  "exercise_front_squat_barbell_description": "Quadrizeps"
+  "exercise_front_squat_barbell_description": "Quadrizeps",
+  "training_day": "Trainingstag",
+  "no_recent_workouts": "Keine aktuellen Workouts"
 }
