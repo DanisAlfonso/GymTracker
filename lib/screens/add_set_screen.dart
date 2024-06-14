@@ -56,7 +56,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
   }
 
   void _updateInitialValues() {
-    final previousSetData = _getPreviousSetData();
+    final previousSetData = _getPreviousSetData(_setNumber);
     if (previousSetData != null) {
       setState(() {
         _repetitions = previousSetData.repetitions;
@@ -66,7 +66,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
     }
   }
 
-  Workout? _getPreviousSetData() {
+  Workout? _getPreviousSetData(int setNumber) {
     if (_previousWorkouts.isEmpty) return null;
 
     // Group workouts by date
@@ -93,7 +93,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
     latestWorkouts.sort((a, b) => a.date.compareTo(b.date));
 
     // Return the workout for the selected set number, if available
-    return _setNumber <= latestWorkouts.length ? latestWorkouts[_setNumber - 1] : null;
+    return setNumber <= latestWorkouts.length ? latestWorkouts[setNumber - 1] : null;
   }
 
   void _submit() {
@@ -150,7 +150,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
   @override
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context);
-    final previousSetData = _getPreviousSetData();
+    final previousSetData = _getPreviousSetData(_setNumber);
 
     return Scaffold(
       appBar: AppBar(

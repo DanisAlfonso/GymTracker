@@ -147,68 +147,90 @@ class HomeScreen extends StatelessWidget {
   Widget _buildWorkoutDataTable(BuildContext context, List<Workout> workouts) {
     final appLocalizations = AppLocalizations.of(context);
 
+    // Generate a unique set number for each workout within the list
+    final List<DataRow> rows = [];
+    DateTime? currentWorkoutDate;
+    int setNumber = 0;
+
+    for (var workout in workouts) {
+      if (currentWorkoutDate == null || !isSameDate(currentWorkoutDate, workout.date)) {
+        currentWorkoutDate = workout.date;
+        setNumber = 1;
+      } else {
+        setNumber++;
+      }
+
+      rows.add(DataRow(cells: [
+        DataCell(Text(appLocalizations?.translate(workout.exercise.localizationKey + "_name") ?? workout.exercise.name)),
+        DataCell(Text('$setNumber')),
+        DataCell(Text('${workout.repetitions} ${appLocalizations?.translate('reps') ?? 'reps'}')),
+        DataCell(Text('${workout.weight} kg')),
+        DataCell(Text(DateFormat('yyyy-MM-dd – kk:mm').format(workout.date))),
+        DataCell(Row(
+          children: [
+            IconButton(
+              icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditWorkoutScreen(workout: workout),
+                  ),
+                );
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete, color: Colors.red),
+              onPressed: () async {
+                final confirm = await showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text(appLocalizations?.translate('confirm') ?? 'Confirm'),
+                      content: Text(appLocalizations?.translate('confirm_delete') ?? 'Are you sure you want to delete this workout?'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: Text(appLocalizations?.translate('cancel') ?? 'Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          child: Text(appLocalizations?.translate('delete') ?? 'Delete'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+                if (confirm) {
+                  Provider.of<WorkoutModel>(context, listen: false).deleteWorkout(workout);
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(appLocalizations?.translate('workout_deleted') ?? 'Workout deleted')));
+                }
+              },
+            ),
+          ],
+        )),
+      ]));
+    }
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: DataTable(
         columns: [
           DataColumn(label: Text(appLocalizations?.translate('exercise') ?? 'Exercise')),
+          DataColumn(label: Text(appLocalizations?.translate('set') ?? 'Set')),
           DataColumn(label: Text(appLocalizations?.translate('reps') ?? 'Reps')),
           DataColumn(label: Text(appLocalizations?.translate('weight') ?? 'Weight')),
           DataColumn(label: Text(appLocalizations?.translate('date') ?? 'Date')),
           DataColumn(label: Text(appLocalizations?.translate('actions') ?? 'Actions')),
         ],
-        rows: workouts.map((workout) {
-          return DataRow(cells: [
-            DataCell(Text(appLocalizations?.translate(workout.exercise.localizationKey + "_name") ?? workout.exercise.name)),
-            DataCell(Text('${workout.repetitions} ${appLocalizations?.translate('reps') ?? 'reps'}')),
-            DataCell(Text('${workout.weight} kg')),
-            DataCell(Text(DateFormat('yyyy-MM-dd – kk:mm').format(workout.date))),
-            DataCell(Row(
-              children: [
-                IconButton(
-                  icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EditWorkoutScreen(workout: workout),
-                      ),
-                    );
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: () async {
-                    final confirm = await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text(appLocalizations?.translate('confirm') ?? 'Confirm'),
-                          content: Text(appLocalizations?.translate('confirm_delete') ?? 'Are you sure you want to delete this workout?'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(false),
-                              child: Text(appLocalizations?.translate('cancel') ?? 'Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(true),
-                              child: Text(appLocalizations?.translate('delete') ?? 'Delete'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                    if (confirm) {
-                      Provider.of<WorkoutModel>(context, listen: false).deleteWorkout(workout);
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(appLocalizations?.translate('workout_deleted') ?? 'Workout deleted')));
-                    }
-                  },
-                ),
-              ],
-            )),
-          ]);
-        }).toList(),
+        rows: rows,
       ),
     );
+  }
+
+  bool isSameDate(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
 }

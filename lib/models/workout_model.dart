@@ -1,3 +1,4 @@
+// lib/models/workout_model.dart
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -189,7 +190,6 @@ class WorkoutModel extends ChangeNotifier {
     final user = FirebaseAuth.instance.currentUser;
 
     final exercisesJson = jsonEncode(_exercises.map((e) => e.toJson()).toList());
-    print("Saving exercises: $exercisesJson");
 
     if (user != null) {
       final userDoc = firestore.collection('users').doc(user.uid);
@@ -199,13 +199,11 @@ class WorkoutModel extends ChangeNotifier {
         'routines': jsonEncode(_routines.map((r) => r.toJson()).toList()),
         'exercises': exercisesJson,
       });
-      print("Data saved to Firebase");
     }
 
     prefs.setString('workouts', jsonEncode(_workouts.map((w) => w.toJson()).toList()));
     prefs.setString('routines', jsonEncode(_routines.map((r) => r.toJson()).toList()));
     prefs.setString('exercises', exercisesJson);
-    print("Data saved to SharedPreferences");
   }
 
   Future<void> _loadData() async {
@@ -244,9 +242,7 @@ class WorkoutModel extends ChangeNotifier {
             }
 
             _ensureDefaultExercises();
-            print("Loaded exercises from Firebase: $exercisesString");
           }
-          print("Data loaded from Firebase");
         }
       } else {
         final workoutsString = prefs.getString('workouts');
@@ -272,7 +268,6 @@ class WorkoutModel extends ChangeNotifier {
         }
 
         _ensureDefaultExercises();
-        print("Loaded exercises from SharedPreferences: $exercisesString");
       }
 
       if (_exercises.isEmpty) {
@@ -281,11 +276,9 @@ class WorkoutModel extends ChangeNotifier {
       }
 
       notifyListeners();
-      print("Data loaded from SharedPreferences");
     } catch (e) {
       _exercises = defaultExercises;
       notifyListeners();
-      print("Error loading data, using default exercises: $e");
     }
   }
 
