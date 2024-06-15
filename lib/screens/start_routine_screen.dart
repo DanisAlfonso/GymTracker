@@ -1,4 +1,3 @@
-// lib/screens/start_routine_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
@@ -84,6 +83,7 @@ class StartRoutineScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
     final iconColor = isDarkMode ? Colors.white : theme.primaryColor;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
 
     return Scaffold(
       appBar: AppBar(
@@ -115,6 +115,7 @@ class StartRoutineScreen extends StatelessWidget {
                 key: ValueKey(exercise),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
+                  side: BorderSide(color: theme.dividerColor.withOpacity(0.5)),
                 ),
                 elevation: 5,
                 margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -128,9 +129,10 @@ class StartRoutineScreen extends StatelessWidget {
                     ),
                     title: Text(
                       appLocalizations?.translate(exercise.localizationKey + "_name") ?? exercise.name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
+                        color: textColor,
                       ),
                     ),
                     subtitle: Text(
@@ -158,7 +160,7 @@ class StartRoutineScreen extends StatelessWidget {
                           return ListTile(
                             title: Text(
                               '${appLocalizations?.translate('reps') ?? 'Reps'}: ${workout.repetitions}, ${appLocalizations?.translate('weight') ?? 'Weight'}: ${workout.weight} kg',
-                              style: const TextStyle(fontSize: 16.0),
+                              style: TextStyle(fontSize: 16.0, color: textColor),
                             ),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,

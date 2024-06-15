@@ -76,6 +76,12 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
     // Sort muscle groups alphabetically
     final sortedKeys = groupedExercises.keys.toList()..sort();
 
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    final iconColor = isDarkMode ? Colors.white : theme.primaryColor;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+    final cardBorder = BorderSide(color: theme.dividerColor.withOpacity(0.5));
+
     return Scaffold(
       appBar: AppBar(
         title: Text(appLocalizations!.translate('exercise_library')),
@@ -91,6 +97,7 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
                 prefixIcon: const Icon(Icons.search),
               ),
             ),
+            const SizedBox(height: 16),
             Expanded(
               child: ListView(
                 children: sortedKeys.map((key) {
@@ -99,26 +106,33 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
+                      side: cardBorder,
                     ),
-                    child: ExpansionTile(
-                      title: Text(
-                        key,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      children: groupedExercises[key]!.map((exercise) {
-                        final isSelected = _selectedExercises.contains(exercise);
-                        return ListTile(
-                          title: Text(appLocalizations.translate('${exercise.localizationKey}_name')),
-                          trailing: Icon(
-                            isSelected ? Icons.check_circle : Icons.check_circle_outline,
-                            color: isSelected ? Colors.green : Colors.grey,
+                    child: Theme(
+                      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                      child: ExpansionTile(
+                        title: Text(
+                          key,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: textColor,
                           ),
-                          onTap: () => _toggleSelection(exercise),
-                        );
-                      }).toList(),
+                        ),
+                        collapsedBackgroundColor: theme.cardColor, // Set background color to match card color
+                        backgroundColor: theme.cardColor, // Set background color to match card color
+                        children: groupedExercises[key]!.map((exercise) {
+                          final isSelected = _selectedExercises.contains(exercise);
+                          return ListTile(
+                            title: Text(appLocalizations.translate('${exercise.localizationKey}_name')),
+                            trailing: Icon(
+                              isSelected ? Icons.check_circle : Icons.check_circle_outline,
+                              color: isSelected ? Colors.green : Colors.grey,
+                            ),
+                            onTap: () => _toggleSelection(exercise),
+                          );
+                        }).toList(),
+                      ),
                     ),
                   );
                 }).toList(),
