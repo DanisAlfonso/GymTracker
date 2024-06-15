@@ -1,4 +1,5 @@
 // lib/screens/recovery_status.dart
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
@@ -37,6 +38,9 @@ class RecoveryStatus extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             ...sortedRecoveryPercentages.map((entry) {
+              final muscleGroupDescription = entry.key;
+              final localizationKey = _findLocalizationKeyForDescription(muscleGroupDescription, workoutModel.exercises);
+              final translatedKey = appLocalizations?.translate(localizationKey) ?? muscleGroupDescription;
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4.0),
                 child: Row(
@@ -44,7 +48,7 @@ class RecoveryStatus extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        appLocalizations?.translate(entry.key) ?? entry.key,
+                        translatedKey,
                         style: const TextStyle(fontSize: 16),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -69,5 +73,10 @@ class RecoveryStatus extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _findLocalizationKeyForDescription(String description, List<Exercise> exercises) {
+    final exercise = exercises.firstWhere((e) => e.description == description, orElse: () => Exercise(name: '', description: description, localizationKey: description, recoveryTimeInHours: 0));
+    return exercise.localizationKey + "_description";
   }
 }
