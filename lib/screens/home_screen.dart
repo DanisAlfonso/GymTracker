@@ -1,4 +1,3 @@
-// lib/screens/home_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -15,6 +14,8 @@ class HomeScreen extends StatelessWidget {
     final appLocalizations = AppLocalizations.of(context);
     final workoutModel = Provider.of<WorkoutModel>(context);
     final recentWorkouts = workoutModel.workouts.take(5).toList();
+    final theme = Theme.of(context);
+    final cardBorder = BorderSide(color: theme.dividerColor.withOpacity(0.5));
 
     return Scaffold(
       appBar: AppBar(
@@ -31,16 +32,16 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 20),
             const RecoveryStatus(), // Add the RecoveryStatus widget
             const SizedBox(height: 20),
-            _buildRecentActivities(context, recentWorkouts),
+            _buildRecentActivities(context, recentWorkouts, cardBorder),
             const SizedBox(height: 20),
-            _buildAllActivities(context, workoutModel.workouts),
+            _buildAllActivities(context, workoutModel.workouts, cardBorder),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildRecentActivities(BuildContext context, List<Workout> recentWorkouts) {
+  Widget _buildRecentActivities(BuildContext context, List<Workout> recentWorkouts, BorderSide cardBorder) {
     final appLocalizations = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
@@ -60,7 +61,10 @@ class HomeScreen extends StatelessWidget {
 
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+        side: cardBorder,
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -97,7 +101,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAllActivities(BuildContext context, List<Workout> allWorkouts) {
+  Widget _buildAllActivities(BuildContext context, List<Workout> allWorkouts, BorderSide cardBorder) {
     final appLocalizations = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
@@ -117,7 +121,10 @@ class HomeScreen extends StatelessWidget {
 
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+        side: cardBorder,
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

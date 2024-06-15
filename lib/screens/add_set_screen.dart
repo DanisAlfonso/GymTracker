@@ -1,12 +1,11 @@
-// lib/screens/add_set_screen.dart
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
 import 'duration_picker_dialog.dart';
-import '../app_localizations.dart'; // Import AppLocalizations
-import 'package:intl/intl.dart'; // For formatting the date
-import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
+import '../app_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddSetScreen extends StatefulWidget {
   final Exercise exercise;
@@ -25,7 +24,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
   int _repetitions = 1;
   int _weightInt = 0;
   int _weightDecimal = 0;
-  Duration _restTime = const Duration(minutes: 3); // Default rest time
+  Duration _restTime = const Duration(minutes: 3);
   DateTime _selectedDate = DateTime.now();
   List<Workout> _previousWorkouts = [];
 
@@ -69,7 +68,6 @@ class _AddSetScreenState extends State<AddSetScreen> {
   Workout? _getPreviousSetData(int setNumber) {
     if (_previousWorkouts.isEmpty) return null;
 
-    // Group workouts by date
     Map<DateTime, List<Workout>> groupedWorkouts = {};
     for (var workout in _previousWorkouts) {
       DateTime date = DateTime(workout.date.year, workout.date.month, workout.date.day);
@@ -79,20 +77,15 @@ class _AddSetScreenState extends State<AddSetScreen> {
       groupedWorkouts[date]!.add(workout);
     }
 
-    // Get the latest workout date
     DateTime? latestDate = groupedWorkouts.keys.isNotEmpty
         ? groupedWorkouts.keys.reduce((a, b) => a.isAfter(b) ? a : b)
         : null;
 
     if (latestDate == null) return null;
 
-    // Get the sets for the latest workout date
     List<Workout> latestWorkouts = groupedWorkouts[latestDate]!;
-
-    // Ensure the sets are ordered by the time they were performed
     latestWorkouts.sort((a, b) => a.date.compareTo(b.date));
 
-    // Return the workout for the selected set number, if available
     return setNumber <= latestWorkouts.length ? latestWorkouts[setNumber - 1] : null;
   }
 
@@ -107,7 +100,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
         weight: weight,
         restTime: _restTime,
         notes: notes,
-        date: _selectedDate, // Use the selected date
+        date: _selectedDate,
       );
 
       Provider.of<WorkoutModel>(context, listen: false).addWorkout(workout);
@@ -156,6 +149,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
     final iconColor = isDarkMode ? Colors.white : primaryColor;
     final selectedTextStyle = TextStyle(color: iconColor, fontSize: 32, fontWeight: FontWeight.bold);
     final textStyle = TextStyle(color: isDarkMode ? Colors.white70 : Colors.grey, fontSize: 18);
+    final cardBorder = BorderSide(color: theme.dividerColor.withOpacity(0.5));
 
     final previousSetData = _getPreviousSetData(_setNumber);
 
@@ -175,6 +169,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                 Card(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0),
+                    side: cardBorder,
                   ),
                   elevation: 5,
                   margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -220,6 +215,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
               Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
+                  side: cardBorder,
                 ),
                 elevation: 5,
                 margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -238,7 +234,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 4), // Reduced spacing
+                      const SizedBox(height: 4),
                       Center(
                         child: NumberPicker(
                           minValue: 1,
@@ -247,14 +243,14 @@ class _AddSetScreenState extends State<AddSetScreen> {
                           onChanged: (value) {
                             setState(() {
                               _setNumber = value;
-                              _updateInitialValues(); // Update the initial values when set number changes
+                              _updateInitialValues();
                             });
                           },
                           selectedTextStyle: selectedTextStyle,
                           textStyle: textStyle,
                         ),
                       ),
-                      const SizedBox(height: 12), // Reduced spacing
+                      const SizedBox(height: 12),
                       const Divider(),
                       Row(
                         children: [
@@ -266,7 +262,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 4), // Reduced spacing
+                      const SizedBox(height: 4),
                       Center(
                         child: NumberPicker(
                           minValue: 1,
@@ -281,7 +277,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                           textStyle: textStyle,
                         ),
                       ),
-                      const SizedBox(height: 12), // Reduced spacing
+                      const SizedBox(height: 12),
                       const Divider(),
                       Row(
                         children: [
@@ -293,7 +289,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 4), // Reduced spacing
+                      const SizedBox(height: 4),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -351,6 +347,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
               Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
+                  side: cardBorder,
                 ),
                 elevation: 5,
                 margin: const EdgeInsets.symmetric(vertical: 8.0),

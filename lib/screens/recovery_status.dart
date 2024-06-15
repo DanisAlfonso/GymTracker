@@ -1,5 +1,3 @@
-// lib/screens/recovery_status.dart
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/workout_model.dart';
@@ -22,10 +20,14 @@ class RecoveryStatus extends StatelessWidget {
     final isDarkMode = theme.brightness == Brightness.dark;
     final iconColor = isDarkMode ? Colors.white : theme.primaryColor;
     final textColor = isDarkMode ? Colors.white : Colors.black;
+    final cardBorder = BorderSide(color: theme.dividerColor.withOpacity(0.5));
 
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+        side: cardBorder,
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -81,7 +83,10 @@ class RecoveryStatus extends StatelessWidget {
   }
 
   String _findLocalizationKeyForDescription(String description, List<Exercise> exercises) {
-    final exercise = exercises.firstWhere((e) => e.description == description, orElse: () => Exercise(name: '', description: description, localizationKey: description, recoveryTimeInHours: 0));
+    final exercise = exercises.firstWhere(
+          (e) => e.description == description,
+      orElse: () => Exercise(name: '', description: description, localizationKey: description, recoveryTimeInHours: 0),
+    );
     return exercise.localizationKey + "_description";
   }
 }

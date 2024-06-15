@@ -1,4 +1,3 @@
-// lib/screens/training_screen.dart
 import 'package:flutter/material.dart';
 import 'create_routine_screen.dart';
 import 'start_routine_screen.dart';
@@ -78,6 +77,8 @@ class TrainingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final cardBorder = BorderSide(color: theme.dividerColor.withOpacity(0.5));
 
     return Scaffold(
       appBar: AppBar(
@@ -97,6 +98,7 @@ class TrainingScreen extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(vertical: 8.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
+                  side: cardBorder,
                 ),
                 elevation: 5,
                 child: ListTile(

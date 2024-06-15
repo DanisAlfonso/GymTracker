@@ -21,6 +21,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
   @override
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final cardBorder = BorderSide(color: theme.dividerColor.withOpacity(0.5));
 
     return Scaffold(
       appBar: AppBar(
@@ -82,6 +84,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                     elevation: 4.0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
+                      side: cardBorder,
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -93,6 +96,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   elevation: 4.0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
+                    side: cardBorder,
                   ),
                   child: const Padding(
                     padding: EdgeInsets.all(16.0),
@@ -104,6 +108,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   elevation: 4.0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
+                    side: cardBorder,
                   ),
                   child: const Padding(
                     padding: EdgeInsets.all(16.0),
@@ -115,6 +120,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   elevation: 4.0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
+                    side: cardBorder,
                   ),
                   child: const Padding(
                     padding: EdgeInsets.all(16.0),
@@ -126,6 +132,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   elevation: 4.0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
+                    side: cardBorder,
                   ),
                   child: const Padding(
                     padding: EdgeInsets.all(16.0),
