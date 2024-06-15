@@ -95,14 +95,14 @@ class TrainingScreen extends StatelessWidget {
               final routine = workoutModel.routines[index];
               return Card(
                 key: ValueKey(routine),
-                margin: const EdgeInsets.symmetric(vertical: 8.0),
+                margin: const EdgeInsets.symmetric(vertical: 12.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                   side: cardBorder,
                 ),
                 elevation: 5,
                 child: ListTile(
-                  contentPadding: const EdgeInsets.all(16.0),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 34.0, horizontal: 16.0), // Adjusted padding to increase card height
                   title: Text(
                     routine.name,
                     style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
