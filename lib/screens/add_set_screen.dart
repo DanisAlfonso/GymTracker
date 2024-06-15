@@ -150,6 +150,13 @@ class _AddSetScreenState extends State<AddSetScreen> {
   @override
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    final primaryColor = theme.primaryColor;
+    final iconColor = isDarkMode ? Colors.white : primaryColor;
+    final selectedTextStyle = TextStyle(color: iconColor, fontSize: 32, fontWeight: FontWeight.bold);
+    final textStyle = TextStyle(color: isDarkMode ? Colors.white70 : Colors.grey, fontSize: 18);
+
     final previousSetData = _getPreviousSetData(_setNumber);
 
     return Scaffold(
@@ -183,7 +190,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                         const SizedBox(height: 8),
                         Row(
                           children: [
-                            Icon(Icons.fitness_center, color: Theme.of(context).primaryColor),
+                            Icon(Icons.fitness_center, color: iconColor),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
@@ -196,7 +203,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                         const SizedBox(height: 8),
                         Row(
                           children: [
-                            Icon(Icons.calendar_today, color: Theme.of(context).primaryColor),
+                            Icon(Icons.calendar_today, color: iconColor),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
@@ -223,7 +230,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.format_list_numbered, color: Theme.of(context).primaryColor),
+                          Icon(Icons.format_list_numbered, color: iconColor),
                           const SizedBox(width: 8),
                           Text(
                             appLocalizations?.translate('set_number') ?? 'Set Number',
@@ -243,15 +250,15 @@ class _AddSetScreenState extends State<AddSetScreen> {
                               _updateInitialValues(); // Update the initial values when set number changes
                             });
                           },
-                          selectedTextStyle: TextStyle(color: Theme.of(context).primaryColor, fontSize: 24),
-                          textStyle: const TextStyle(color: Colors.grey, fontSize: 18),
+                          selectedTextStyle: selectedTextStyle,
+                          textStyle: textStyle,
                         ),
                       ),
                       const SizedBox(height: 12), // Reduced spacing
                       const Divider(),
                       Row(
                         children: [
-                          Icon(Icons.repeat, color: Theme.of(context).primaryColor),
+                          Icon(Icons.repeat, color: iconColor),
                           const SizedBox(width: 8),
                           Text(
                             appLocalizations?.translate('repetitions') ?? 'Repetitions',
@@ -270,15 +277,15 @@ class _AddSetScreenState extends State<AddSetScreen> {
                               _repetitions = value;
                             });
                           },
-                          selectedTextStyle: TextStyle(color: Theme.of(context).primaryColor, fontSize: 24),
-                          textStyle: const TextStyle(color: Colors.grey, fontSize: 18),
+                          selectedTextStyle: selectedTextStyle,
+                          textStyle: textStyle,
                         ),
                       ),
                       const SizedBox(height: 12), // Reduced spacing
                       const Divider(),
                       Row(
                         children: [
-                          Icon(Icons.fitness_center, color: Theme.of(context).primaryColor),
+                          Icon(Icons.fitness_center, color: iconColor),
                           const SizedBox(width: 8),
                           Text(
                             appLocalizations?.translate('weight_kg') ?? 'Weight (kg)',
@@ -299,8 +306,8 @@ class _AddSetScreenState extends State<AddSetScreen> {
                                 _weightInt = value;
                               });
                             },
-                            selectedTextStyle: TextStyle(color: Theme.of(context).primaryColor, fontSize: 24),
-                            textStyle: const TextStyle(color: Colors.grey, fontSize: 18),
+                            selectedTextStyle: selectedTextStyle,
+                            textStyle: textStyle,
                           ),
                           const Text(
                             '.',
@@ -315,8 +322,8 @@ class _AddSetScreenState extends State<AddSetScreen> {
                                 _weightDecimal = value;
                               });
                             },
-                            selectedTextStyle: TextStyle(color: Theme.of(context).primaryColor, fontSize: 24),
-                            textStyle: const TextStyle(color: Colors.grey, fontSize: 18),
+                            selectedTextStyle: selectedTextStyle,
+                            textStyle: textStyle,
                           ),
                         ],
                       ),
@@ -329,7 +336,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
-                            backgroundColor: Theme.of(context).primaryColor,
+                            backgroundColor: primaryColor,
                           ),
                           child: Text(
                             appLocalizations?.translate('add_set') ?? 'Add Set',
@@ -365,7 +372,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
-                            backgroundColor: Theme.of(context).primaryColor,
+                            backgroundColor: primaryColor,
                           ),
                           child: Text(
                             '${appLocalizations?.translate('pick_rest_time') ?? 'Pick Rest Time'} (${_restTime.inMinutes} min ${_restTime.inSeconds % 60} sec)',
@@ -388,7 +395,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
-                            backgroundColor: Theme.of(context).primaryColor,
+                            backgroundColor: primaryColor,
                           ),
                           child: Text(
                             DateFormat.yMd().format(_selectedDate),

@@ -42,6 +42,11 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildRecentActivities(BuildContext context, List<Workout> recentWorkouts) {
     final appLocalizations = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    final iconColor = isDarkMode ? Colors.white : theme.primaryColor;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+
     Map<String, List<Workout>> groupedWorkouts = {};
 
     for (var workout in recentWorkouts) {
@@ -63,11 +68,11 @@ class HomeScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.history, color: Theme.of(context).primaryColor),
+                Icon(Icons.history, color: iconColor), // Adjusted icon color based on theme
                 const SizedBox(width: 8),
                 Text(
                   appLocalizations?.translate('recent_activities') ?? 'Recent Activities',
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: textColor),
                 ),
               ],
             ),
@@ -76,7 +81,7 @@ class HomeScreen extends StatelessWidget {
               return ExpansionTile(
                 title: Text(
                   entry.key,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor),
                 ),
                 children: [_buildWorkoutDataTable(context, entry.value)],
               );
@@ -94,6 +99,11 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildAllActivities(BuildContext context, List<Workout> allWorkouts) {
     final appLocalizations = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    final iconColor = isDarkMode ? Colors.white : theme.primaryColor;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+
     Map<String, List<Workout>> groupedWorkouts = {};
 
     for (var workout in allWorkouts) {
@@ -115,11 +125,11 @@ class HomeScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.list, color: Theme.of(context).primaryColor),
+                Icon(Icons.list, color: iconColor), // Adjusted icon color based on theme
                 const SizedBox(width: 8),
                 Text(
                   appLocalizations?.translate('all_activities') ?? 'All Activities',
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: textColor),
                 ),
               ],
             ),
@@ -128,7 +138,7 @@ class HomeScreen extends StatelessWidget {
               return ExpansionTile(
                 title: Text(
                   entry.key,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor),
                 ),
                 children: [_buildWorkoutDataTable(context, entry.value)],
               );
@@ -146,6 +156,9 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildWorkoutDataTable(BuildContext context, List<Workout> workouts) {
     final appLocalizations = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
 
     // Generate a unique set number for each workout within the list
     final List<DataRow> rows = [];
@@ -161,15 +174,15 @@ class HomeScreen extends StatelessWidget {
       }
 
       rows.add(DataRow(cells: [
-        DataCell(Text(appLocalizations?.translate(workout.exercise.localizationKey + "_name") ?? workout.exercise.name)),
-        DataCell(Text('$setNumber')),
-        DataCell(Text('${workout.repetitions} ${appLocalizations?.translate('reps') ?? 'reps'}')),
-        DataCell(Text('${workout.weight} kg')),
-        DataCell(Text(DateFormat('yyyy-MM-dd – kk:mm').format(workout.date))),
+        DataCell(Text(appLocalizations?.translate(workout.exercise.localizationKey + "_name") ?? workout.exercise.name, style: TextStyle(color: textColor))),
+        DataCell(Text('$setNumber', style: TextStyle(color: textColor))),
+        DataCell(Text('${workout.repetitions} ${appLocalizations?.translate('reps') ?? 'reps'}', style: TextStyle(color: textColor))),
+        DataCell(Text('${workout.weight} kg', style: TextStyle(color: textColor))),
+        DataCell(Text(DateFormat('yyyy-MM-dd – kk:mm').format(workout.date), style: TextStyle(color: textColor))),
         DataCell(Row(
           children: [
             IconButton(
-              icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
+              icon: Icon(Icons.edit, color: isDarkMode ? Colors.white : theme.primaryColor), // Adjusted icon color based on theme
               onPressed: () {
                 Navigator.push(
                   context,
@@ -216,12 +229,12 @@ class HomeScreen extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       child: DataTable(
         columns: [
-          DataColumn(label: Text(appLocalizations?.translate('exercise') ?? 'Exercise')),
-          DataColumn(label: Text(appLocalizations?.translate('set') ?? 'Set')),
-          DataColumn(label: Text(appLocalizations?.translate('reps') ?? 'Reps')),
-          DataColumn(label: Text(appLocalizations?.translate('weight') ?? 'Weight')),
-          DataColumn(label: Text(appLocalizations?.translate('date') ?? 'Date')),
-          DataColumn(label: Text(appLocalizations?.translate('actions') ?? 'Actions')),
+          DataColumn(label: Text(appLocalizations?.translate('exercise') ?? 'Exercise', style: TextStyle(color: textColor))),
+          DataColumn(label: Text(appLocalizations?.translate('set') ?? 'Set', style: TextStyle(color: textColor))),
+          DataColumn(label: Text(appLocalizations?.translate('reps') ?? 'Reps', style: TextStyle(color: textColor))),
+          DataColumn(label: Text(appLocalizations?.translate('weight') ?? 'Weight', style: TextStyle(color: textColor))),
+          DataColumn(label: Text(appLocalizations?.translate('date') ?? 'Date', style: TextStyle(color: textColor))),
+          DataColumn(label: Text(appLocalizations?.translate('actions') ?? 'Actions', style: TextStyle(color: textColor))),
         ],
         rows: rows,
       ),

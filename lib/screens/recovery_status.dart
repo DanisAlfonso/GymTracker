@@ -18,6 +18,11 @@ class RecoveryStatus extends StatelessWidget {
     final sortedRecoveryPercentages = recoveryPercentages.entries.toList()
       ..sort((a, b) => a.value.compareTo(b.value));
 
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    final iconColor = isDarkMode ? Colors.white : theme.primaryColor;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -28,11 +33,11 @@ class RecoveryStatus extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.hotel, color: Theme.of(context).primaryColor),
+                Icon(Icons.hotel, color: iconColor), // Adjusted icon color based on theme
                 const SizedBox(width: 8),
                 Text(
                   appLocalizations?.translate('recovery_status') ?? 'Recovery Status',
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: textColor),
                 ),
               ],
             ),
@@ -49,7 +54,7 @@ class RecoveryStatus extends StatelessWidget {
                     Expanded(
                       child: Text(
                         translatedKey,
-                        style: const TextStyle(fontSize: 16),
+                        style: TextStyle(fontSize: 16, color: textColor),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),

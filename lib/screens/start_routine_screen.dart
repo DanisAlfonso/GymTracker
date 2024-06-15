@@ -81,6 +81,9 @@ class StartRoutineScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    final iconColor = isDarkMode ? Colors.white : theme.primaryColor;
 
     return Scaffold(
       appBar: AppBar(
@@ -120,7 +123,7 @@ class StartRoutineScreen extends StatelessWidget {
                   child: ExpansionTile(
                     leading: Icon(
                       Icons.fitness_center,
-                      color: Theme.of(context).primaryColor,
+                      color: iconColor,
                       size: 32.0,
                     ),
                     title: Text(
@@ -161,7 +164,7 @@ class StartRoutineScreen extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
-                                  icon: const Icon(Icons.edit, color: Colors.blue),
+                                  icon: Icon(Icons.edit, color: isDarkMode ? Colors.white : Colors.blue),
                                   onPressed: () => _editSet(context, workout),
                                 ),
                                 IconButton(
@@ -186,7 +189,7 @@ class StartRoutineScreen extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ),
-                            backgroundColor: Theme.of(context).primaryColor,
+                            backgroundColor: theme.primaryColor,
                             foregroundColor: Colors.white,
                             shadowColor: Colors.black.withOpacity(0.25),
                             elevation: 10,
