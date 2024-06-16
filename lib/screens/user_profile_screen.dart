@@ -1,6 +1,8 @@
-// lib/screens/user_profile_screen.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import '../app_localizations.dart'; // Import the AppLocalizations
 
 class UserProfileScreen extends StatefulWidget {
@@ -16,6 +18,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   final _ageController = TextEditingController();
   final _weightController = TextEditingController();
   final _heightController = TextEditingController();
+  File? _profileImage;
 
   @override
   void initState() {
@@ -30,6 +33,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       _ageController.text = prefs.getInt('age')?.toString() ?? '';
       _weightController.text = prefs.getDouble('weight')?.toString() ?? '';
       _heightController.text = prefs.getDouble('height')?.toString() ?? '';
+      String? imagePath = prefs.getString('profileImage');
+      if (imagePath != null) {
+        _profileImage = File(imagePath);
+      }
     });
   }
 
@@ -41,15 +48,37 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       await prefs.setInt('age', int.parse(_ageController.text));
       await prefs.setDouble('weight', double.parse(_weightController.text));
       await prefs.setDouble('height', double.parse(_heightController.text));
+      if (_profileImage != null) {
+        await prefs.setString('profileImage', _profileImage!.path);
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(appLocalizations!.translate('profile_saved'))),
       );
     }
   }
 
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _profileImage = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<void> _signOut() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+  }
+
   @override
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    final avatarBackgroundColor = isDarkMode ? Colors.grey[700] : Colors.grey[300];
 
     return Scaffold(
       appBar: AppBar(
@@ -63,13 +92,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             children: [
               Center(
                 child: GestureDetector(
-                  onTap: () {
-                    // Implement profile picture selection
-                  },
+                  onTap: _pickImage,
                   child: CircleAvatar(
                     radius: 50,
-                    backgroundColor: Colors.grey[300],
-                    child: const Icon(Icons.person, size: 50),
+                    backgroundColor: avatarBackgroundColor,
+                    backgroundImage: _profileImage != null ? FileImage(_profileImage!) : null,
+                    child: _profileImage == null ? const Icon(Icons.person, size: 50) : null,
                   ),
                 ),
               ),
@@ -124,6 +152,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ElevatedButton(
                 onPressed: _saveUserProfile,
                 child: Text(appLocalizations.translate('save_profile')),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _signOut,
+                child: Text(appLocalizations.translate('logout')),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red, // Background color
+                ),
               ),
             ],
           ),
