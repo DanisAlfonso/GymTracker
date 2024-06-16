@@ -109,6 +109,7 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
@@ -137,9 +138,14 @@ class _AuthScreenState extends State<AuthScreen> {
                   children: [
                     TextFormField(
                       controller: _emailController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Email',
-                        prefixIcon: Icon(Icons.email),
+                        prefixIcon: Icon(Icons.email, color: isDarkMode ? Colors.white : Colors.black),
+                        filled: true,
+                        fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                       ),
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) {
@@ -155,9 +161,14 @@ class _AuthScreenState extends State<AuthScreen> {
                     const SizedBox(height: 20),
                     TextFormField(
                       controller: _passwordController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Password',
-                        prefixIcon: Icon(Icons.lock),
+                        prefixIcon: Icon(Icons.lock, color: isDarkMode ? Colors.white : Colors.black),
+                        filled: true,
+                        fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                       ),
                       obscureText: true,
                       validator: (value) {
@@ -185,13 +196,32 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ElevatedButton(
                 onPressed: _isLoading ? null : _authenticate,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  textStyle: const TextStyle(fontSize: 16),
+                  backgroundColor: theme.colorScheme.secondary,
+                  foregroundColor: isDarkMode ? Colors.black : Colors.white,
+                  shadowColor: theme.colorScheme.secondary.withOpacity(0.5),
+                  elevation: 5,
+                ),
                 child: Text(_isSignIn ? 'Sign In' : 'Sign Up'),
               ),
               const SizedBox(height: 20),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
+                  backgroundColor: isDarkMode ? Colors.grey[800] : Colors.white,
+                  foregroundColor: isDarkMode ? Colors.white : Colors.black,
+                  side: BorderSide(color: isDarkMode ? Colors.white : Colors.black),
+                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  textStyle: const TextStyle(fontSize: 16),
+                  shadowColor: Colors.grey,
+                  elevation: 5,
                 ),
                 icon: Image.asset(
                   'assets/google_logo.png',
@@ -211,6 +241,10 @@ class _AuthScreenState extends State<AuthScreen> {
                 },
                 child: Text(
                   _isSignIn ? 'Create an account' : 'Have an account? Sign in',
+                  style: TextStyle(
+                    color: theme.primaryColor,
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ],
