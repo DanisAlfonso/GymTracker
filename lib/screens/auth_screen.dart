@@ -13,7 +13,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isSignIn = true;
+  bool _isSignIn = false; // Initial state is false for first-time users
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -132,121 +132,174 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ),
               const SizedBox(height: 40),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        prefixIcon: Icon(Icons.email, color: isDarkMode ? Colors.white : Colors.black),
-                        filled: true,
-                        fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your email';
-                        }
-                        if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                          return 'Please enter a valid email';
-                        }
-                        return null;
-                      },
+              if (!_isSignIn) ...[
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isDarkMode ? Colors.grey[800] : Colors.white,
+                    foregroundColor: isDarkMode ? Colors.white : Colors.black,
+                    side: BorderSide(color: isDarkMode ? Colors.white : Colors.black),
+                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    const SizedBox(height: 20),
-                    TextFormField(
-                      controller: _passwordController,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        prefixIcon: Icon(Icons.lock, color: isDarkMode ? Colors.white : Colors.black),
-                        filled: true,
-                        fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      obscureText: true,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your password';
-                        }
-                        if (value.length < 6) {
-                          return 'Password must be at least 6 characters';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                  ],
+                    textStyle: const TextStyle(fontSize: 16),
+                    shadowColor: Colors.grey,
+                    elevation: 5,
+                  ),
+                  icon: Image.asset(
+                    'assets/google_logo.png',
+                    height: 24,
+                  ),
+                  label: const Text('Register with Google'),
+                  onPressed: _isLoading ? null : _signInWithGoogle,
                 ),
-              ),
-              if (_isLoading) const CircularProgressIndicator(),
-              if (_errorMessage != null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _isSignIn = false;
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    textStyle: const TextStyle(fontSize: 16),
+                    backgroundColor: theme.colorScheme.secondary,
+                    foregroundColor: isDarkMode ? Colors.black : Colors.white,
+                    shadowColor: theme.colorScheme.secondary.withOpacity(0.5),
+                    elevation: 5,
+                  ),
+                  child: const Text('Register with Email'),
+                ),
+                const SizedBox(height: 20),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _isSignIn = true;
+                    });
+                  },
+                  child: const Text(
+                    'Do you already have an account? Sign in',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ] else ...[
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isDarkMode ? Colors.grey[800] : Colors.white,
+                    foregroundColor: isDarkMode ? Colors.white : Colors.black,
+                    side: BorderSide(color: isDarkMode ? Colors.white : Colors.black),
+                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    textStyle: const TextStyle(fontSize: 16),
+                    shadowColor: Colors.grey,
+                    elevation: 5,
+                  ),
+                  icon: Image.asset(
+                    'assets/google_logo.png',
+                    height: 24,
+                  ),
+                  label: const Text('Sign in with Google'),
+                  onPressed: _isLoading ? null : _signInWithGoogle,
+                ),
+                const SizedBox(height: 20),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          prefixIcon: Icon(Icons.email, color: isDarkMode ? Colors.white : Colors.black),
+                          filled: true,
+                          fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your email';
+                          }
+                          if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                            return 'Please enter a valid email';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          prefixIcon: Icon(Icons.lock, color: isDarkMode ? Colors.white : Colors.black),
+                          filled: true,
+                          fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        obscureText: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          if (value.length < 6) {
+                            return 'Password must be at least 6 characters';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+                if (_isLoading) const CircularProgressIndicator(),
+                if (_errorMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Text(
+                      _errorMessage!,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ElevatedButton(
+                  onPressed: _isLoading ? null : _authenticate,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    textStyle: const TextStyle(fontSize: 16),
+                    backgroundColor: theme.colorScheme.secondary,
+                    foregroundColor: isDarkMode ? Colors.black : Colors.white,
+                    shadowColor: theme.colorScheme.secondary.withOpacity(0.5),
+                    elevation: 5,
+                  ),
+                  child: Text(_isSignIn ? 'Sign In' : 'Sign Up'),
+                ),
+                const SizedBox(height: 20),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _isSignIn = !_isSignIn;
+                    });
+                  },
                   child: Text(
-                    _errorMessage!,
-                    style: const TextStyle(color: Colors.red),
+                    _isSignIn ? 'Create an account' : 'Have an account? Sign in',
+                    style: TextStyle(
+                      color: theme.primaryColor,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
-              ElevatedButton(
-                onPressed: _isLoading ? null : _authenticate,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  textStyle: const TextStyle(fontSize: 16),
-                  backgroundColor: theme.colorScheme.secondary,
-                  foregroundColor: isDarkMode ? Colors.black : Colors.white,
-                  shadowColor: theme.colorScheme.secondary.withOpacity(0.5),
-                  elevation: 5,
-                ),
-                child: Text(_isSignIn ? 'Sign In' : 'Sign Up'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: isDarkMode ? Colors.grey[800] : Colors.white,
-                  foregroundColor: isDarkMode ? Colors.white : Colors.black,
-                  side: BorderSide(color: isDarkMode ? Colors.white : Colors.black),
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  textStyle: const TextStyle(fontSize: 16),
-                  shadowColor: Colors.grey,
-                  elevation: 5,
-                ),
-                icon: Image.asset(
-                  'assets/google_logo.png',
-                  height: 24,
-                ),
-                label: const Text('Sign in with Google'),
-                onPressed: _isLoading ? null : _signInWithGoogle,
-              ),
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: _isLoading
-                    ? null
-                    : () {
-                  setState(() {
-                    _isSignIn = !_isSignIn;
-                  });
-                },
-                child: Text(
-                  _isSignIn ? 'Create an account' : 'Have an account? Sign in',
-                  style: TextStyle(
-                    color: theme.primaryColor,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
+              ],
             ],
           ),
         ),
