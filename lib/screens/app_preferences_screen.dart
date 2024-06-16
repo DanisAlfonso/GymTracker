@@ -1,4 +1,3 @@
-// lib/screens/app_preferences_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,7 +15,7 @@ class AppPreferencesScreen extends StatefulWidget {
 
 class _AppPreferencesScreenState extends State<AppPreferencesScreen> {
   bool _notificationsEnabled = true;
-  String _selectedLanguage = 'en';
+  String _selectedLanguage = 'system';
 
   @override
   void initState() {
@@ -28,7 +27,7 @@ class _AppPreferencesScreenState extends State<AppPreferencesScreen> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _notificationsEnabled = prefs.getBool('notificationsEnabled') ?? true;
-      _selectedLanguage = prefs.getString('selectedLanguage') ?? 'en';
+      _selectedLanguage = prefs.getString('selectedLanguage') ?? 'system';
     });
     Provider.of<ThemeModel>(context, listen: false)
         .setDarkMode(prefs.getBool('isDarkMode') ?? false);
@@ -39,7 +38,13 @@ class _AppPreferencesScreenState extends State<AppPreferencesScreen> {
     await prefs.setBool('isDarkMode', Provider.of<ThemeModel>(context, listen: false).isDark);
     await prefs.setBool('notificationsEnabled', _notificationsEnabled);
     await prefs.setString('selectedLanguage', _selectedLanguage);
-    widget.onLocaleChange(Locale(_selectedLanguage));
+
+    if (_selectedLanguage == 'system') {
+      widget.onLocaleChange(WidgetsBinding.instance.window.locale);
+    } else {
+      widget.onLocaleChange(Locale(_selectedLanguage));
+    }
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Preferences Saved')),
     );
@@ -83,10 +88,20 @@ class _AppPreferencesScreenState extends State<AppPreferencesScreen> {
                   _selectedLanguage = newValue!;
                 });
               },
-              items: <String>['en', 'es', 'fr', 'de'].map<DropdownMenuItem<String>>((String value) {
+              items: <String>['system', 'en', 'es', 'fr', 'de'].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value == 'en' ? 'English' : value == 'es' ? 'Español' : value == 'fr' ? 'Français' : 'Deutsch'),
+                  child: Text(
+                    value == 'system'
+                        ? 'System Default'
+                        : value == 'en'
+                        ? 'English'
+                        : value == 'es'
+                        ? 'Español'
+                        : value == 'fr'
+                        ? 'Français'
+                        : 'Deutsch',
+                  ),
                 );
               }).toList(),
             ),
