@@ -38,7 +38,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale _locale = const Locale('en');
+  Locale _locale = WidgetsBinding.instance.window.locale;
   User? _user;
 
   @override
@@ -50,9 +50,11 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _loadLocale() async {
     final prefs = await SharedPreferences.getInstance();
-    final languageCode = prefs.getString('selectedLanguage') ?? 'en';
+    final languageCode = prefs.getString('selectedLanguage');
     setState(() {
-      _locale = Locale(languageCode);
+      if (languageCode != null) {
+        _locale = Locale(languageCode);
+      }
     });
   }
 

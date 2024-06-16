@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../app_localizations.dart'; // Import the AppLocalizations
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -110,10 +111,11 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
+    final appLocalizations = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isSignIn ? 'Sign In' : 'Sign Up'),
+        title: Text(_isSignIn ? appLocalizations!.translate('sign_in') : appLocalizations!.translate('sign_up')),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -150,7 +152,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     'assets/google_logo.png',
                     height: 24,
                   ),
-                  label: const Text('Register with Google'),
+                  label: Text(appLocalizations!.translate('register_with_google')),
                   onPressed: _isLoading ? null : _signInWithGoogle,
                 ),
                 const SizedBox(height: 20),
@@ -171,7 +173,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     shadowColor: theme.colorScheme.secondary.withOpacity(0.5),
                     elevation: 5,
                   ),
-                  child: const Text('Register with Email'),
+                  child: Text(appLocalizations!.translate('register_with_email')),
                 ),
                 const SizedBox(height: 20),
                 TextButton(
@@ -180,9 +182,9 @@ class _AuthScreenState extends State<AuthScreen> {
                       _isSignIn = true;
                     });
                   },
-                  child: const Text(
-                    'Do you already have an account? Sign in',
-                    style: TextStyle(fontSize: 16),
+                  child: Text(
+                    appLocalizations!.translate('already_have_account_sign_in'),
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ),
               ] else ...[
@@ -203,7 +205,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     'assets/google_logo.png',
                     height: 24,
                   ),
-                  label: const Text('Sign in with Google'),
+                  label: Text(appLocalizations!.translate('sign_in_with_google')),
                   onPressed: _isLoading ? null : _signInWithGoogle,
                 ),
                 const SizedBox(height: 20),
@@ -214,7 +216,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       TextFormField(
                         controller: _emailController,
                         decoration: InputDecoration(
-                          labelText: 'Email',
+                          labelText: appLocalizations!.translate('email'),
                           prefixIcon: Icon(Icons.email, color: isDarkMode ? Colors.white : Colors.black),
                           filled: true,
                           fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
@@ -225,10 +227,10 @@ class _AuthScreenState extends State<AuthScreen> {
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
+                            return appLocalizations!.translate('please_enter_email');
                           }
                           if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                            return 'Please enter a valid email';
+                            return appLocalizations!.translate('please_enter_valid_email');
                           }
                           return null;
                         },
@@ -237,7 +239,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       TextFormField(
                         controller: _passwordController,
                         decoration: InputDecoration(
-                          labelText: 'Password',
+                          labelText: appLocalizations!.translate('password'),
                           prefixIcon: Icon(Icons.lock, color: isDarkMode ? Colors.white : Colors.black),
                           filled: true,
                           fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
@@ -248,10 +250,10 @@ class _AuthScreenState extends State<AuthScreen> {
                         obscureText: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
+                            return appLocalizations!.translate('please_enter_password');
                           }
                           if (value.length < 6) {
-                            return 'Password must be at least 6 characters';
+                            return appLocalizations!.translate('password_must_be_at_least_6_characters');
                           }
                           return null;
                         },
@@ -282,7 +284,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     shadowColor: theme.colorScheme.secondary.withOpacity(0.5),
                     elevation: 5,
                   ),
-                  child: Text(_isSignIn ? 'Sign In' : 'Sign Up'),
+                  child: Text(_isSignIn ? appLocalizations!.translate('sign_in') : appLocalizations!.translate('sign_up')),
                 ),
                 const SizedBox(height: 20),
                 TextButton(
@@ -292,7 +294,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     });
                   },
                   child: Text(
-                    _isSignIn ? 'Create an account' : 'Have an account? Sign in',
+                    _isSignIn ? appLocalizations!.translate('create_account') : appLocalizations!.translate('have_account_sign_in'),
                     style: TextStyle(
                       color: theme.primaryColor,
                       fontSize: 16,

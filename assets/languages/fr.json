@@ -289,5 +289,20 @@
   "exercise_front_squat_barbell_name": "Squat Avant (Barre)",
   "exercise_front_squat_barbell_description": "Quadriceps",
   "training_day": "Jour d'Entraînement",
-  "no_recent_workouts": "Pas d'entraînements récents"
+  "no_recent_workouts": "Pas d'entraînements récents",
+  "register_with_google": "S'inscrire avec Google",
+  "register_with_email": "S'inscrire avec Email",
+  "already_have_account_sign_in": "Vous avez déjà un compte? Se connecter",
+  "sign_in_with_google": "Se connecter avec Google",
+  "sign_in": "Se connecter",
+  "sign_up": "S'inscrire",
+  "email": "E-mail",
+  "password": "Mot de passe",
+  "please_enter_email": "Veuillez entrer votre e-mail",
+  "please_enter_valid_email": "Veuillez entrer un e-mail valide",
+  "please_enter_password": "Veuillez entrer votre mot de passe",
+  "password_must_be_at_least_6_characters": "Le mot de passe doit contenir au moins 6 caractères",
+  "create_account": "Créer un compte",
+  "have_account_sign_in": "Vous avez un compte? Se connecter"
+
 }

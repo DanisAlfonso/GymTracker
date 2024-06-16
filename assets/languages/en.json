@@ -289,5 +289,19 @@
   "exercise_front_squat_barbell_name": "Front Squat (Barbell)",
   "exercise_front_squat_barbell_description": "Quadriceps",
   "training_day": "Training Day",
-  "no_recent_workouts": "No recent workouts"
+  "no_recent_workouts": "No recent workouts",
+  "register_with_google": "Register with Google",
+  "register_with_email": "Register with Email",
+  "already_have_account_sign_in": "Do you already have an account? Sign in",
+  "sign_in_with_google": "Sign in with Google",
+  "sign_in": "Sign In",
+  "sign_up": "Sign Up",
+  "email": "Email",
+  "password": "Password",
+  "please_enter_email": "Please enter your email",
+  "please_enter_valid_email": "Please enter a valid email",
+  "please_enter_password": "Please enter your password",
+  "password_must_be_at_least_6_characters": "Password must be at least 6 characters",
+  "create_account": "Create an account",
+  "have_account_sign_in": "Have an account? Sign in"
 }

@@ -289,5 +289,20 @@
   "exercise_front_squat_barbell_name": "Frontkniebeuge (Langhantel)",
   "exercise_front_squat_barbell_description": "Quadrizeps",
   "training_day": "Trainingstag",
-  "no_recent_workouts": "Keine aktuellen Workouts"
+  "no_recent_workouts": "Keine aktuellen Workouts",
+  "register_with_google": "Mit Google registrieren",
+  "register_with_email": "Mit E-Mail registrieren",
+  "already_have_account_sign_in": "Haben Sie bereits ein Konto? Anmelden",
+  "sign_in_with_google": "Mit Google anmelden",
+  "sign_in": "Anmelden",
+  "sign_up": "Registrieren",
+  "email": "E-Mail",
+  "password": "Passwort",
+  "please_enter_email": "Bitte geben Sie Ihre E-Mail-Adresse ein",
+  "please_enter_valid_email": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+  "please_enter_password": "Bitte geben Sie Ihr Passwort ein",
+  "password_must_be_at_least_6_characters": "Das Passwort muss mindestens 6 Zeichen lang sein",
+  "create_account": "Ein Konto erstellen",
+  "have_account_sign_in": "Haben Sie ein Konto? Anmelden"
+
 }
