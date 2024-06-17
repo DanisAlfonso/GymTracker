@@ -43,8 +43,7 @@ class _TotalSetsPerWeekSectionState extends State<TotalSetsPerWeekSection> {
     DateTime endOfWeek = _endOfWeek(today);
 
     for (var workout in workoutModel.workouts) {
-      if (workout.date.isAfter(startOfWeek.subtract(Duration(days: 1))) &&
-          workout.date.isBefore(endOfWeek.add(Duration(days: 1)))) {
+      if (workout.date.isAfter(startOfWeek.subtract(Duration(days: 1))) && workout.date.isBefore(endOfWeek.add(Duration(days: 1)))){
         String day = DateFormat.E().format(workout.date);
         setsPerWeek[day] = setsPerWeek[day]! + 1;
       }
@@ -188,19 +187,20 @@ class _TotalSetsPerWeekSectionState extends State<TotalSetsPerWeekSection> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 24),
+                const SizedBox(width: 50), // Increased horizontal padding
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 40), // Add this to align with the graph bars
                     ...setsPerWeek.entries.map((entry) {
+                      int colorIndex = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].indexOf(entry.key);
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 4.0),
                         child: Row(
                           children: [
                             Text(
                               '${entry.key}: ',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor),
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.primaries[colorIndex % Colors.primaries.length]),
                             ),
                             Text(
                               entry.value.toString(),
