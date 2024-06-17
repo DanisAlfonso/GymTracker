@@ -6,6 +6,7 @@ import 'statistics/weekly_progress.dart';
 import 'statistics/exercise_frequency.dart';
 import 'statistics/monthly_progress.dart';
 import 'statistics/calculate_one_rep_max.dart'; // Import the new component
+import 'statistics/total_sets_per_week.dart'; // Import the TotalSetsPerWeekSection component
 import '../app_localizations.dart'; // Import the AppLocalizations
 
 class StatisticsScreen extends StatefulWidget {
@@ -137,6 +138,18 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   child: const Padding(
                     padding: EdgeInsets.all(16.0),
                     child: CalculateOneRepMax(), // Use the new component
+                  ),
+                ),
+                const SizedBox(height: 32),
+                Card(
+                  elevation: 4.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    side: cardBorder,
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: TotalSetsPerWeekSection(), // Add the new TotalSetsPerWeekSection component
                   ),
                 ),
               ],
