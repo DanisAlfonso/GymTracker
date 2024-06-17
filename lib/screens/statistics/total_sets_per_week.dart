@@ -43,7 +43,8 @@ class _TotalSetsPerWeekSectionState extends State<TotalSetsPerWeekSection> {
     DateTime endOfWeek = _endOfWeek(today);
 
     for (var workout in workoutModel.workouts) {
-      if (workout.date.isAfter(startOfWeek.subtract(Duration(days: 1))) && workout.date.isBefore(endOfWeek.add(Duration(days: 1)))){
+      if (workout.date.isAfter(startOfWeek.subtract(Duration(days: 1))) &&
+          workout.date.isBefore(endOfWeek.add(Duration(days: 1)))) {
         String day = DateFormat.E().format(workout.date);
         setsPerWeek[day] = setsPerWeek[day]! + 1;
       }
@@ -86,19 +87,19 @@ class _TotalSetsPerWeekSectionState extends State<TotalSetsPerWeekSection> {
         final totalSetsBars = _generateBarGroups(setsPerWeek);
         final totalSets = setsPerWeek.values.reduce((a, b) => a + b);
 
-        return Row(
+        return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    appLocalizations!.translate('total_sets_per_week'),
-                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 24),
-                  SizedBox(
+            Text(
+              appLocalizations!.translate('total_sets_per_week'),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: SizedBox(
                     height: 300,
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
@@ -186,34 +187,35 @@ class _TotalSetsPerWeekSectionState extends State<TotalSetsPerWeekSection> {
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 24),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ...setsPerWeek.entries.map((entry) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: Row(
-                      children: [
-                        Text(
-                          '${entry.key}: ',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor),
+                ),
+                const SizedBox(width: 24),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 40), // Add this to align with the graph bars
+                    ...setsPerWeek.entries.map((entry) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Row(
+                          children: [
+                            Text(
+                              '${entry.key}: ',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor),
+                            ),
+                            Text(
+                              entry.value.toString(),
+                              style: TextStyle(fontSize: 16, color: textColor),
+                            ),
+                          ],
                         ),
-                        Text(
-                          entry.value.toString(),
-                          style: TextStyle(fontSize: 16, color: textColor),
-                        ),
-                      ],
+                      );
+                    }).toList(),
+                    const SizedBox(height: 16),
+                    Text(
+                      '${appLocalizations.translate('total')}: $totalSets',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor),
                     ),
-                  );
-                }).toList(),
-                const SizedBox(height: 16),
-                Text(
-                  '${appLocalizations.translate('total')}: $totalSets',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor),
+                  ],
                 ),
               ],
             ),
