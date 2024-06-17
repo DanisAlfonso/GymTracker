@@ -30,7 +30,7 @@ class _AppPreferencesScreenState extends State<AppPreferencesScreen> {
       _selectedLanguage = prefs.getString('selectedLanguage') ?? 'system';
     });
     Provider.of<ThemeModel>(context, listen: false)
-        .setDarkMode(prefs.getBool('isDarkMode') ?? false);
+        .setUseSystemTheme(prefs.getBool('useSystemTheme') ?? true);
   }
 
   Future<void> _savePreferences() async {
@@ -64,12 +64,20 @@ class _AppPreferencesScreenState extends State<AppPreferencesScreen> {
         child: ListView(
           children: [
             SwitchListTile(
-              title: Text(appLocalizations.translate('dark_mode')),
-              value: themeModel.isDark,
+              title: Text(appLocalizations.translate('use_system_theme')),
+              value: themeModel.useSystemTheme,
               onChanged: (bool value) {
-                themeModel.setDarkMode(value);
+                themeModel.setUseSystemTheme(value);
               },
             ),
+            if (!themeModel.useSystemTheme)
+              SwitchListTile(
+                title: Text(appLocalizations.translate('dark_mode')),
+                value: themeModel.isDark,
+                onChanged: (bool value) {
+                  themeModel.setDarkMode(value);
+                },
+              ),
             SwitchListTile(
               title: Text(appLocalizations.translate('notifications')),
               value: _notificationsEnabled,

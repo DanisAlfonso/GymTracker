@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:ui' as ui; // Import dart:ui for PlatformDispatcher
+
 import 'firebase_options.dart';
 import 'models/workout_model.dart';
 import 'models/theme_model.dart';
@@ -38,7 +40,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale _locale = WidgetsBinding.instance.window.locale;
+  Locale _locale = ui.PlatformDispatcher.instance.locale;
   User? _user;
 
   @override
@@ -76,6 +78,11 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(
       builder: (context, themeModel, child) {
+        final useSystemTheme = themeModel.useSystemTheme;
+        final brightness = useSystemTheme
+            ? ui.PlatformDispatcher.instance.platformBrightness
+            : (themeModel.isDark ? Brightness.dark : Brightness.light);
+
         return MaterialApp(
           locale: _locale,
           localizationsDelegates: const [
@@ -91,16 +98,16 @@ class _MyAppState extends State<MyApp> {
           ],
           theme: ThemeData(
             primarySwatch: Colors.blue,
-            brightness: themeModel.isDark ? Brightness.dark : Brightness.light,
+            brightness: brightness,
             inputDecorationTheme: InputDecorationTheme(
               filled: true,
-              fillColor: themeModel.isDark ? Colors.grey[800] : Colors.white,
+              fillColor: brightness == Brightness.dark ? Colors.grey[800] : Colors.white,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: themeModel.isDark ? Colors.white : Colors.blue,
+                  color: brightness == Brightness.dark ? Colors.white : Colors.blue,
                 ),
               ),
             ),

@@ -110,7 +110,7 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDarkMode = theme.brightness == Brightness.dark;
+    final isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
     final appLocalizations = AppLocalizations.of(context);
 
     return Scaffold(
