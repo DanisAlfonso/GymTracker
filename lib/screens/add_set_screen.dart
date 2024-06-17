@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/workout_model.dart';
 import 'duration_picker_dialog.dart';
 import '../app_localizations.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'add_set/previous_performance_card.dart';
+import 'add_set/set_details_card.dart';
+import 'add_set/rest_time_and_notes_card.dart';
 
 class AddSetScreen extends StatefulWidget {
   final Exercise exercise;
@@ -166,264 +168,51 @@ class _AddSetScreenState extends State<AddSetScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (previousSetData != null)
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                    side: cardBorder,
-                  ),
-                  elevation: 5,
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          appLocalizations?.translate('previous_performance') ?? 'Previous Performance',
-                          style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Icon(Icons.fitness_center, color: iconColor),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                '${previousSetData.repetitions} reps, ${previousSetData.weight} kg',
-                                style: const TextStyle(fontSize: 16.0),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Icon(Icons.calendar_today, color: iconColor),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                DateFormat.yMMMd().add_Hm().format(previousSetData.date),
-                                style: const TextStyle(fontSize: 16.0),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                PreviousPerformanceCard(
+                  previousSetData: previousSetData,
+                  iconColor: iconColor,
+                  cardBorder: cardBorder,
                 ),
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                  side: cardBorder,
-                ),
-                elevation: 5,
-                margin: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.format_list_numbered, color: iconColor),
-                          const SizedBox(width: 8),
-                          Text(
-                            appLocalizations?.translate('set_number') ?? 'Set Number',
-                            style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Center(
-                        child: NumberPicker(
-                          minValue: 1,
-                          maxValue: 10,
-                          value: _setNumber,
-                          onChanged: (value) {
-                            setState(() {
-                              _setNumber = value;
-                              _updateInitialValues();
-                            });
-                          },
-                          selectedTextStyle: selectedTextStyle,
-                          textStyle: textStyle,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      const Divider(),
-                      Row(
-                        children: [
-                          Icon(Icons.repeat, color: iconColor),
-                          const SizedBox(width: 8),
-                          Text(
-                            appLocalizations?.translate('repetitions') ?? 'Repetitions',
-                            style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Center(
-                        child: NumberPicker(
-                          minValue: 1,
-                          maxValue: 100,
-                          value: _repetitions,
-                          onChanged: (value) {
-                            setState(() {
-                              _repetitions = value;
-                            });
-                          },
-                          selectedTextStyle: selectedTextStyle,
-                          textStyle: textStyle,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      const Divider(),
-                      Row(
-                        children: [
-                          Icon(Icons.fitness_center, color: iconColor),
-                          const SizedBox(width: 8),
-                          Text(
-                            appLocalizations?.translate('weight_kg') ?? 'Weight (kg)',
-                            style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          NumberPicker(
-                            minValue: 0,
-                            maxValue: 1000,
-                            value: _weightInt,
-                            onChanged: (value) {
-                              setState(() {
-                                _weightInt = value;
-                              });
-                            },
-                            selectedTextStyle: selectedTextStyle,
-                            textStyle: textStyle,
-                          ),
-                          const Text(
-                            '.',
-                            style: TextStyle(fontSize: 24, color: Colors.grey),
-                          ),
-                          NumberPicker(
-                            minValue: 0,
-                            maxValue: 9,
-                            value: _weightDecimal,
-                            onChanged: (value) {
-                              setState(() {
-                                _weightDecimal = value;
-                              });
-                            },
-                            selectedTextStyle: selectedTextStyle,
-                            textStyle: textStyle,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: _submit,
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            backgroundColor: primaryColor,
-                          ),
-                          child: Text(
-                            appLocalizations?.translate('add_set') ?? 'Add Set',
-                            style: const TextStyle(fontSize: 16.0, color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              SetDetailsCard(
+                setNumber: _setNumber,
+                repetitions: _repetitions,
+                weightInt: _weightInt,
+                weightDecimal: _weightDecimal,
+                selectedTextStyle: selectedTextStyle,
+                textStyle: textStyle,
+                iconColor: iconColor,
+                cardBorder: cardBorder,
+                onSetNumberChanged: (value) {
+                  setState(() {
+                    _setNumber = value;
+                    _updateInitialValues();
+                  });
+                },
+                onRepetitionsChanged: (value) {
+                  setState(() {
+                    _repetitions = value;
+                  });
+                },
+                onWeightIntChanged: (value) {
+                  setState(() {
+                    _weightInt = value;
+                  });
+                },
+                onWeightDecimalChanged: (value) {
+                  setState(() {
+                    _weightDecimal = value;
+                  });
+                },
+                onSubmit: _submit,
               ),
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                  side: cardBorder,
-                ),
-                elevation: 5,
-                margin: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        appLocalizations?.translate('rest_time') ?? 'Rest Time',
-                        style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: _pickRestTime,
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            backgroundColor: primaryColor,
-                          ),
-                          child: Text(
-                            '${appLocalizations?.translate('pick_rest_time') ?? 'Pick Rest Time'} (${_restTime.inMinutes} min ${_restTime.inSeconds % 60} sec)',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      const Divider(),
-                      Text(
-                        appLocalizations?.translate('training_day') ?? 'Training Day',
-                        style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: _pickDate,
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            backgroundColor: primaryColor,
-                          ),
-                          child: Text(
-                            DateFormat.yMd().format(_selectedDate),
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      const Divider(),
-                      Text(
-                        appLocalizations?.translate('notes') ?? 'Notes',
-                        style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        controller: _notesController,
-                        decoration: InputDecoration(
-                          hintText: appLocalizations?.translate('enter_notes') ?? 'Enter notes',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          filled: true,
-                          fillColor: Theme.of(context).inputDecorationTheme.fillColor,
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                        ),
-                        keyboardType: TextInputType.multiline,
-                        maxLines: 3,
-                      ),
-                    ],
-                  ),
-                ),
+              RestTimeAndNotesCard(
+                restTime: _restTime,
+                selectedDate: _selectedDate,
+                notesController: _notesController,
+                onPickRestTime: _pickRestTime,
+                onPickDate: _pickDate,
+                iconColor: iconColor,
+                cardBorder: cardBorder,
               ),
             ],
           ),
