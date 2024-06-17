@@ -137,7 +137,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   ),
                   child: const Padding(
                     padding: EdgeInsets.all(16.0),
-                    child: CalculateOneRepMax(), // Use the new component
+                    child: TotalSetsPerWeekSection(), // Use the new component
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -149,7 +149,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   ),
                   child: const Padding(
                     padding: EdgeInsets.all(16.0),
-                    child: TotalSetsPerWeekSection(), // Add the new TotalSetsPerWeekSection component
+                    child: CalculateOneRepMax()
                   ),
                 ),
               ],
