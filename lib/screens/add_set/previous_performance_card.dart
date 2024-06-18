@@ -4,13 +4,13 @@ import '../../models/workout_model.dart';
 import '../../app_localizations.dart';
 
 class PreviousPerformanceCard extends StatelessWidget {
-  final Workout previousSetData;
+  final List<Workout> previousWorkouts;
   final Color iconColor;
   final BorderSide cardBorder;
 
   const PreviousPerformanceCard({
     super.key,
-    required this.previousSetData,
+    required this.previousWorkouts,
     required this.iconColor,
     required this.cardBorder,
   });
@@ -36,31 +36,34 @@ class PreviousPerformanceCard extends StatelessWidget {
               style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            Row(
-              children: [
-                Icon(Icons.fitness_center, color: iconColor),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    '${previousSetData.repetitions} reps, ${previousSetData.weight} kg',
-                    style: const TextStyle(fontSize: 16.0),
+            for (int i = 0; i < previousWorkouts.length; i++) ...[
+              Row(
+                children: [
+                  Icon(Icons.format_list_numbered, color: iconColor),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      '${appLocalizations?.translate('set')} ${i + 1}: ${previousWorkouts[i].repetitions} reps, ${previousWorkouts[i].weight} kg',
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Icon(Icons.calendar_today, color: iconColor),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    DateFormat.yMMMd().add_Hm().format(previousSetData.date),
-                    style: const TextStyle(fontSize: 16.0),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.calendar_today, color: iconColor),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      DateFormat.yMMMd().add_Hm().format(previousWorkouts[i].date),
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+              const SizedBox(height: 16),
+            ],
           ],
         ),
       ),

@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/workout_model.dart';
 import 'duration_picker_dialog.dart';
 import '../app_localizations.dart';
-import 'package:intl/intl.dart';
 import 'add_set/previous_performance_card.dart';
 import 'add_set/set_details_card.dart';
 import 'add_set/rest_time_and_notes_card.dart';
@@ -91,6 +90,25 @@ class _AddSetScreenState extends State<AddSetScreen> {
     return setNumber <= latestWorkouts.length ? latestWorkouts[setNumber - 1] : null;
   }
 
+  List<Workout> _getLatestWorkouts() {
+    if (_previousWorkouts.isEmpty) return [];
+
+    Map<DateTime, List<Workout>> groupedWorkouts = {};
+    for (var workout in _previousWorkouts) {
+      DateTime date = DateTime(workout.date.year, workout.date.month, workout.date.day);
+      if (!groupedWorkouts.containsKey(date)) {
+        groupedWorkouts[date] = [];
+      }
+      groupedWorkouts[date]!.add(workout);
+    }
+
+    DateTime? latestDate = groupedWorkouts.keys.isNotEmpty
+        ? groupedWorkouts.keys.reduce((a, b) => a.isAfter(b) ? a : b)
+        : null;
+
+    return latestDate != null ? groupedWorkouts[latestDate]! : [];
+  }
+
   void _submit() {
     if (_formKey.currentState!.validate()) {
       final weight = _weightInt + (_weightDecimal / 10.0);
@@ -153,7 +171,7 @@ class _AddSetScreenState extends State<AddSetScreen> {
     final textStyle = TextStyle(color: isDarkMode ? Colors.white70 : Colors.grey, fontSize: 18);
     final cardBorder = BorderSide(color: theme.dividerColor.withOpacity(0.5));
 
-    final previousSetData = _getPreviousSetData(_setNumber);
+    final latestWorkouts = _getLatestWorkouts();
 
     return Scaffold(
       appBar: AppBar(
@@ -167,9 +185,9 @@ class _AddSetScreenState extends State<AddSetScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (previousSetData != null)
+              if (latestWorkouts.isNotEmpty)
                 PreviousPerformanceCard(
-                  previousSetData: previousSetData,
+                  previousWorkouts: latestWorkouts,
                   iconColor: iconColor,
                   cardBorder: cardBorder,
                 ),
