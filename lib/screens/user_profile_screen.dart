@@ -156,10 +156,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _signOut,
-                child: Text(appLocalizations.translate('logout')),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red, // Background color
                 ),
+                child: Text(appLocalizations.translate('logout')),
               ),
             ],
           ),

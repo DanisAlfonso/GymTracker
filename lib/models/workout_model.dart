@@ -291,7 +291,7 @@ class WorkoutModel extends ChangeNotifier {
       } catch (e) {
         attempt++;
         if (attempt >= retries) {
-          throw e;
+          rethrow;
         }
         await Future.delayed(retryDelay);
       }

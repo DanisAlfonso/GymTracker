@@ -51,7 +51,7 @@ class HomeScreen extends StatelessWidget {
     Map<String, List<Workout>> groupedWorkouts = {};
 
     for (var workout in recentWorkouts) {
-      String categoryKey = workout.exercise.localizationKey + "_description";
+      String categoryKey = "${workout.exercise.localizationKey}_description";
       String category = appLocalizations?.translate(categoryKey) ?? workout.exercise.description;
       if (groupedWorkouts[category] == null) {
         groupedWorkouts[category] = [];
@@ -111,7 +111,7 @@ class HomeScreen extends StatelessWidget {
     Map<String, List<Workout>> groupedWorkouts = {};
 
     for (var workout in allWorkouts) {
-      String categoryKey = workout.exercise.localizationKey + "_description";
+      String categoryKey = "${workout.exercise.localizationKey}_description";
       String category = appLocalizations?.translate(categoryKey) ?? workout.exercise.description;
       if (groupedWorkouts[category] == null) {
         groupedWorkouts[category] = [];
@@ -181,7 +181,7 @@ class HomeScreen extends StatelessWidget {
       }
 
       rows.add(DataRow(cells: [
-        DataCell(Text(appLocalizations?.translate(workout.exercise.localizationKey + "_name") ?? workout.exercise.name, style: TextStyle(color: textColor))),
+        DataCell(Text(appLocalizations?.translate("${workout.exercise.localizationKey}_name") ?? workout.exercise.name, style: TextStyle(color: textColor))),
         DataCell(Text('$setNumber', style: TextStyle(color: textColor))),
         DataCell(Text('${workout.repetitions} ${appLocalizations?.translate('reps') ?? 'reps'}', style: TextStyle(color: textColor))),
         DataCell(Text('${workout.weight} kg', style: TextStyle(color: textColor))),

@@ -27,7 +27,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(appLocalizations!.translate('statistics')!),
+        title: Text(appLocalizations!.translate('statistics')),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -37,7 +37,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
 
             // Sort exercises alphabetically by translated name
             exercises.sort((a, b) {
-              final nameA = appLocalizations!.translate('${a.localizationKey}_name');
+              final nameA = appLocalizations.translate('${a.localizationKey}_name');
               final nameB = appLocalizations.translate('${b.localizationKey}_name');
               return nameA.compareTo(nameB);
             });
@@ -45,7 +45,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
             return ListView(
               children: [
                 Text(
-                  appLocalizations.translate('select_exercise')!,
+                  appLocalizations.translate('select_exercise'),
                   style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
@@ -59,7 +59,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<Exercise>(
                       isExpanded: true,
-                      hint: Text(appLocalizations.translate('select_exercise')!),
+                      hint: Text(appLocalizations.translate('select_exercise')),
                       value: _selectedExercise,
                       onChanged: (Exercise? newValue) {
                         setState(() {

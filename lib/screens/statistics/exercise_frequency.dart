@@ -12,7 +12,7 @@ class ExerciseFrequencySection extends StatelessWidget {
     double totalWeight = 0;
 
     for (var workout in workoutModel.workouts) {
-      String muscleGroupKey = workout.exercise.localizationKey + '_description';
+      String muscleGroupKey = '${workout.exercise.localizationKey}_description';
       String muscleGroup = appLocalizations?.translate(muscleGroupKey) ?? workout.exercise.description;
       if (!muscleGroupFrequency.containsKey(muscleGroup)) {
         muscleGroupFrequency[muscleGroup] = 0.0;

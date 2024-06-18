@@ -152,7 +152,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     'assets/google_logo.png',
                     height: 24,
                   ),
-                  label: Text(appLocalizations!.translate('register_with_google')),
+                  label: Text(appLocalizations.translate('register_with_google')),
                   onPressed: _isLoading ? null : _signInWithGoogle,
                 ),
                 const SizedBox(height: 20),
@@ -173,7 +173,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     shadowColor: theme.colorScheme.secondary.withOpacity(0.5),
                     elevation: 5,
                   ),
-                  child: Text(appLocalizations!.translate('register_with_email')),
+                  child: Text(appLocalizations.translate('register_with_email')),
                 ),
                 const SizedBox(height: 20),
                 TextButton(
@@ -183,7 +183,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     });
                   },
                   child: Text(
-                    appLocalizations!.translate('already_have_account_sign_in'),
+                    appLocalizations.translate('already_have_account_sign_in'),
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),
@@ -205,7 +205,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     'assets/google_logo.png',
                     height: 24,
                   ),
-                  label: Text(appLocalizations!.translate('sign_in_with_google')),
+                  label: Text(appLocalizations.translate('sign_in_with_google')),
                   onPressed: _isLoading ? null : _signInWithGoogle,
                 ),
                 const SizedBox(height: 20),
@@ -216,7 +216,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       TextFormField(
                         controller: _emailController,
                         decoration: InputDecoration(
-                          labelText: appLocalizations!.translate('email'),
+                          labelText: appLocalizations.translate('email'),
                           prefixIcon: Icon(Icons.email, color: isDarkMode ? Colors.white : Colors.black),
                           filled: true,
                           fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
@@ -227,10 +227,10 @@ class _AuthScreenState extends State<AuthScreen> {
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return appLocalizations!.translate('please_enter_email');
+                            return appLocalizations.translate('please_enter_email');
                           }
                           if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                            return appLocalizations!.translate('please_enter_valid_email');
+                            return appLocalizations.translate('please_enter_valid_email');
                           }
                           return null;
                         },
@@ -239,7 +239,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       TextFormField(
                         controller: _passwordController,
                         decoration: InputDecoration(
-                          labelText: appLocalizations!.translate('password'),
+                          labelText: appLocalizations.translate('password'),
                           prefixIcon: Icon(Icons.lock, color: isDarkMode ? Colors.white : Colors.black),
                           filled: true,
                           fillColor: isDarkMode ? Colors.grey[800] : Colors.grey[200],
@@ -250,10 +250,10 @@ class _AuthScreenState extends State<AuthScreen> {
                         obscureText: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return appLocalizations!.translate('please_enter_password');
+                            return appLocalizations.translate('please_enter_password');
                           }
                           if (value.length < 6) {
-                            return appLocalizations!.translate('password_must_be_at_least_6_characters');
+                            return appLocalizations.translate('password_must_be_at_least_6_characters');
                           }
                           return null;
                         },
@@ -284,7 +284,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     shadowColor: theme.colorScheme.secondary.withOpacity(0.5),
                     elevation: 5,
                   ),
-                  child: Text(_isSignIn ? appLocalizations!.translate('sign_in') : appLocalizations!.translate('sign_up')),
+                  child: Text(_isSignIn ? appLocalizations.translate('sign_in') : appLocalizations.translate('sign_up')),
                 ),
                 const SizedBox(height: 20),
                 TextButton(
@@ -294,7 +294,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     });
                   },
                   child: Text(
-                    _isSignIn ? appLocalizations!.translate('create_account') : appLocalizations!.translate('have_account_sign_in'),
+                    _isSignIn ? appLocalizations.translate('create_account') : appLocalizations.translate('have_account_sign_in'),
                     style: TextStyle(
                       color: theme.primaryColor,
                       fontSize: 16,

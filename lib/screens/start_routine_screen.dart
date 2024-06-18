@@ -128,7 +128,7 @@ class StartRoutineScreen extends StatelessWidget {
                       size: 32.0,
                     ),
                     title: Text(
-                      appLocalizations?.translate(exercise.localizationKey + "_name") ?? exercise.name,
+                      appLocalizations?.translate("${exercise.localizationKey}_name") ?? exercise.name,
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,

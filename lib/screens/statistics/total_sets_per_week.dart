@@ -43,7 +43,7 @@ class _TotalSetsPerWeekSectionState extends State<TotalSetsPerWeekSection> {
     DateTime endOfWeek = _endOfWeek(today);
 
     for (var workout in workoutModel.workouts) {
-      if (workout.date.isAfter(startOfWeek.subtract(Duration(days: 1))) && workout.date.isBefore(endOfWeek.add(Duration(days: 1)))){
+      if (workout.date.isAfter(startOfWeek.subtract(const Duration(days: 1))) && workout.date.isBefore(endOfWeek.add(const Duration(days: 1)))){
         String day = DateFormat.E().format(workout.date);
         setsPerWeek[day] = setsPerWeek[day]! + 1;
       }
@@ -209,7 +209,7 @@ class _TotalSetsPerWeekSectionState extends State<TotalSetsPerWeekSection> {
                           ],
                         ),
                       );
-                    }).toList(),
+                    }),
                     const SizedBox(height: 16),
                     Text(
                       '${appLocalizations.translate('total')}: $totalSets',

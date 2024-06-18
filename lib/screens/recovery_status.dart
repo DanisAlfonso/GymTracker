@@ -87,6 +87,6 @@ class RecoveryStatus extends StatelessWidget {
           (e) => e.description == description,
       orElse: () => Exercise(name: '', description: description, localizationKey: description, recoveryTimeInHours: 0),
     );
-    return exercise.localizationKey + "_description";
+    return "${exercise.localizationKey}_description";
   }
 }
