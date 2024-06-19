@@ -305,6 +305,9 @@
   "create_account": "Crear una cuenta",
   "have_account_sign_in": "¿Tienes una cuenta? Iniciar sesión",
   "total_sets_per_week": "Conjuntos Totales Por Semana",
-  "current_performance": "Rendimiento actual"
+  "current_performance": "Rendimiento actual",
+  "percentage_change": "Cambio de Porcentaje",
+  "percentage_change_explanation": "Este porcentaje representa el cambio en el volumen (peso x repeticiones) entre los entrenamientos anteriores y actuales. Un porcentaje positivo indica una mejora, mientras que un porcentaje negativo indica una disminución en el rendimiento.",
+  "close": "Cerrar"
 }
 

@@ -305,5 +305,9 @@
   "create_account": "Create an account",
   "have_account_sign_in": "Have an account? Sign in",
   "total_sets_per_week": "Total Sets Per Week",
-  "current_performance": "Current Performance"
+  "current_performance": "Current Performance",
+  "percentage_change": "Percentage Change",
+  "percentage_change_explanation": "This percentage represents the change in volume (weight x repetitions) between the previous and current workouts. A positive percentage indicates an improvement, while a negative percentage indicates a decrease in performance.",
+  "close": "Close"
+
 }

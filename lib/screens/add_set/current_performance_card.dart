@@ -1,7 +1,8 @@
-// lib/widgets/add_set/current_performance_card.dart
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../models/workout_model.dart';
+import '../../models/theme_model.dart';
 import '../../app_localizations.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +22,7 @@ class CurrentPerformanceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context);
     final workoutModel = Provider.of<WorkoutModel>(context, listen: false);
+    final themeModel = Provider.of<ThemeModel>(context);
 
     // Fetch all previous workouts for the current exercise
     List<Workout> previousWorkouts = workoutModel.previousWorkoutsExcludingToday
@@ -79,28 +81,84 @@ class CurrentPerformanceCard extends StatelessWidget {
                     Icon(Icons.format_list_numbered, color: iconColor),
                     const SizedBox(width: 8),
                     Expanded(
+                      flex: 3,
                       child: Text(
                         '${appLocalizations?.translate('set')} ${i + 1}: ${currentWorkouts[i].repetitions} reps, ${currentWorkouts[i].weight} kg',
                         style: const TextStyle(fontSize: 16.0),
                       ),
                     ),
                     if (i < latestPreviousWorkouts.length) ...[
-                      const SizedBox(width: 8),
                       Expanded(
-                        child: Builder(
-                          builder: (context) {
-                            final previousSet = latestPreviousWorkouts[i];
-                            final currentSet = currentWorkouts[i];
-                            final percentageChange = workoutModel.calculateVolumePercentageChange(previousSet, currentSet);
-
-                            return Text(
-                              '${percentageChange.toStringAsFixed(1)}%',
+                        flex: 1,
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                    backgroundColor: Colors.transparent,
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                                      child: Container(
+                                        padding: EdgeInsets.all(16.0),
+                                        decoration: BoxDecoration(
+                                          color: themeModel.isDark ? Colors.black.withOpacity(0.7) : Colors.white.withOpacity(0.7),
+                                          borderRadius: BorderRadius.circular(15.0),
+                                        ),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              appLocalizations?.translate('percentage_change') ?? 'Percentage Change',
+                                              style: TextStyle(
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold,
+                                                color: themeModel.isDark ? Colors.white : Colors.black,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 8.0),
+                                            Text(
+                                              appLocalizations?.translate('percentage_change_explanation') ??
+                                                  'This percentage represents the change in volume (weight x repetitions) between the previous and current workouts. A positive percentage indicates an improvement, while a negative percentage indicates a decrease in performance.',
+                                              style: TextStyle(
+                                                fontSize: 16.0,
+                                                color: themeModel.isDark ? Colors.white70 : Colors.black,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 16.0),
+                                            Align(
+                                              alignment: Alignment.centerRight,
+                                              child: TextButton(
+                                                child: Text(
+                                                  appLocalizations?.translate('close') ?? 'Close',
+                                                  style: TextStyle(color: Colors.blue),
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            child: Text(
+                              '${workoutModel.calculateVolumePercentageChange(latestPreviousWorkouts[i], currentWorkouts[i]).toStringAsFixed(1)}%',
                               style: TextStyle(
                                 fontSize: 16.0,
-                                color: percentageChange >= 0 ? Colors.green : Colors.red,
+                                color: workoutModel.calculateVolumePercentageChange(latestPreviousWorkouts[i], currentWorkouts[i]) >= 0
+                                    ? Colors.green
+                                    : Colors.red,
                               ),
-                            );
-                          },
+                            ),
+                          ),
                         ),
                       ),
                     ],

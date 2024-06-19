@@ -305,5 +305,8 @@
   "create_account": "Ein Konto erstellen",
   "have_account_sign_in": "Haben Sie ein Konto? Anmelden",
   "total_sets_per_week": "Gesamte Sätze Pro Woche",
-  "current_performance": "Aktuelle Leistung"
+  "current_performance": "Aktuelle Leistung",
+  "percentage_change": "Prozentuale Veränderung",
+  "percentage_change_explanation": "Dieser Prozentsatz stellt die Veränderung des Volumens (Gewicht x Wiederholungen) zwischen den vorherigen und aktuellen Workouts dar. Ein positiver Prozentsatz weist auf eine Verbesserung hin, während ein negativer Prozentsatz auf eine Verschlechterung der Leistung hinweist.",
+  "close": "Schließen"
 }
