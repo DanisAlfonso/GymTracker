@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image/image.dart' as img;
-import '../../app_localizations.dart'; // Import the AppLocalizations
+import '../../app_localizations.dart';
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
@@ -156,6 +156,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     final appLocalizations = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+    final iconColor = isDarkMode ? Colors.white : theme.primaryColor;
     final avatarBackgroundColor = isDarkMode ? Colors.grey[700] : Colors.grey[300];
 
     return Scaffold(
@@ -164,88 +166,146 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              Center(
-                child: GestureDetector(
-                  onTap: _pickImage,
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundColor: avatarBackgroundColor,
-                    backgroundImage: _profileImage != null
-                        ? FileImage(_profileImage!)
-                        : (_profileImageUrl != null
-                        ? NetworkImage(_profileImageUrl!)
-                        : null) as ImageProvider?,
-                    child: _profileImage == null && _profileImageUrl == null
-                        ? const Icon(Icons.person, size: 50)
-                        : null,
+        child: Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+            side: BorderSide(color: theme.dividerColor.withOpacity(0.5)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                children: [
+                  Center(
+                    child: GestureDetector(
+                      onTap: _pickImage,
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundColor: avatarBackgroundColor,
+                        backgroundImage: _profileImage != null
+                            ? FileImage(_profileImage!)
+                            : (_profileImageUrl != null
+                            ? NetworkImage(_profileImageUrl!)
+                            : null) as ImageProvider?,
+                        child: _profileImage == null && _profileImageUrl == null
+                            ? const Icon(Icons.person, size: 50)
+                            : null,
+                      ),
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      labelText: appLocalizations.translate('name'),
+                      filled: true,
+                      fillColor: isDarkMode ? Colors.grey[800] : Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: isDarkMode ? Colors.white : theme.primaryColor,
+                        ),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return appLocalizations.translate('please_enter_name');
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    controller: _ageController,
+                    decoration: InputDecoration(
+                      labelText: appLocalizations.translate('age'),
+                      filled: true,
+                      fillColor: isDarkMode ? Colors.grey[800] : Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: isDarkMode ? Colors.white : theme.primaryColor,
+                        ),
+                      ),
+                    ),
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return appLocalizations.translate('please_enter_age');
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    controller: _weightController,
+                    decoration: InputDecoration(
+                      labelText: appLocalizations.translate('weight_kg'),
+                      filled: true,
+                      fillColor: isDarkMode ? Colors.grey[800] : Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: isDarkMode ? Colors.white : theme.primaryColor,
+                        ),
+                      ),
+                    ),
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return appLocalizations.translate('please_enter_weight');
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    controller: _heightController,
+                    decoration: InputDecoration(
+                      labelText: appLocalizations.translate('height_cm'),
+                      filled: true,
+                      fillColor: isDarkMode ? Colors.grey[800] : Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: isDarkMode ? Colors.white : theme.primaryColor,
+                        ),
+                      ),
+                    ),
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return appLocalizations.translate('please_enter_height');
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _saveUserProfile,
+                    child: Text(appLocalizations.translate('save_profile')),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _signOut,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red, // Background color
+                    ),
+                    child: Text(appLocalizations.translate('logout')),
+                  ),
+                ],
               ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(labelText: appLocalizations.translate('name')),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return appLocalizations.translate('please_enter_name');
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _ageController,
-                decoration: InputDecoration(labelText: appLocalizations.translate('age')),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return appLocalizations.translate('please_enter_age');
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _weightController,
-                decoration: InputDecoration(labelText: appLocalizations.translate('weight_kg')),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return appLocalizations.translate('please_enter_weight');
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _heightController,
-                decoration: InputDecoration(labelText: appLocalizations.translate('height_cm')),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return appLocalizations.translate('please_enter_height');
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _saveUserProfile,
-                child: Text(appLocalizations.translate('save_profile')),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _signOut,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red, // Background color
-                ),
-                child: Text(appLocalizations.translate('logout')),
-              ),
-            ],
+            ),
           ),
         ),
       ),
