@@ -198,6 +198,17 @@ class WorkoutModel extends ChangeNotifier {
     }).toList();
   }
 
+  Workout? getLastWorkoutForExercise(String exerciseName) {
+    List<Workout> filteredWorkouts = previousWorkoutsExcludingToday
+        .where((workout) => workout.exercise.name == exerciseName)
+        .toList();
+    if (filteredWorkouts.isEmpty) {
+      return null;
+    }
+    filteredWorkouts.sort((a, b) => b.date.compareTo(a.date));
+    return filteredWorkouts.first;
+  }
+
   void saveData() {
     _saveData();
   }
@@ -388,5 +399,13 @@ class WorkoutModel extends ChangeNotifier {
     });
 
     return recoveryPercentage;
+  }
+
+  // Calculate volume percentage change between workouts
+  double calculateVolumePercentageChange(Workout previous, Workout current) {
+    final previousVolume = previous.weight * previous.repetitions;
+    final currentVolume = current.weight * current.repetitions;
+    if (previousVolume == 0) return currentVolume == 0 ? 0 : 100; // Handle division by zero
+    return ((currentVolume - previousVolume) / previousVolume) * 100;
   }
 }

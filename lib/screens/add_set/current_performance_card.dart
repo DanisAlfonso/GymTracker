@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../models/workout_model.dart';
 import '../../app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class CurrentPerformanceCard extends StatelessWidget {
   final List<Workout> currentWorkouts;
@@ -19,6 +20,11 @@ class CurrentPerformanceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appLocalizations = AppLocalizations.of(context);
+    final workoutModel = Provider.of<WorkoutModel>(context, listen: false);
+
+    // Fetch the previous workout data for comparison
+    Workout? previousWorkout = workoutModel.getLastWorkoutForExercise(
+        currentWorkouts.isNotEmpty ? currentWorkouts.first.exercise.name : '');
 
     return Card(
       shape: RoundedRectangleBorder(
@@ -49,6 +55,20 @@ class CurrentPerformanceCard extends StatelessWidget {
                         style: const TextStyle(fontSize: 16.0),
                       ),
                     ),
+                    if (previousWorkout != null && i < currentWorkouts.length) ...[
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          '${workoutModel.calculateVolumePercentageChange(previousWorkout, currentWorkouts[i]).toStringAsFixed(1)}%',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: workoutModel.calculateVolumePercentageChange(previousWorkout, currentWorkouts[i]) >= 0
+                                ? Colors.green
+                                : Colors.red,
+                          ),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
                 const SizedBox(height: 8),
