@@ -54,6 +54,8 @@ class _AppPreferencesScreenState extends State<AppPreferencesScreen> {
   Widget build(BuildContext context) {
     final themeModel = Provider.of<ThemeModel>(context);
     final appLocalizations = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
@@ -61,64 +63,83 @@ class _AppPreferencesScreenState extends State<AppPreferencesScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            SwitchListTile(
-              title: Text(appLocalizations.translate('use_system_theme')),
-              value: themeModel.useSystemTheme,
-              onChanged: (bool value) {
-                themeModel.setUseSystemTheme(value);
-              },
-            ),
-            if (!themeModel.useSystemTheme)
-              SwitchListTile(
-                title: Text(appLocalizations.translate('dark_mode')),
-                value: themeModel.isDark,
-                onChanged: (bool value) {
-                  themeModel.setDarkMode(value);
-                },
-              ),
-            SwitchListTile(
-              title: Text(appLocalizations.translate('notifications')),
-              value: _notificationsEnabled,
-              onChanged: (bool value) {
-                setState(() {
-                  _notificationsEnabled = value;
-                });
-              },
-            ),
-            const SizedBox(height: 20),
-            Text(appLocalizations.translate('language'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            DropdownButton<String>(
-              value: _selectedLanguage,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedLanguage = newValue!;
-                });
-              },
-              items: <String>['system', 'en', 'es', 'fr', 'de'].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value == 'system'
-                        ? 'System Default'
-                        : value == 'en'
-                        ? 'English'
-                        : value == 'es'
-                        ? 'Español'
-                        : value == 'fr'
-                        ? 'Français'
-                        : 'Deutsch',
+        child: Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+            side: BorderSide(color: theme.dividerColor.withOpacity(0.5)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ListView(
+              children: [
+                SwitchListTile(
+                  title: Text(appLocalizations.translate('use_system_theme')),
+                  value: themeModel.useSystemTheme,
+                  onChanged: (bool value) {
+                    themeModel.setUseSystemTheme(value);
+                  },
+                ),
+                if (!themeModel.useSystemTheme)
+                  SwitchListTile(
+                    title: Text(appLocalizations.translate('dark_mode')),
+                    value: themeModel.isDark,
+                    onChanged: (bool value) {
+                      themeModel.setDarkMode(value);
+                    },
                   ),
-                );
-              }).toList(),
+                SwitchListTile(
+                  title: Text(appLocalizations.translate('notifications')),
+                  value: _notificationsEnabled,
+                  onChanged: (bool value) {
+                    setState(() {
+                      _notificationsEnabled = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 20),
+                Text(appLocalizations.translate('language'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                DropdownButton<String>(
+                  value: _selectedLanguage,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedLanguage = newValue!;
+                    });
+                  },
+                  items: <String>['system', 'en', 'es', 'fr', 'de'].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value == 'system'
+                            ? appLocalizations.translate('system_default')
+                            : value == 'en'
+                            ? 'English'
+                            : value == 'es'
+                            ? 'Español'
+                            : value == 'fr'
+                            ? 'Français'
+                            : 'Deutsch',
+                      ),
+                    );
+                  }).toList(),
+                  style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+                  dropdownColor: isDarkMode ? Colors.grey[850] : Colors.white,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _savePreferences,
+                  child: Text(appLocalizations.translate('save')),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _savePreferences,
-              child: Text(appLocalizations.translate('save')),
-            ),
-          ],
+          ),
         ),
       ),
     );
