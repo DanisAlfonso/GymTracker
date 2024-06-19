@@ -304,7 +304,7 @@
   "password_must_be_at_least_6_characters": "La contraseña debe tener al menos 6 caracteres",
   "create_account": "Crear una cuenta",
   "have_account_sign_in": "¿Tienes una cuenta? Iniciar sesión",
-  "total_sets_per_week": "Conjuntos Totales Por Semana"
-
+  "total_sets_per_week": "Conjuntos Totales Por Semana",
+  "current_performance": "Rendimiento actual"
 }
 

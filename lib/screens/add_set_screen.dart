@@ -1,3 +1,4 @@
+// lib/screens/add_set_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,6 +8,7 @@ import '../app_localizations.dart';
 import 'add_set/previous_performance_card.dart';
 import 'add_set/set_details_card.dart';
 import 'add_set/rest_time_and_notes_card.dart';
+import 'add_set/current_performance_card.dart'; // Import the new card
 
 class AddSetScreen extends StatefulWidget {
   final Exercise exercise;
@@ -28,12 +30,14 @@ class _AddSetScreenState extends State<AddSetScreen> {
   Duration _restTime = const Duration(minutes: 3);
   DateTime _selectedDate = DateTime.now();
   List<Workout> _previousWorkouts = [];
+  List<Workout> _currentWorkouts = [];
 
   @override
   void initState() {
     super.initState();
     _fetchPreferences();
     _fetchPreviousWorkouts();
+    _fetchCurrentWorkouts();
   }
 
   Future<void> _fetchPreferences() async {
@@ -48,11 +52,20 @@ class _AddSetScreenState extends State<AddSetScreen> {
   void _fetchPreviousWorkouts() {
     final workoutModel = Provider.of<WorkoutModel>(context, listen: false);
     setState(() {
-      _previousWorkouts = workoutModel.workouts
+      _previousWorkouts = workoutModel.previousWorkoutsExcludingToday
           .where((workout) => workout.exercise.name == widget.exercise.name)
           .toList();
     });
     _updateInitialValues();
+  }
+
+  void _fetchCurrentWorkouts() {
+    final workoutModel = Provider.of<WorkoutModel>(context, listen: false);
+    setState(() {
+      _currentWorkouts = workoutModel.todaysWorkouts
+          .where((workout) => workout.exercise.name == widget.exercise.name)
+          .toList();
+    });
   }
 
   void _updateInitialValues() {
@@ -188,6 +201,12 @@ class _AddSetScreenState extends State<AddSetScreen> {
               if (latestWorkouts.isNotEmpty)
                 PreviousPerformanceCard(
                   previousWorkouts: latestWorkouts,
+                  iconColor: iconColor,
+                  cardBorder: cardBorder,
+                ),
+              if (_currentWorkouts.isNotEmpty)
+                CurrentPerformanceCard(
+                  currentWorkouts: _currentWorkouts,
                   iconColor: iconColor,
                   cardBorder: cardBorder,
                 ),

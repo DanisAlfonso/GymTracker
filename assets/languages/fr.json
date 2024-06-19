@@ -304,5 +304,6 @@
   "password_must_be_at_least_6_characters": "Le mot de passe doit contenir au moins 6 caractères",
   "create_account": "Créer un compte",
   "have_account_sign_in": "Vous avez un compte? Se connecter",
-  "total_sets_per_week": "Total des séries par semaine"
+  "total_sets_per_week": "Total des séries par semaine",
+  "current_performance": "Performance actuelle"
 }

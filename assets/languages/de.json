@@ -304,5 +304,6 @@
   "password_must_be_at_least_6_characters": "Das Passwort muss mindestens 6 Zeichen lang sein",
   "create_account": "Ein Konto erstellen",
   "have_account_sign_in": "Haben Sie ein Konto? Anmelden",
-  "total_sets_per_week": "Gesamte Sätze Pro Woche"
+  "total_sets_per_week": "Gesamte Sätze Pro Woche",
+  "current_performance": "Aktuelle Leistung"
 }

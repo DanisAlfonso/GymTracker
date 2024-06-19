@@ -304,6 +304,6 @@
   "password_must_be_at_least_6_characters": "Password must be at least 6 characters",
   "create_account": "Create an account",
   "have_account_sign_in": "Have an account? Sign in",
-  "total_sets_per_week": "Total Sets Per Week"
-
+  "total_sets_per_week": "Total Sets Per Week",
+  "current_performance": "Current Performance"
 }

@@ -180,6 +180,24 @@ class WorkoutModel extends ChangeNotifier {
     return _workouts.where((workout) => routine.exercises.contains(workout.exercise)).toList();
   }
 
+  List<Workout> get todaysWorkouts {
+    DateTime today = DateTime.now();
+    return _workouts.where((workout) {
+      return workout.date.year == today.year &&
+          workout.date.month == today.month &&
+          workout.date.day == today.day;
+    }).toList();
+  }
+
+  List<Workout> get previousWorkoutsExcludingToday {
+    DateTime today = DateTime.now();
+    return _workouts.where((workout) {
+      return !(workout.date.year == today.year &&
+          workout.date.month == today.month &&
+          workout.date.day == today.day);
+    }).toList();
+  }
+
   void saveData() {
     _saveData();
   }
