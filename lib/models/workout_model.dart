@@ -405,7 +405,12 @@ class WorkoutModel extends ChangeNotifier {
   double calculateVolumePercentageChange(Workout previous, Workout current) {
     final previousVolume = previous.weight * previous.repetitions;
     final currentVolume = current.weight * current.repetitions;
-    if (previousVolume == 0) return currentVolume == 0 ? 0 : 100; // Handle division by zero
-    return ((currentVolume - previousVolume) / previousVolume) * 100;
+
+    if (previousVolume == 0) {
+      return currentVolume == 0 ? 0 : 100; // Handle division by zero
+    }
+
+    final percentageChange = ((currentVolume - previousVolume) / previousVolume) * 100;
+    return percentageChange;
   }
 }
