@@ -1,10 +1,10 @@
 // lib/screens/settings_screen.dart
 import 'package:flutter/material.dart';
-import 'user_profile_screen.dart';
-import 'workout_preferences_screen.dart';
-import 'app_preferences_screen.dart';
-import 'backup_restore_screen.dart';
-import 'about_screen.dart';
+import 'settings/user_profile_screen.dart';
+import 'settings/workout_preferences_screen.dart';
+import 'settings/app_preferences_screen.dart';
+import 'settings/backup_restore_screen.dart';
+import 'settings/about_screen.dart';
 import '../app_localizations.dart'; // Import the AppLocalizations
 
 class SettingsScreen extends StatelessWidget {

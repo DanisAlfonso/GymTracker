@@ -1,7 +1,7 @@
 // lib/screens/workout_preferences_screen.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../app_localizations.dart'; // Import the AppLocalizations
+import '../../app_localizations.dart'; // Import the AppLocalizations
 
 class WorkoutPreferencesScreen extends StatefulWidget {
   const WorkoutPreferencesScreen({super.key});

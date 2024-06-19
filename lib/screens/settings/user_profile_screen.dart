@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import '../app_localizations.dart'; // Import the AppLocalizations
+import '../../app_localizations.dart'; // Import the AppLocalizations
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
