@@ -195,7 +195,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 30), // Increased height
                   TextFormField(
                     controller: _nameController,
                     decoration: InputDecoration(
@@ -218,7 +218,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 30), // Increased height
                   TextFormField(
                     controller: _ageController,
                     decoration: InputDecoration(
@@ -242,7 +242,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 30), // Increased height
                   TextFormField(
                     controller: _weightController,
                     decoration: InputDecoration(
@@ -266,7 +266,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 30), // Increased height
                   TextFormField(
                     controller: _heightController,
                     decoration: InputDecoration(
@@ -290,7 +290,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 30), // Increased height
                   ElevatedButton(
                     onPressed: _saveUserProfile,
                     child: Text(appLocalizations.translate('save_profile')),
@@ -312,3 +312,4 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 }
+t
