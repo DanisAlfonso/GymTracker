@@ -3,6 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image/image.dart' as img;
 import '../../app_localizations.dart'; // Import the AppLocalizations
 
 class UserProfileScreen extends StatefulWidget {
@@ -19,6 +22,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   final _weightController = TextEditingController();
   final _heightController = TextEditingController();
   File? _profileImage;
+  String? _profileImageUrl;
 
   @override
   void initState() {
@@ -28,16 +32,29 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   Future<void> _loadUserProfile() async {
     final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _nameController.text = prefs.getString('name') ?? '';
-      _ageController.text = prefs.getInt('age')?.toString() ?? '';
-      _weightController.text = prefs.getDouble('weight')?.toString() ?? '';
-      _heightController.text = prefs.getDouble('height')?.toString() ?? '';
-      String? imagePath = prefs.getString('profileImage');
-      if (imagePath != null) {
-        _profileImage = File(imagePath);
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      if (doc.exists) {
+        final data = doc.data()!;
+        setState(() {
+          _nameController.text = data['name'] ?? prefs.getString('name') ?? '';
+          _ageController.text = data['age']?.toString() ?? prefs.getInt('age')?.toString() ?? '';
+          _weightController.text = data['weight']?.toString() ?? prefs.getDouble('weight')?.toString() ?? '';
+          _heightController.text = data['height']?.toString() ?? prefs.getDouble('height')?.toString() ?? '';
+          _profileImageUrl = data['profileImageUrl'] ?? prefs.getString('profileImageUrl');
+        });
       }
-    });
+    } else {
+      setState(() {
+        _nameController.text = prefs.getString('name') ?? '';
+        _ageController.text = prefs.getInt('age')?.toString() ?? '';
+        _weightController.text = prefs.getDouble('weight')?.toString() ?? '';
+        _heightController.text = prefs.getDouble('height')?.toString() ?? '';
+        _profileImageUrl = prefs.getString('profileImageUrl');
+      });
+    }
   }
 
   Future<void> _saveUserProfile() async {
@@ -48,12 +65,24 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       await prefs.setInt('age', int.parse(_ageController.text));
       await prefs.setDouble('weight', double.parse(_weightController.text));
       await prefs.setDouble('height', double.parse(_heightController.text));
-      if (_profileImage != null) {
-        await prefs.setString('profileImage', _profileImage!.path);
+      if (_profileImageUrl != null) {
+        await prefs.setString('profileImageUrl', _profileImageUrl!);
       }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(appLocalizations!.translate('profile_saved'))),
       );
+
+      // Save to Firestore
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'name': _nameController.text,
+          'age': int.parse(_ageController.text),
+          'weight': double.parse(_weightController.text),
+          'height': double.parse(_heightController.text),
+          'profileImageUrl': _profileImageUrl,
+        }, SetOptions(merge: true));
+      }
     }
   }
 
@@ -62,9 +91,58 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+
+      // Compress the image
+      final compressedImage = await compressImage(imageFile);
+
       setState(() {
-        _profileImage = File(pickedFile.path);
+        _profileImage = compressedImage;
       });
+      await _uploadImageToFirebase();
+    }
+  }
+
+  Future<File> compressImage(File imageFile) async {
+    final originalImage = img.decodeImage(imageFile.readAsBytesSync());
+    final compressedImage = img.copyResize(originalImage!, width: 500);
+    final compressedFile = File('${imageFile.path}_compressed.jpg')
+      ..writeAsBytesSync(img.encodeJpg(compressedImage, quality: 85));
+    return compressedFile;
+  }
+
+  Future<void> _uploadImageToFirebase() async {
+    if (_profileImage == null) return;
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    try {
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child('user_profile_images')
+          .child('${user.uid}.jpg');
+
+      await ref.putFile(_profileImage!);
+      final url = await ref.getDownloadURL();
+
+      if (mounted) {
+        setState(() {
+          _profileImageUrl = url;
+        });
+      }
+
+      // Save the URL to Firestore
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+        'profileImageUrl': _profileImageUrl,
+      });
+    } catch (e) {
+      print('Failed to upload image: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to upload image: $e')),
+        );
+      }
     }
   }
 
@@ -96,8 +174,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   child: CircleAvatar(
                     radius: 50,
                     backgroundColor: avatarBackgroundColor,
-                    backgroundImage: _profileImage != null ? FileImage(_profileImage!) : null,
-                    child: _profileImage == null ? const Icon(Icons.person, size: 50) : null,
+                    backgroundImage: _profileImage != null
+                        ? FileImage(_profileImage!)
+                        : (_profileImageUrl != null
+                        ? NetworkImage(_profileImageUrl!)
+                        : null) as ImageProvider?,
+                    child: _profileImage == null && _profileImageUrl == null
+                        ? const Icon(Icons.person, size: 50)
+                        : null,
                   ),
                 ),
               ),
