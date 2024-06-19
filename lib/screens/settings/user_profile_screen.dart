@@ -291,17 +291,33 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     },
                   ),
                   const SizedBox(height: 30), // Increased height
-                  ElevatedButton(
+                  ElevatedButton.icon(
                     onPressed: _saveUserProfile,
-                    child: Text(appLocalizations.translate('save_profile')),
+                    icon: Icon(Icons.save, color: isDarkMode ? Colors.white : Colors.white),
+                    label: Text(
+                      appLocalizations.translate('save_profile'),
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: theme.primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    ),
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
+                  ElevatedButton.icon(
                     onPressed: _signOut,
+                    icon: const Icon(Icons.logout, color: Colors.white),
+                    label: Text(appLocalizations.translate('logout')),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red, // Background color
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
                     ),
-                    child: Text(appLocalizations.translate('logout')),
                   ),
                 ],
               ),
