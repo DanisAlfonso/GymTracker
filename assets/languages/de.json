@@ -308,5 +308,8 @@
   "current_performance": "Aktuelle Leistung",
   "percentage_change": "Prozentuale Veränderung",
   "percentage_change_explanation": "Dieser Prozentsatz stellt die Veränderung des Volumens (Gewicht x Wiederholungen) zwischen den vorherigen und aktuellen Workouts dar. Ein positiver Prozentsatz weist auf eine Verbesserung hin, während ein negativer Prozentsatz auf eine Verschlechterung der Leistung hinweist.",
-  "close": "Schließen"
+  "close": "Schließen",
+  "system_default": "Systemstandard",
+  "light_mode": "Heller Modus",
+  "theme": "Thema"
 }

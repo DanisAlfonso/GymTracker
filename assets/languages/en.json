@@ -308,6 +308,8 @@
   "current_performance": "Current Performance",
   "percentage_change": "Percentage Change",
   "percentage_change_explanation": "This percentage represents the change in volume (weight x repetitions) between the previous and current workouts. A positive percentage indicates an improvement, while a negative percentage indicates a decrease in performance.",
-  "close": "Close"
-
+  "close": "Close",
+  "system_default": "System Default",
+  "light_mode": "Light Mode",
+  "theme": "Theme"
 }

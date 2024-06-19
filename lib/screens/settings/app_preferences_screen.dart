@@ -14,7 +14,6 @@ class AppPreferencesScreen extends StatefulWidget {
 }
 
 class _AppPreferencesScreenState extends State<AppPreferencesScreen> {
-  bool _notificationsEnabled = true;
   String _selectedLanguage = 'system';
 
   @override
@@ -26,17 +25,16 @@ class _AppPreferencesScreenState extends State<AppPreferencesScreen> {
   Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _notificationsEnabled = prefs.getBool('notificationsEnabled') ?? true;
       _selectedLanguage = prefs.getString('selectedLanguage') ?? 'system';
     });
-    Provider.of<ThemeModel>(context, listen: false)
-        .setUseSystemTheme(prefs.getBool('useSystemTheme') ?? true);
+    final themeModel = Provider.of<ThemeModel>(context, listen: false);
+    themeModel.loadPreferences();
   }
 
   Future<void> _savePreferences() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isDarkMode', Provider.of<ThemeModel>(context, listen: false).isDark);
-    await prefs.setBool('notificationsEnabled', _notificationsEnabled);
+    final themeModel = Provider.of<ThemeModel>(context, listen: false);
+    await prefs.setBool('isDarkMode', themeModel.isDark);
     await prefs.setString('selectedLanguage', _selectedLanguage);
 
     if (_selectedLanguage == 'system') {
@@ -73,29 +71,42 @@ class _AppPreferencesScreenState extends State<AppPreferencesScreen> {
             padding: const EdgeInsets.all(16.0),
             child: ListView(
               children: [
-                SwitchListTile(
-                  title: Text(appLocalizations.translate('use_system_theme')),
-                  value: themeModel.useSystemTheme,
-                  onChanged: (bool value) {
-                    themeModel.setUseSystemTheme(value);
-                  },
-                ),
-                if (!themeModel.useSystemTheme)
-                  SwitchListTile(
-                    title: Text(appLocalizations.translate('dark_mode')),
-                    value: themeModel.isDark,
-                    onChanged: (bool value) {
-                      themeModel.setDarkMode(value);
+                Text(appLocalizations.translate('theme'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                ListTile(
+                  title: Text(appLocalizations.translate('system_default')),
+                  leading: Radio<String>(
+                    value: 'system',
+                    groupValue: themeModel.themePreference,
+                    onChanged: (value) {
+                      setState(() {
+                        themeModel.setThemePreference(value!);
+                      });
                     },
                   ),
-                SwitchListTile(
-                  title: Text(appLocalizations.translate('notifications')),
-                  value: _notificationsEnabled,
-                  onChanged: (bool value) {
-                    setState(() {
-                      _notificationsEnabled = value;
-                    });
-                  },
+                ),
+                ListTile(
+                  title: Text(appLocalizations.translate('light_mode')),
+                  leading: Radio<String>(
+                    value: 'light',
+                    groupValue: themeModel.themePreference,
+                    onChanged: (value) {
+                      setState(() {
+                        themeModel.setThemePreference(value!);
+                      });
+                    },
+                  ),
+                ),
+                ListTile(
+                  title: Text(appLocalizations.translate('dark_mode')),
+                  leading: Radio<String>(
+                    value: 'dark',
+                    groupValue: themeModel.themePreference,
+                    onChanged: (value) {
+                      setState(() {
+                        themeModel.setThemePreference(value!);
+                      });
+                    },
+                  ),
                 ),
                 const SizedBox(height: 20),
                 Text(appLocalizations.translate('language'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),

@@ -78,8 +78,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return Consumer<ThemeModel>(
       builder: (context, themeModel, child) {
-        final useSystemTheme = themeModel.useSystemTheme;
-        final brightness = useSystemTheme
+        final themePreference = themeModel.themePreference;
+        final brightness = themePreference == 'system'
             ? ui.PlatformDispatcher.instance.platformBrightness
             : (themeModel.isDark ? Brightness.dark : Brightness.light);
 

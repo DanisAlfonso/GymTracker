@@ -308,5 +308,8 @@
   "current_performance": "Performance actuelle",
   "percentage_change": "Changement de Pourcentage",
   "percentage_change_explanation": "Ce pourcentage représente le changement de volume (poids x répétitions) entre les séances d'entraînement précédentes et actuelles. Un pourcentage positif indique une amélioration, tandis qu'un pourcentage négatif indique une diminution des performances.",
-  "close": "Fermer"
+  "close": "Fermer",
+  "system_default": "Par défaut du système",
+  "light_mode": "Mode Clair",
+  "theme": "Thème"
 }
