@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'settings/user_profile_screen.dart';
 import 'settings/workout_preferences_screen.dart';
 import 'settings/app_preferences_screen.dart';
-import 'settings/backup_restore_screen.dart';
 import 'settings/about_screen.dart';
 import '../app_localizations.dart'; // Import the AppLocalizations
 
@@ -73,20 +72,6 @@ class SettingsScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => AppPreferencesScreen(onLocaleChange: onLocaleChange)),
-                    );
-                  },
-                  iconColor: iconColor,
-                  textColor: textColor,
-                ),
-                Divider(color: theme.dividerColor.withOpacity(0.5)),
-                _buildSettingsTile(
-                  context,
-                  icon: Icons.backup,
-                  text: appLocalizations.translate('backup_restore'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const BackupRestoreScreen()),
                     );
                   },
                   iconColor: iconColor,
